@@ -1,0 +1,47 @@
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[piece_taken]	 piece: 5 file: 1 rank: 3
+[move]	board::PieceType: 5
+[piece_taken]	 piece: 5 file: 1 rank: 3
+[move]	board::PieceType: 4
+[move]	board::PieceType: 5
+[move]	board::PieceType: 3
+[move]	board::PieceType: 4
+[move]	board::PieceType: 1
+[check]	: color: 0
+[move]	board::PieceType: 4
+[move]	board::PieceType: 0
+[queenside castling]	color: 1
+[move]	board::PieceType: 1
+[move]	board::PieceType: 1
+[piece_taken]	 piece: 1 file: 1 rank: 4
+[move]	board::PieceType: 4
+[piece_taken]	 piece: 1 file: 1 rank: 4
+[move]	board::PieceType: 3
+[piece_taken]	 piece: 5 file: 3 rank: 4
+[move]	board::PieceType: 4
+[piece_taken]	 piece: 5 file: 3 rank: 5
+[move]	board::PieceType: 3
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 4
+[piece_taken]	 piece: 5 file: 1 rank: 6
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[piece_taken]	 piece: 5 file: 5 rank: 4
+[move]	board::PieceType: 4
+[move]	board::PieceType: 0
+[piece_taken]	 piece: 4 file: 3 rank: 7
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[move]	board::PieceType: 5
+[disqualified]	: color: 0
+[game_finished]	
