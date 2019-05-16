@@ -1,4 +1,4 @@
-#include "pgn-exception.hh"
+#include "pgn_parser/pgn-exception.hh"
 
 namespace pgn_parser
 {

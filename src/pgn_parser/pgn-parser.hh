@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "pgn-move.hh"
+#include "board/pgn-move.hh"
 #include "report-type.hh"
 
 namespace pgn_parser

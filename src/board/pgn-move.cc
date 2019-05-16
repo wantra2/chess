@@ -1,4 +1,4 @@
-#include "pgn-move.hh"
+#include "board/pgn-move.hh"
 
 namespace board
 {

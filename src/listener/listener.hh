@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "chessboard-interface.hh"
-#include "color.hh"
-#include "piece-type.hh"
-#include "position.hh"
+#include "board/chessboard-interface.hh"
+#include "board/color.hh"
+#include "board/piece-type.hh"
+#include "board/position.hh"
 
 namespace listener
 {
