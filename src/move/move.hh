@@ -48,6 +48,8 @@ namespace move
 
     board::piece_type promotion_type(const Move move);
 
+    int pos_to_int(board::Position pos);
+
     Move create_move(const board::square from, const board::square to,
             const board::piece_type prom, const MoveType move_type);
 }

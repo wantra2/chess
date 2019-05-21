@@ -3,20 +3,26 @@
 #include <cstdint>
 
 #include "board/color.hh"
+#include "board/piece-type.hh"
 
 namespace board
 {
     class Board
     {
     public:
+
+        using bitboard = int_fast64_t;
+
         Board();
         ~Board() = default;
 
-        void generate_board();
+        constexpr void generate_board();
+        bitboard& get_bitboard(piece_type type);
+        bitboard& get_bitboard(Color color);
 
     private:
         int ply_;
-        int_fast64_t bitboards_[8];
+        bitboard bitboards_[8];
         //FIXME: NEED TIMES
 
     };

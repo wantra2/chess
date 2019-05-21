@@ -36,4 +36,6 @@ namespace board
         PieceType::QUEEN,  PieceType::ROOK, PieceType::BISHOP,
         PieceType::KNIGHT, PieceType::PAWN, PieceType::KING};
 
+    PieceType switch_piecetype(const piece_type type);
+
 } // namespace board
