@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "board/chessboard-interface.hh"
-#include "board/color.hh"
-#include "board/piece-type.hh"
-#include "board/position.hh"
+#include "chessboard-interface.hh"
+#include "color.hh"
+#include "piece-type.hh"
+#include "position.hh"
 
 namespace listener
 {
@@ -112,13 +112,6 @@ namespace listener
         ** @param color: The color of the player who is pat.
         */
         virtual void on_player_pat(const board::Color color) = 0;
-
-        /**
-        ** \brief Event when a player timed out.
-        **
-        ** @param color: The color of the player who timed out.
-        */
-        virtual void on_player_timeout(const board::Color color) = 0;
 
         /**
         ** \brief Event when a player is disqualified.

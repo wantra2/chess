@@ -34,15 +34,6 @@ namespace board
         EIGHT,
     };
 
-#ifndef STUDENT
-    constexpr char file_to_char[] = {
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-    };
-
-    constexpr char rank_to_char[] = {
-        '1', '2', '3', '4', '5', '6', '7', '8',
-    };
-#endif
 
     /* Position represent a coordinate on the board */
     class Position final

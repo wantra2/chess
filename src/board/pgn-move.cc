@@ -44,65 +44,10 @@ namespace board
         return queen_side ? b_big : b_small;
     }
 
-#ifndef STUDENT
-    bool PgnMove::is_castling() const
-    {
-        if (piece_ != PieceType::KING)
-            return false;
-        return start_.file_get() == File::E
-            && (end_.file_get() == File::C || end_.file_get() == File::G);
-    }
-
-    bool PgnMove::is_castling_queenside() const
-    {
-        return end_.file_get() == File::C;
-    }
-#endif
-
-    const Position& PgnMove::start_get() const
-    {
-        return start_;
-    }
-
-    const Position& PgnMove::end_get() const
-    {
-        return end_;
-    }
-
-    PieceType PgnMove::piece_get() const
-    {
-        return piece_;
-    }
-
-    const PgnMove::opt_piece_t& PgnMove::promotion_get() const
-    {
-        return promotion_;
-    }
-
-    bool PgnMove::capture_get() const
-    {
-        return capture_;
-    }
-
-    ReportType PgnMove::report_get() const
-    {
-        return report_;
-    }
-
     void PgnMove::report_set(ReportType report)
     {
         report_ = report;
     }
 
-    bool PgnMove::operator==(const PgnMove& other) const
-    {
-        return start_ == other.start_ && end_ == other.end_
-            && piece_ == other.piece_ && promotion_ == other.promotion_;
-    }
-
-    bool PgnMove::operator!=(const PgnMove& other) const
-    {
-        return !(*this == other);
-    }
 
 } // namespace board

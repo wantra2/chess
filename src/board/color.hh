@@ -9,11 +9,5 @@ namespace board
         BLACK = true
     };
 
-#ifndef STUDENT
-    constexpr Color other_color(Color color) noexcept
-    {
-        return Color::WHITE == color ? Color::BLACK : Color::WHITE;
-    }
-#endif
 
 } // namespace board

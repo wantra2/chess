@@ -5,7 +5,7 @@
 #include "board/color.hh"
 #include "board/piece-type.hh"
 #include "board/position.hh"
-#include "report-type.hh"
+#include "board/report-type.hh"
 
 namespace board
 {
@@ -22,39 +22,11 @@ namespace board
                 bool capture, ReportType report,
                 const opt_piece_t& promotion = std::nullopt);
 
-        PgnMove(const Position& start, const Position& end, bool capture,
-                ReportType report, const opt_piece_t& promotion = std::nullopt);
-
         /*! \brief Generate a castling given a color and a side */
         static PgnMove generate_castling(bool queen_side, Color color);
 
-#ifndef STUDENT
-        /*! \brief Return wether the move is a castling or not */
-        bool is_castling() const;
-
-        /*! \brief Return wether the castling is queen side or not
-         ** This function suppose that the move is a valid castling
-         */
-        bool is_castling_queenside() const;
-
-        const Position& start_get() const;
-
-        const Position& end_get() const;
-
-        PieceType piece_get() const;
-
-        const opt_piece_t& promotion_get() const;
-
-        bool capture_get() const;
-
-        ReportType report_get() const;
-
         void report_set(ReportType report);
 
-        bool operator==(const PgnMove& other) const;
-
-        bool operator!=(const PgnMove& other) const;
-#endif
 
     private:
         // The original position of the piece

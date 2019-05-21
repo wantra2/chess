@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <regex>
-#include <iostream>
 
 #include "pgn_parser/pgn-exception.hh"
 
@@ -132,7 +131,6 @@ namespace pgn_parser
 
         /* separating tokens in number | move | end */
         std::vector<std::string> moves_txt;
-        std::string end_game;
         unsigned idx = 0;
 
         try
@@ -140,10 +138,7 @@ namespace pgn_parser
             for (const auto& tok : tokens)
             {
                 if (parse_end(tok))
-                {
-                    end_game = tok;
                     break;
-                }
                 else if (idx++ % 3 == 0)
                     parse_turn_number(tok);
                 else
@@ -171,7 +166,7 @@ namespace pgn_parser
         return moves.moves_get();
     }
 
-    board::PgnMove::opt_piece_t MoveTextParser::parse_promotion(char promotion)
+    board::Move::opt_piece_t MoveTextParser::parse_promotion(char promotion)
     {
         return {static_cast<board::PieceType>(promotion)};
     }
@@ -214,13 +209,10 @@ namespace pgn_parser
             ** parse promotion if there is one + move iter
             ** after the '=X' where X is Q,R,B or N
             */
-            board::PgnMove::opt_piece_t promotion;
+            board::Move::opt_piece_t promotion;
 
             if (*iter == '=')
-            {
                 promotion = parse_promotion(*++iter);
-                iter++;
-            }
             auto move = board::PgnMove(start, end, moving_piece, piece_taken,
                                        parse_report(word), promotion);
             moves_.emplace_back(move);
