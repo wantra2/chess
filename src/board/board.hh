@@ -3,14 +3,22 @@
 #include <cstdint>
 #include <vector>
 
+#include "move/move.hh"
 #include "board/color.hh"
 #include "board/piece-type.hh"
 
 namespace board
 {
+    enum EdgesMask
+    {
+        UP = 0xFF00000000000000,
+        LEFT = 0x0101010101010101,
+        RIGHT = 0x8080808080808080,
+        DOWN = 0x00000000000000FF
+    };
+
     class Board
     {
-        using Bitboard = int_fast64_t;
     public:
 
         using bitboard = int_fast64_t;
