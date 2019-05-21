@@ -15,8 +15,8 @@ namespace board
         void generate_board();
 
     private:
-        int_fast64_t bitboards[];
-        int turn;
+        int_fast64_t bitboards_[];
+        int turn_;
         //FIXME: NEED TIMES
 
     }

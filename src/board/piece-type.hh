@@ -19,6 +19,16 @@ namespace board
         PAWN
     };
 
+    enum piece_type : int
+    {
+        PAWN = 2,
+        KNIGHT,
+        BISHOP,
+        ROOK,
+        QUEEN,
+        KING
+    }
+
     using opt_piecetype_t = std::optional<PieceType>;
 
     /* Can be useful to iterate over PieceTypes */
