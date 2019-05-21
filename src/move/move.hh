@@ -17,7 +17,8 @@ namespace move
     using Move = uint16_t;
     enum MoveType
     {
-        PROMOTION = 1,
+        NORMAL,
+        PROMOTION,
         CASTLING,
         EN_PASSANT
     };
@@ -32,19 +33,21 @@ namespace move
     /*
       Returns a Move's source/destination formated as a Position
      */
-    board::Position move_src(Move move);
-    board::Position move_dst(Move move);
+    board::square move_src(const Move move);
+    board::square move_dst(const Move move);
 
     /*
       Move flags handler
      */
-    bool is_castling(Move move);
-    bool is_passant(Move move);
+    bool is_castling(const Move move);
+    bool is_passant(const Move move);
 
-    bool is_promotion(Move move);
+    bool is_promotion(const Move move);
 
-    board::piece_type promotion_type(Move move);
+    move::MoveType mv_type(const Move move);
 
-    Move create_move(board::Position from, board::Position to,
-            board::piece_type prom, MoveType move_type);
+    board::piece_type promotion_type(const Move move);
+
+    Move create_move(const board::square from, const board::square to,
+            const board::piece_type prom, const MoveType move_type);
 }

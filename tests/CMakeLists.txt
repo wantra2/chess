@@ -1,8 +1,8 @@
 
 
-add_executable(test_movegen movegen_Test.cc)
+add_executable(out1 move_Test.cc)
 
-target_link_libraries(test_movegen gtest gtest_main pthread)
+target_link_libraries(out1 gtest gtest_main pthread board)
 
-add_test(moveGen ./test_movegen)
+add_test(test_move ./out1)
 

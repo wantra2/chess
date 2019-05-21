@@ -52,42 +52,39 @@ namespace move
         }
     }
 
-    board::Position move_src(Move move)
+    board::square move_src(const Move move)
     {
-        uint8_t s = (move >> 6) & 0x3F;
-        board::File file = int_to_file(s / 8);
-        board::Rank rank = int_to_rank(s % 8);
-        board::Position pos(file, rank);
-        return pos;
+        return board::square((move >> 6) & 0x3F);
     }
 
-    board::Position move_dst(Move move)
+    board::square move_dst(const Move move)
     {
-        uint8_t d = move & 0x3F;
-        board::File file = int_to_file(d / 8);
-        board::Rank rank = int_to_rank(d % 8);
-        board::Position pos(file, rank);
-        return pos;
+        return board::square(move & 0x3F);
     }
 
-    bool is_castling(Move move)
+    bool is_castling(const Move move)
     {
         return ((move >> 12) & 0x3) == MoveType::CASTLING;
     }
 
-    bool is_passant(Move move)
+    bool is_passant(const Move move)
     {
         return ((move >> 12) & 0x3) == MoveType::EN_PASSANT;
     }
 
-    bool is_promotion(Move move)
+    bool is_promotion(const Move move)
     {
         return ((move >> 12) & 0x3) == MoveType::PROMOTION;
     }
 
-    board::piece_type promotion_type(Move move)
+    move::MoveType mv_type(const Move move)
     {
-        return (board::piece_type)(3 + ((move >> 14) & 0x3));
+        return move::MoveType((move >> 12) & 0x3);
+    }
+
+    board::piece_type promotion_type(const Move move)
+    {
+        return board::piece_type(3 + ((move >> 14) & 0x3));
     }
 
     int file_to_int(board::File f)
@@ -147,10 +144,9 @@ namespace move
             + rank_to_int(pos.rank_get());
     }
 
-    Move create_move(board::Position from, board::Position to,
-            board::piece_type prom, MoveType move_type)
+    Move create_move(const board::square from, const board::square to,
+            const board::piece_type prom, const MoveType move_type)
     {
-        return (((((prom << 2) | move_type) << 6) | pos_to_int(from))
-                << 6) | pos_to_int(to);
+        return (move_type << 12) + ((prom - board::KNIGHT) << 12) + (from << 6) + to;
     }
 }
