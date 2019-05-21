@@ -12,7 +12,7 @@ namespace listener
         register_board(const board::ChessboardInterface& board_interface) override;
 
 
-        void on_game_finished() = 0;
+        void on_game_finished() override;
 
 
         void on_piece_moved(const board::PieceType piece,
@@ -41,9 +41,6 @@ namespace listener
 
 
         void on_player_pat(const board::Color color) override;
-
-
-        void on_player_timeout(const board::Color color) override;
 
 
         void on_player_disqualified(const board::Color color) override;

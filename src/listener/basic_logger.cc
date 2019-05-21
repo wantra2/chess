@@ -51,10 +51,6 @@ namespace listener
     {
         std::cout << "Stalemate\n";
     }
-    void Basic_logger::on_player_timeout(const board::Color color)
-    {
-        std::cout << "Timeout\n";
-    }
     void Basic_logger::on_player_disqualified(const board::Color color)
     {
         std::cout << "Disqualification\n";

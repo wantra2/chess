@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "board/pgn-move.hh"
 #include "report-type.hh"
