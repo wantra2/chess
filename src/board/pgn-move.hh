@@ -5,7 +5,7 @@
 #include "board/color.hh"
 #include "board/piece-type.hh"
 #include "board/position.hh"
-#include "board/report-type.hh"
+#include "report-type.hh"
 
 namespace board
 {
