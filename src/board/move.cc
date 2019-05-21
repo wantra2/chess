@@ -69,4 +69,30 @@ namespace move
         board::Position pos(file, rank);
         return pos;
     }
+
+    bool is_castling(Move move)
+    {
+        return (move >> 12) & 0x3 == MoveType::CASTLING;
+    }
+
+    bool is_passant(Move move)
+    {
+        return (move >> 12) & 0x3 == MoveType::EN_PASSANT;
+    }
+
+    bool is_promotion(move move)
+    {
+        return (move >> 12) & 0x3 == MoveType::PROMOTION;
+    }
+
+    board::piece_type promotion_type(Move move)
+    {
+        return ((move >> 14) & 0x3) + 3;
+    }
+
+    Move create_move(board::Position from, board::Position to,
+            board::piece_type prom, MoveType move_type)
+    {
+        return (((((prom << 2) | move_type) << 6) | from) << 6) | to;
+    }
 }
