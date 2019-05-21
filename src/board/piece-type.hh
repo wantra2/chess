@@ -27,7 +27,7 @@ namespace board
         ROOK,
         QUEEN,
         KING
-    }
+    };
 
     using opt_piecetype_t = std::optional<PieceType>;
 

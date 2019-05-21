@@ -23,7 +23,7 @@ namespace move
             case 7:
                 return board::File::H;
             default:
-                throw std::out_of_range("file out of bounds")
+                throw std::out_of_range("file out of bounds");
         }
     }
 
@@ -48,7 +48,7 @@ namespace move
             case 7:
                 return board::Rank::EIGHT;
             default:
-                throw std::out_of_range("file out of bounds")
+                throw std::out_of_range("file out of bounds");
         }
     }
 
@@ -57,6 +57,15 @@ namespace move
         uint8_t s = (move >> 6) & 0x3F;
         board::File file = int_to_file(s / 8);
         board::Rank rank = int_to_rank(s % 8);
+        board::Position pos(file, rank);
+        return pos;
+    }
+
+    board::Position move_dst(Move move)
+    {
+        uint8_t d = move & 0x3F;
+        board::File file = int_to_file(d / 8);
+        board::Rank rank = int_to_rank(d % 8);
         board::Position pos(file, rank);
         return pos;
     }
