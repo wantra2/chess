@@ -1,4 +1,4 @@
-#include "board/move.hh"
+#include "move/move.hh"
 
 namespace move
 {
