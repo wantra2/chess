@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "board/move.hh"
+#include "move/move.hh"
 
 //This testsuite does not check for legality, it only ensure correct encoding of moves
 
