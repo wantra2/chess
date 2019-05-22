@@ -31,4 +31,21 @@ namespace board
     {
         return bitboards_[(int)color];
     }
+
+    std::vector<move::Move> bitboard_to_moves(bitboard b)
+    {
+        if (not b)
+            return 0;
+        bitboard bit = 1;
+        std::vector<move::Move> moves;
+        int i = 0;
+        while (i < 64)
+        {
+            if (b & bit)
+                moves.push_back(i);
+            bit <<= 1;
+            ++i;
+        }
+    }
+
 }
