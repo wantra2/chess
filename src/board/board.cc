@@ -49,14 +49,22 @@ namespace board
         {
             if (b & bit)
             {
-                move_list.push_back((i << 6) | (i - 9));
-                move_list.push_back((i << 6) | (i - 8));
-                move_list.push_back((i << 6) | (i - 7));
-                move_list.push_back((i << 6) | (i - 1));
-                move_list.push_back((i << 6) | (i + 1));
-                move_list.push_back((i << 6) | (i + 7));
-                move_list.push_back((i << 6) | (i + 8));
-                move_list.push_back((i << 6) | (i + 9));
+                if (((b >> 9) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i - 9));
+                if (((b >> 8) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i - 8));
+                if (((b >> 7) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i - 7));
+                if (((b >> 1) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i - 1));
+                if (((b << 1) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i + 1));
+                if (((b << 7) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i + 7));
+                if (((b << 8) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i + 8));
+                if (((b << 9) & occupied) == 0)
+                    move_list.push_back((i << 6) | (i + 9));
                 break;
             }
             bit <<= 1;
