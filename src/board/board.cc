@@ -32,20 +32,35 @@ namespace board
         return bitboards_[(int)color];
     }
 
-    std::vector<move::Move> bitboard_to_moves(bitboard b)
+    std::vector<move::Move> Board::gen_king_moves(Color color)
     {
-        if (not b)
-            return 0;
+        bitboard occupied = (bitboards_[piece_type::PAWN]
+            | bitboards_[piece_type::KNIGHT]
+            | bitboards_[piece_type::BISHOP]
+            | bitboards_[piece_type::ROOK]
+            | bitboards_[piece_type::QUEEN])
+            & bitboards_[(int)color];
+        bitboard b = bitboards_[piece_type::KING]
+            & bitboards_[(int)color];
         bitboard bit = 1;
-        std::vector<move::Move> moves;
-        int i = 0;
+        std::vector<move::Move> move_list;
+        uint8_t i = 0;
         while (i < 64)
         {
             if (b & bit)
-                moves.push_back(i);
+            {
+                move_list.push_back((i << 6) | (i - 9));
+                move_list.push_back((i << 6) | (i - 8));
+                move_list.push_back((i << 6) | (i - 7));
+                move_list.push_back((i << 6) | (i - 1));
+                move_list.push_back((i << 6) | (i + 1));
+                move_list.push_back((i << 6) | (i + 7));
+                move_list.push_back((i << 6) | (i + 8));
+                move_list.push_back((i << 6) | (i + 9));
+                break;
+            }
             bit <<= 1;
             ++i;
         }
     }
-
 }

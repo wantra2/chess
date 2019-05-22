@@ -29,8 +29,6 @@ namespace board
         bitboard& get_bitboard(piece_type type);
         bitboard& get_bitboard(Color color);
 
-        std::vector<move::Move> bitboard_to_moves(bitboard b);
-
         std::vector<move::Move> gen_king_moves(Color color);
         std::vector<move::Move> gen_queen_moves(Color color);
         std::vector<move::Move> gen_rook_moves(Color color);
