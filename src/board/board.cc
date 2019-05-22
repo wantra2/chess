@@ -12,14 +12,14 @@ namespace board
 
     constexpr void Board::generate_board()
     {
-        bitboards_[0] = 0x000000000000FFFF; //WHITES
-        bitboards_[1] = 0xFFFF000000000000; //BLACKS
-        bitboards_[2] = 0x00FF00000000FF00; //PAWNS
-        bitboards_[3] = 0x4200000000000042; //KNIGHTS
-        bitboards_[4] = 0x2400000000000024; //BISHOPS
-        bitboards_[5] = 0x8100000000000081; //ROOKS
-        bitboards_[6] = 0x0800000000000008; //QUEENS
-        bitboards_[7] = 0x1000000000000010; //KINGS
+        bitboards_[(int)Color::WHITE] = 0x000000000000FFFF; //WHITES
+        bitboards_[(int)Color::BLACK] = 0xFFFF000000000000; //BLACKS
+        bitboards_[piece_type::PAWN] = 0x00FF00000000FF00; //PAWNS
+        bitboards_[piece_type::KNIGHT] = 0x4200000000000042; //KNIGHTS
+        bitboards_[piece_type::BISHOP] = 0x2400000000000024; //BISHOPS
+        bitboards_[piece_type::ROOK] = 0x8100000000000081; //ROOKS
+        bitboards_[piece_type::QUEEN] = 0x0800000000000008; //QUEENS
+        bitboards_[piece_type::KING] = 0x1000000000000010; //KINGS
     }
 
     Board::bitboard& Board::get_bitboard(piece_type type)
