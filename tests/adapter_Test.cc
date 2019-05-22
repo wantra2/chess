@@ -97,3 +97,9 @@ TEST(board, blacks)
     ASSERT_EQ((*adapt[board::Position(board::File::H, board::Rank::SEVEN)]).second
               , board::Color::BLACK);
 }
+
+int main(int argc, char **argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
