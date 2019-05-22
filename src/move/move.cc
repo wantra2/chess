@@ -140,8 +140,8 @@ namespace move
 
     int pos_to_int(board::Position pos)
     {
-        return file_to_int(pos.file_get()) * 10
-            + rank_to_int(pos.rank_get());
+        return rank_to_int(pos.rank_get()) * 8
+            + file_to_int(pos.file_get());
     }
 
     Move create_move(const board::square from, const board::square to,
