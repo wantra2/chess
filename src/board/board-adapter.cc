@@ -14,7 +14,7 @@ namespace board
     BoardAdapter::operator[](const Position& position) const
     {
         Board::bitboard location = 0x1;
-        location << move::pos_to_int(position);
+        location = location << move::pos_to_int(position);
 
         bool found = false;
         piece_type i = piece_type::PAWN;
