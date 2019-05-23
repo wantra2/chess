@@ -111,4 +111,10 @@ namespace board
             gen_non_pawn(movelist, knightAttacks_[from_square] & targets, from_square);
         }
     }
+
+    void Board::gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets)
+    {
+        int from_square = poplsb(king);
+        gen_non_pawn(movelist, kingAttacks_[from_square] & targets, from_square);
+    }
 }

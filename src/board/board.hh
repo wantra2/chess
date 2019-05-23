@@ -29,6 +29,7 @@ namespace board
         void init_Knight_and_KingAttacks();
 
         void gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets);
+        void gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets);
 
         std::vector<move::Move> gen_king_moves(Color color);
         std::vector<move::Move> gen_queen_moves(Color color);
