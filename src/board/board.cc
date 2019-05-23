@@ -7,6 +7,7 @@ namespace board
     Board::Board()
     {
         generate_board();
+        init_Knight_and_KingAttacks();
         ply_ = 0;
     }
 
@@ -14,22 +15,26 @@ namespace board
     {
         bitboards_[(int)Color::WHITE] = 0x000000000000FFFF; //WHITES
         bitboards_[(int)Color::BLACK] = 0xFFFF000000000000; //BLACKS
-        bitboards_[piece_type::PAWN] = 0x00FF00000000FF00; //PAWNS
-        bitboards_[piece_type::KNIGHT] = 0x4200000000000042; //KNIGHTS
-        bitboards_[piece_type::BISHOP] = 0x2400000000000024; //BISHOPS
-        bitboards_[piece_type::ROOK] = 0x8100000000000081; //ROOKS
-        bitboards_[piece_type::QUEEN] = 0x0800000000000008; //QUEENS
-        bitboards_[piece_type::KING] = 0x1000000000000010; //KINGS
+        bitboards_[PAWN] = 0x00FF00000000FF00; //PAWNS
+        bitboards_[KNIGHT] = 0x4200000000000042; //KNIGHTS
+        bitboards_[BISHOP] = 0x2400000000000024; //BISHOPS
+        bitboards_[ROOK] = 0x8100000000000081; //ROOKS
+        bitboards_[QUEEN] = 0x0800000000000008; //QUEENS
+        bitboards_[KING] = 0x1000000000000010; //KINGS
     }
 
-    Board::bitboard& Board::get_bitboard(piece_type type)
+    void Board::init_Knight_and_KingAttacks()
     {
-        return bitboards_[(int)type];
-    }
-
-    Board::bitboard& Board::get_bitboard(Color color)
-    {
-        return bitboards_[(int)color];
+        const int KnightDelta[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
+        const int KingDelta[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
+        for (int sq = board::A1; sq < SQUARE_NB; ++sq)
+        {
+            for (int d = 0; d < 8; ++d)
+            {
+                square_set(knightAttacks_[sq], board::rank(sq) + KnightDelta[d][0], board::file(sq) + KnightDelta[d][1]);
+                square_set(kingAttacks_[sq], board::rank(sq) + KingDelta[d][0], board::file(sq) + KingDelta[d][1]);
+            }
+        }
     }
 
     std::vector<move::Move> Board::gen_king_moves(Color color)
@@ -87,5 +92,23 @@ namespace board
             }
         }
         return move_list;
+    }
+
+    void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from)
+    {
+        while (attacks)
+        {
+            int target_square = poplsb(attacks);
+            movelist.emplace_back(move::create_move(square_from, target_square, board::KNIGHT, move::NORMAL));
+        }
+    }
+
+    void Board::gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets)
+    {
+        while (knights)
+        {
+            int from_square = poplsb(knights);
+            gen_non_pawn(movelist, knightAttacks_[from_square] & targets, from_square);
+        }
     }
 }

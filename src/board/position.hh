@@ -47,6 +47,14 @@ namespace board
         SQUARE_NB = 64
     };
 
+    static inline int rank(const int square)
+    {return square / 8;}
+
+    static inline int file(const int square)
+    {return square % 8;}
+
+    static inline int to_square(const int rank, const int file)
+    {return rank * 8 + file;}
 
     /* Position represent a coordinate on the board */
     class Position final

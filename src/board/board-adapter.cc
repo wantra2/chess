@@ -3,6 +3,7 @@
 #include "board/piece-type.hh"
 #include "board/board.hh"
 #include "move/move.hh"
+#include "board/bitboard.hh"
 
 namespace board
 {
@@ -13,14 +14,14 @@ namespace board
     ChessboardInterface::opt_piece_t
     BoardAdapter::operator[](const Position& position) const
     {
-        Board::bitboard location = 0x1;
+        bitboard location = 1;
         location = location << move::pos_to_int(position);
 
         bool found = false;
         piece_type i = piece_type::PAWN;
         for (; i != piece_type::KING; i = (piece_type)((int)i + 1))
         {
-            if (location & board_.get_bitboard(i))
+            if (location & board_.bitboards_[i])
             {
                 found = true;
                 break;
@@ -29,7 +30,7 @@ namespace board
         if (! found)
             return std::nullopt;
 
-        if (location & board_.get_bitboard(Color::WHITE))
+        if (location & board_.bitboards_[(int)Color::WHITE])
             return std::pair<PieceType, Color>(switch_piecetype(i)
                                                , Color::WHITE);
 

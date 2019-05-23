@@ -50,6 +50,6 @@ namespace move
 
     int pos_to_int(board::Position pos);
 
-    Move create_move(const board::square from, const board::square to,
+    Move create_move(const int square_from, const int square_to,
             const board::piece_type prom, const MoveType move_type);
 }
