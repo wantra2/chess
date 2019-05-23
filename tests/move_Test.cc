@@ -13,6 +13,7 @@ TEST(move, basic)
   ASSERT_EQ(move::is_castling(m), false);
   ASSERT_EQ(move::is_passant(m), false);
   ASSERT_EQ(move::is_promotion(m), false);
+  ASSERT_EQ(move::mv_type(m), move::MoveType::NORMAL);
 }
 
 TEST(move, promo_knight)

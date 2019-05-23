@@ -131,29 +131,46 @@ namespace board
     }
 
 
+    static inline bool check_promote(const bitboard& piece, Color color)
+    {
+        EdgesMask limit = (bool)color ? EdgesMask::DOWN : EdgesMask::UP;
+        return (piece & limit) != 0;
+    }
+
     void Board::gen_pawn_moves(std::vector<move::Move>& movelist, Color color)
     {
         int direction = (bool)color ? -8 : 8; // The enum color states that WHITE = false, BLACK = true
-        bitboard starting = (bool)color ? 0x000000000000FF00 : 0x00FF000000000000;
-        bitboard promote = (bool)color ? 0x00FF000000000000 : 0x000000000000FF00;
+        bitboard starting = (bool)color ? 0x00FF000000000000 : 0x000000000000FF00;
 
         bitboard pieces = get_bitboard(color) & get_bitboard(piece_type::PAWN);
+        bitboard all = get_bitboard(Color::BLACK) & get_bitboard(Color::WHITE);
 
-        bitboard bit = 0;
+        bitboard bit = 1;
         for (int ite = 0; ite < 64; ite++, bit <<= 1)
         {
             if(pieces & bit)
             {
+                std::cout << "Found: " << ite << '\n';
                 check_pawn_capture(ite, bit, color, movelist);
-                // Gen the move with src: ite, dst: ite + 8
-                if (bit & promote)
-                {} //This move is a promotion
+                bitboard moved = bit << direction;
+                if ((moved & all) != 0)
+                    continue;
+                move::MoveType type = check_promote(moved, color) ?
+                    move::MoveType::PROMOTION : move::MoveType::NORMAL;
+                std::cout << "TYPE: " << type << '\n';
+                movelist.emplace_back(move::create_move((square)ite,
+                                                        (square)(ite + direction)
+                                                        , piece_type::PAWN, type));
+                moved <<= direction;
+                if ((bit & starting) && !(moved & all))
+                {
+                    movelist.emplace_back(move::create_move((square)ite,
+                                                            (square)(ite + 2 * direction),
+                                                            piece_type::PAWN,
+                                                            move::MoveType::EN_PASSANT));
 
-                if (bit & starting)
-                {} // The pawn can move by two squares
-
+                }
             }
-
         }
     }
 
@@ -163,24 +180,24 @@ namespace board
         int direction = (bool)color ? -1 : 1;
         bitboard enemies = get_bitboard((Color)(!(bool)color));
 
-        if (piece << (direction * 9) & enemies)
+        bitboard tmp = (piece << (direction * 9) & enemies);
+        if (tmp)
         {
+            move::MoveType type = check_promote(tmp, color) ?
+                move::MoveType::PROMOTION : move::MoveType::NORMAL;
             movelist.emplace_back(move::create_move((square)position,
                                                (square)(position + direction * 9)
-                                               , piece_type::PAWN, move::MoveType::NORMAL));
+                                               , piece_type::PAWN, type));
         }
 
-        if (piece << (direction * 7) & enemies)
+        if ((tmp = (piece << (direction * 7) & enemies)))
         {
+            move::MoveType type = check_promote(tmp, color) ?
+                move::MoveType::PROMOTION : move::MoveType::NORMAL;
             movelist.emplace_back(move::create_move((square)position,
                                                     (square)(position + direction * 7)
-                                                    , piece_type::PAWN, move::MoveType::NORMAL));
+                                                    , piece_type::PAWN, type));
         }
     }
 
-    static bool check_promote(const bitboard& piece, Color color)
-    {
-        EdgesMask limit = (bool)color ? EdgesMask::DOWN : EdgesMask::UP;
-        return (piece & limit) != 0;
-    }
 }
