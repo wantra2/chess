@@ -37,14 +37,14 @@ namespace board
 
     void Board::init_Knight_and_KingAttacks()
     {
-        const int KnightDelta[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
-        const int KingDelta[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
+        const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
+        const int KingOffsets[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
         for (int sq = board::A1; sq < SQUARE_NB; ++sq)
         {
             for (int d = 0; d < 8; ++d)
             {
-                square_set(knightAttacks_[sq], board::rank(sq) + KnightDelta[d][0], board::file(sq) + KnightDelta[d][1]);
-                square_set(kingAttacks_[sq], board::rank(sq) + KingDelta[d][0], board::file(sq) + KingDelta[d][1]);
+                square_set(knightAttacks_[sq], board::rank(sq) + KnightOffsets[d][0], board::file(sq) + KnightOffsets[d][1]);
+                square_set(kingAttacks_[sq], board::rank(sq) + KingOffsets[d][0], board::file(sq) + KingOffsets[d][1]);
             }
         }
     }
