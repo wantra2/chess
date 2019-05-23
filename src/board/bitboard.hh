@@ -5,7 +5,7 @@
 
 namespace board
 {
-    using bitboard = uint64_t;
+    using bitboard = int_fast64_t;
 
     void square_set(bitboard& bboard, const int rank, const int file);
     int getlsb(const bitboard& bboard);

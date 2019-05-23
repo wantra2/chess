@@ -26,18 +26,25 @@ namespace board
         ~Board() = default;
 
         constexpr void generate_board();
+
+        bitboard& get_bitboard(piece_type type);
+        bitboard& get_bitboard(Color color);
+
         void init_Knight_and_KingAttacks();
 
         void gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets);
         void gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets);
+        void gen_pawn_moves(std::vector<move::Move>& movelist, Color color);
 
         std::vector<move::Move> gen_king_moves(Color color);
         std::vector<move::Move> gen_queen_moves(Color color);
         std::vector<move::Move> gen_rook_moves(Color color);
         std::vector<move::Move> gen_bishop_moves(Color color);
         std::vector<move::Move> gen_knight_moves(Color color);
-        std::vector<move::Move> gen_pawn_moves(Color color);
 
+
+        void check_pawn_capture(const int position, bitboard& piece,
+                                Color color, std::vector<move::Move>& movelist);
 
         int ply_;
         bitboard bitboards_[8];
