@@ -27,8 +27,8 @@ namespace board
 
         constexpr void generate_board();
 
-        bitboard& get_bitboard(piece_type type);
-        bitboard& get_bitboard(Color color);
+        inline bitboard& get_bitboard(piece_type type);
+        inline bitboard& get_bitboard(Color color);
 
         void init_Knight_and_KingAttacks();
 

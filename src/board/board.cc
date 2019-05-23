@@ -25,12 +25,12 @@ namespace board
         bitboards_[KING] = 0x1000000000000010; //KINGS
     }
 
-    bitboard& Board::get_bitboard(piece_type type)
+    inline bitboard& Board::get_bitboard(piece_type type)
     {
         return bitboards_[(int)type];
     }
 
-    bitboard& Board::get_bitboard(Color color)
+    inline bitboard& Board::get_bitboard(Color color)
     {
         return bitboards_[(int)color];
     }
