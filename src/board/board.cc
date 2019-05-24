@@ -1,6 +1,8 @@
 #include "board/board.hh"
+
 #include "utils/misc.hh"
 #include "board/bitboard.hh"
+#include "position.hh"
 
 #include <iostream>
 
@@ -170,14 +172,12 @@ namespace board
         {
             if(pieces & bit)
             {
-                std::cout << "Found: " << ite << '\n';
                 check_pawn_capture(ite, bit, color, movelist);
                 bitboard moved = bit << direction;
                 if ((moved & all) != 0)
                     continue;
                 move::MoveType type = check_promote(moved, color) ?
                     move::MoveType::PROMOTION : move::MoveType::NORMAL;
-                std::cout << "TYPE: " << type << '\n';
                 movelist.emplace_back(move::create_move((square)ite,
                                                         (square)(ite + direction)
                                                         , piece_type::PAWN, type));
@@ -219,5 +219,4 @@ namespace board
                                                     , piece_type::PAWN, type));
         }
     }
-
 }

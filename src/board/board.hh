@@ -36,9 +36,16 @@ namespace board
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets);
         void gen_pawn_moves(std::vector<move::Move>& movelist, Color color);
 
-
         void check_pawn_capture(const int position, bitboard& piece,
                                 Color color, std::vector<move::Move>& movelist);
+
+        void remove_piece(square position, piece_type type, Color color);
+        void remove_piece(File file, Rank rank, piece_type type, Color color);
+        void remove_piece(const bitboard& piece, piece_type type, Color color);
+
+        void add_piece(square position, piece_type type, Color color);
+        void add_piece(File file, Rank rank, piece_type type, Color color);
+        void add_piece(const bitboard& piece, piece_type type, Color color);
 
 
         int ply_;
