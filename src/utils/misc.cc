@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <list>
 
 #include "board/board.hh"
 #include "board/color.hh"
@@ -44,20 +45,26 @@ namespace utils
         }
     }
 
+
     void print_bitboard(board::bitboard bb)
     {
-        uint64_t bit = 1 << 63;
         int index = 63;
+        std::list<std::string> s;
         while (index >= 0)
         {
-            if (bit & bb)
-                std::cout << "| X ";
+            if (((1ull << index) & bb))
+                s.push_front("| X |");
             else
-                std::cout << "|   ";
-            --index;
-            bit = bit >> 1;
+                s.push_front("|   |");
+
             if (index % 8 == 0)
-                std::cout << '\n';
+            {
+                s.push_front("\n");
+            }
+            --index;
         }
+        for (auto str : s)
+            std::cout << str;
+        std::cout << '\n';
     }
 }
