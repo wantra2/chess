@@ -6,11 +6,12 @@
 #include "board/color.hh"
 
 
-TEST(movegen_sliding, starting_white_pawns_moves)
+TEST(movegen_sliding, starting_position_queen)
 {
     board::Board boardd;
     std::vector<move::Move> movelist;
-    boardd.gen_queen_bishop_moves(movelist, boardd.bitboards_[0] | boardd.bitboards_[1], 0, 0xffffffffffffffff);
+    boardd.gen_queen_bishop_moves(movelist, boardd.get_bitboard(board::QUEEN), 0ull, 0xffffffffffffffff);
+    boardd.gen_queen_rook_moves(movelist, boardd.get_bitboard(board::QUEEN), 0ull, 0xffffffffffffffff);
     ASSERT_EQ(movelist.size(), 0);
 }
 

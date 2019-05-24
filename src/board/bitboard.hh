@@ -14,7 +14,7 @@ namespace board
         bitboard mask;
         bitboard* offset;
 
-        unsigned int compute_index(bitboard occupied)
+        unsigned compute_index(bitboard occupied) const
         {
             #ifdef USE_PEXT
                 return _pext_u64(occupied, mask);

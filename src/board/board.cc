@@ -28,15 +28,29 @@ namespace board
         bitboards_[KING] = 0x1000000000000010; //KINGS
     }
 
-    inline bitboard& Board::get_bitboard(piece_type type)
-    {
-        return bitboards_[(int)type];
-    }
+    inline const bitboard& Board::get_bitboard(piece_type type) const
+    {return bitboards_[(int)type];}
 
-    inline bitboard& Board::get_bitboard(Color color)
-    {
-        return bitboards_[(int)color];
-    }
+    inline const bitboard& Board::get_bitboard(Color color) const
+    {return bitboards_[(int)color];}
+
+    inline const bitboard& Board::knightAttacks(const int square) const
+    {return knightAttacks_[square];}
+
+    inline const bitboard& Board::kingAttacks(const int square) const
+    {return kingAttacks_[square];}
+
+    inline const bitboard& Board::bishopAttacks(const int index) const
+    {return bishopAttacks_[index];}
+
+    inline const bitboard& Board::rookAttacks(const int index) const
+    {return rookAttacks_[index];}
+
+    inline const Magic& Board::bishopMagics(const int square) const
+    {return bishopMagics_[square];}
+
+    inline const Magic& Board::rookMagics(const int square) const
+    {return rookMagics_[square];}
 
     void Board::init_Knight_and_KingAttacks()
     {
@@ -67,10 +81,10 @@ namespace board
         }
     }
 
-    bitboard Board::slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2])
+    bitboard Board::slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2]) const
     {
         int rank, file;
-        bitboard tbr = 0;
+        bitboard tbr = 0ull;
         for (int d = 0; d < 4; ++d)
         {
             for (rank = rankof(from_square) + offsets[d][0],
@@ -81,8 +95,7 @@ namespace board
                  rank += offsets[d][0], file += offsets[d][1])
             {
                 square_set(tbr, rank, file);
-                utils::print_bitboard(tbr);
-                if (occupied & (1 << to_square(rank, file)))
+                if (occupied & (1ull << to_square(rank, file)))
                     break;
             }
         }
@@ -93,11 +106,11 @@ namespace board
     {
         const bitboard edgesmask = ((RANK_1 | RANK_8) & ~Ranks[rankof(square)]) | ((FILE_A | FILE_H) & ~Files[fileof(square)]);
         table[square].magic_number = magic_number;
-        table[square].mask = slider_attacks(square, 0, offsets) & ~edgesmask;
+        table[square].mask = slider_attacks(square, 0ull, offsets) & ~edgesmask;
         table[square].shift_needed = 64 - popcount(table[square].mask);
         if (square < H8)
-            table[square + 1].offset = table[square].offset + (1 << popcount(table[square].mask));
-        bitboard occupied = 0;
+            table[square + 1].offset = table[square].offset + (1ull << popcount(table[square].mask));
+        bitboard occupied = 0ull;
         unsigned index = table[square].compute_index(occupied);
         table[square].offset[index] = slider_attacks(square, occupied, offsets);
         occupied = (occupied - table[square].mask) & table[square].mask;
@@ -109,7 +122,7 @@ namespace board
         }
     }
 
-    void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from)
+    void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from) const
     {
         while (attacks)
         {
@@ -118,7 +131,7 @@ namespace board
         }
     }
 
-    void Board::gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets)
+    void Board::gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets) const
     {
         while (knights)
         {
@@ -127,13 +140,13 @@ namespace board
         }
     }
 
-    void Board::gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets)
+    void Board::gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets) const
     {
         int from_square = poplsb(king);
         gen_non_pawn(movelist, kingAttacks_[from_square] & targets, from_square);
     }
 
-    void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets)
+    void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
     {
         while (pieces)
         {
@@ -143,7 +156,7 @@ namespace board
         }
     }
 
-     void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets)
+     void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
     {
         while (pieces)
         {
@@ -159,7 +172,7 @@ namespace board
         return (piece & limit) != 0;
     }
 
-    void Board::gen_pawn_moves(std::vector<move::Move>& movelist, Color color)
+    void Board::gen_pawn_moves(std::vector<move::Move>& movelist, Color color) const
     {
         int direction = (bool)color ? -8 : 8; // The enum color states that WHITE = false, BLACK = true
         bitboard starting = (bool)color ? 0x00FF000000000000 : 0x000000000000FF00;
@@ -167,7 +180,7 @@ namespace board
         bitboard pieces = get_bitboard(color) & get_bitboard(piece_type::PAWN);
         bitboard all = get_bitboard(Color::BLACK) & get_bitboard(Color::WHITE);
 
-        bitboard bit = 1;
+        bitboard bit = 1ull;
         for (int ite = 0; ite < 64; ite++, bit <<= 1)
         {
             if(pieces & bit)
@@ -195,7 +208,7 @@ namespace board
     }
 
     void Board::check_pawn_capture(const int position, bitboard& piece,
-                                   Color color, std::vector<move::Move>& movelist)
+                                   Color color, std::vector<move::Move>& movelist) const
     {
         int direction = (bool)color ? -1 : 1;
         bitboard enemies = get_bitboard((Color)(!(bool)color));

@@ -24,7 +24,7 @@ TEST(movegen_pawn, promotion_white_pawns_moves)
     board::Board boardd;
     boardd.bitboards_[(int)board::Color::BLACK] = 0x0;
     boardd.bitboards_[(int)board::Color::WHITE] = 0x00FF000000000000;
-    boardd.bitboards_[board::piece_type::PAWN] = 0x00FF000000000000;
+    boardd.bitboards_[(int)board::piece_type::PAWN] = 0x00FF000000000000;
     std::vector<move::Move> movelist;
     boardd.gen_pawn_moves(movelist, board::Color::WHITE);
     ASSERT_EQ(8, movelist.size());
