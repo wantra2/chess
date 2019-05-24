@@ -30,29 +30,32 @@ namespace board
         inline bitboard& get_bitboard(piece_type type);
         inline bitboard& get_bitboard(Color color);
 
-        void init_Knight_and_KingAttacks();
-
         void gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets);
         void gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets);
+        void gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets);
+        void gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets);
         void gen_pawn_moves(std::vector<move::Move>& movelist, Color color);
-
-        std::vector<move::Move> gen_king_moves(Color color);
-        std::vector<move::Move> gen_queen_moves(Color color);
-        std::vector<move::Move> gen_rook_moves(Color color);
-        std::vector<move::Move> gen_bishop_moves(Color color);
-        std::vector<move::Move> gen_knight_moves(Color color);
 
 
         void check_pawn_capture(const int position, bitboard& piece,
                                 Color color, std::vector<move::Move>& movelist);
 
+
         int ply_;
         bitboard bitboards_[8];
         bitboard knightAttacks_[SQUARE_NB] = {0};
         bitboard kingAttacks_[SQUARE_NB] = {0};
+        bitboard bishopAttacks_[5248];
+        bitboard rookAttacks_[102400];
+        Magic bishopMagics_[SQUARE_NB];
+        Magic rookMagics_[SQUARE_NB];
 
         //FIXME: NEED TIMES
     private:
+        void init_Knight_and_KingAttacks();
+        void init_slide_attacks();
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from);
+        bitboard slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2]);
+        void init_magics(const int square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);
     };
 }

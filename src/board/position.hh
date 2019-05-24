@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-
+#include <cstdint>
 #include "utils/utype.hh"
 
 namespace board
@@ -47,14 +47,37 @@ namespace board
         SQUARE_NB = 64
     };
 
-    static inline int rank(const int square)
-    {return square / 8;}
+    enum
+    {
+        RANK_8 = 0xFF00000000000000ull,
+        RANK_7 = 0x00FF000000000000ull,
+        RANK_6 = 0x0000FF0000000000ull,
+        RANK_5 = 0x000000FF00000000ull,
+        RANK_4 = 0x00000000FF000000ull,
+        RANK_3 = 0x0000000000FF0000ull,
+        RANK_2 = 0x000000000000FF00ull,
+        RANK_1 = 0x00000000000000FFull,
 
-    static inline int file(const int square)
-    {return square % 8;}
+        FILE_A = 0x0101010101010101ull,
+        FILE_B = 0x0202020202020202ull,
+        FILE_C = 0x0404040404040404ull,
+        FILE_D = 0x0808080808080808ull,
+        FILE_E = 0x1010101010101010ull,
+        FILE_F = 0x2020202020202020ull,
+        FILE_G = 0x4040404040404040ull,
+        FILE_H = 0x8080808080808080ull,
+    };
 
-    static inline int to_square(const int rank, const int file)
-    {return rank * 8 + file;}
+    const uint64_t Files[8] = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H};
+    const uint64_t Ranks[8] = {RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
+
+    int rankof(const int square);
+
+    int fileof(const int square);
+
+    int to_square(const int rank, const int file);
+
+    bool valid_coordinates(const int rank, const int file);
 
     /* Position represent a coordinate on the board */
     class Position final

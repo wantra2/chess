@@ -10,6 +10,7 @@ namespace board
     {
         generate_board();
         init_Knight_and_KingAttacks();
+        init_slide_attacks();
         ply_ = 0;
     }
 
@@ -43,67 +44,66 @@ namespace board
         {
             for (int d = 0; d < 8; ++d)
             {
-                square_set(knightAttacks_[sq], board::rank(sq) + KnightOffsets[d][0], board::file(sq) + KnightOffsets[d][1]);
-                square_set(kingAttacks_[sq], board::rank(sq) + KingOffsets[d][0], board::file(sq) + KingOffsets[d][1]);
+                square_set(knightAttacks_[sq], rankof(sq) + KnightOffsets[d][0], fileof(sq) + KnightOffsets[d][1]);
+                square_set(kingAttacks_[sq], rankof(sq) + KingOffsets[d][0], fileof(sq) + KingOffsets[d][1]);
             }
         }
     }
 
-    std::vector<move::Move> Board::gen_king_moves(Color color)
+    void Board::init_slide_attacks()
     {
-        bitboard occupied = bitboards_[(int)color];
-        bitboard b = bitboards_[piece_type::KING]
-            & bitboards_[(int)color];
-        bitboard bit = 1;
-        std::vector<move::Move> move_list;
-        uint8_t i = 0;
-        while (i < 64)
+        bishopMagics_[0].offset = bishopAttacks_;
+        rookMagics_[0].offset = rookAttacks_;
+
+        const int bishop_offsets[4][2] = {{-1,-1}, {-1, 1}, { 1,-1}, { 1, 1}};
+        const int rook_offsets[4][2]   = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
+
+        for (int square = A1; square < H8; ++square)
         {
-            if (b & bit)
-            {
-                if (((b >> 9) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 9));
-                if (((b >> 8) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 8));
-                if (((b >> 7) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 7));
-                if (((b >> 1) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 1));
-                if (((b << 1) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i + 1));
-                if (((b << 7) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i + 7));
-                if (((b << 8) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i + 8));
-                if (((b << 9) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i + 9));
-                break;
-            }
-            bit <<= 1;
-            ++i;
+            init_magics(square, bishopMagics_, BishopMagicNumbers[square], bishop_offsets);
+            init_magics(square, rookMagics_, RookMagicNumbers[square], rook_offsets);
         }
-        return move_list;
     }
 
-    std::vector<move::Move> Board::gen_knight_moves(Color color)
+    bitboard Board::slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2])
     {
-        bitboard occupied = bitboards_[(int)color];
-        bitboard b = bitboards_[piece_type::KNIGHT]
-            & bitboards_[(int)color];
-        bitboard bit = 1;
-        std::vector<move::Move> move_list;
-        uint8_t i = 0;
-        while (i < 64)
+        int rank, file;
+        bitboard tbr = 0;
+        for (int d = 0; d < 4; ++d)
         {
-            if (b & bit)
+            for (rank = rankof(from_square) + offsets[d][0],
+                 file = fileof(from_square) + offsets[d][1]
+                 ;
+                 valid_coordinates(rank, file)
+                 ;
+                 rank += offsets[d][0], file += offsets[d][1])
             {
-                if (((b >> 17) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 17));
-                if (((b >> 15) & occupied) == 0)
-                    move_list.push_back((i << 6) | (i - 15));
+                square_set(tbr, rank, file);
+                if (occupied & (1 << to_square(rank, file)))
+                    break;
             }
         }
-        return move_list;
+        return tbr;
+    }
+
+    void Board::init_magics(const int square, Magic* table, const bitboard& magic_number, const int offsets[4][2])
+    {
+        const bitboard edgesmask = ((RANK_1 | RANK_8) & ~Ranks[rankof(square)]) | ((FILE_A | FILE_H) & ~Files[fileof(square)]);
+        table[square].magic_number = magic_number;
+        table[square].mask = slider_attacks(square, 0, offsets) & ~edgesmask;
+        table[square].shift_needed = 64 - popcount(table[square].mask);
+        if (square < H8)
+            table[square + 1].offset = table[square].offset + (1 << popcount(table[square].mask));
+        bitboard occupied = 0;
+        unsigned index = table[square].compute_index(occupied);
+        table[square].offset[index] = slider_attacks(square, occupied, offsets);
+        occupied = (occupied - table[square].mask) & table[square].mask;
+        while (occupied)
+        {
+            index = table[square].compute_index(occupied);
+            table[square].offset[index] = slider_attacks(square, occupied, offsets);
+            occupied = (occupied - table[square].mask) & table[square].mask;
+        }
     }
 
     void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from)
@@ -130,6 +130,25 @@ namespace board
         gen_non_pawn(movelist, kingAttacks_[from_square] & targets, from_square);
     }
 
+    void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets)
+    {
+        while (pieces)
+        {
+            int sq = poplsb(pieces);
+            bitboard attacks = bishopAttacks_[bishopMagics_[sq].offset[bishopMagics_[sq].compute_index(occupied)]];
+            gen_non_pawn(movelist, attacks & targets, sq);
+        }
+    }
+
+     void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets)
+    {
+        while (pieces)
+        {
+            int sq = poplsb(pieces);
+            bitboard attacks = rookAttacks_[rookMagics_[sq].offset[rookMagics_[sq].compute_index(occupied)]];
+            gen_non_pawn(movelist, attacks & targets, sq);
+        }
+    }
 
     static inline bool check_promote(const bitboard& piece, Color color)
     {

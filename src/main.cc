@@ -5,9 +5,10 @@
 #include "board/color.hh"
 #include "board/piece-type.hh"
 
-int main(int, char**) {
-    board::Board tmp = board::Board();
-    auto adapt = board::BoardAdapter(tmp);
+using namespace board;
 
-    std::cout << "Hello World\n";
+int main(int, char**) {
+    Board tmp;
+    uint64_t oui = ((RANK_1 | RANK_8) & ~Ranks[0]) | ((FILE_A | FILE_H) & ~Files[0]);
+    std::cout << oui;
 }

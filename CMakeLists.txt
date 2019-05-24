@@ -8,7 +8,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-add_compile_options(-Wno-unused-parameter -g -Wall -Wextra -std=c++17)
+add_compile_options(-Wall -Wextra -std=c++17)
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 

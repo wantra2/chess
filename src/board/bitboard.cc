@@ -1,3 +1,4 @@
+#include <iostream>
 #include "board/bitboard.hh"
 
 namespace board
@@ -18,5 +19,10 @@ namespace board
         int lsb = getlsb(bboard);
         bboard = bboard & (bboard - 1);
         return lsb;
+    }
+
+    int popcount(bitboard& bboard)
+    {
+        return __builtin_popcountll(bboard);
     }
 }
