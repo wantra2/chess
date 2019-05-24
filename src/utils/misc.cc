@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstdint>
 
 #include "board/board.hh"
 #include "board/color.hh"
@@ -38,6 +39,23 @@ namespace utils
 
             index--;
             bit >>= 1;
+            if (index % 8 == 0)
+                std::cout << '\n';
+        }
+    }
+
+    void print_bitboard(board::bitboard bb)
+    {
+        uint64_t bit = 1 << 63;
+        int index = 63;
+        while (index >= 0)
+        {
+            if (bit & bb)
+                std::cout << "| X ";
+            else
+                std::cout << "|   ";
+            --index;
+            bit = bit >> 1;
             if (index % 8 == 0)
                 std::cout << '\n';
         }

@@ -1,6 +1,6 @@
 #include "board/board.hh"
-
-#include "bitboard.hh"
+#include "utils/misc.hh"
+#include "board/bitboard.hh"
 
 #include <iostream>
 
@@ -79,6 +79,7 @@ namespace board
                  rank += offsets[d][0], file += offsets[d][1])
             {
                 square_set(tbr, rank, file);
+                utils::print_bitboard(tbr);
                 if (occupied & (1 << to_square(rank, file)))
                     break;
             }
