@@ -9,11 +9,11 @@ add_executable(out6 movegen_slidin_Test.cc)
 
 
 target_link_libraries(out1 gtest gtest_main pthread move)
-target_link_libraries(out2 gtest gtest_main pthread board move)
-target_link_libraries(out3 gtest gtest_main pthread board move)
-target_link_libraries(out4 gtest gtest_main pthread board move)
-target_link_libraries(out5 gtest gtest_main pthread board move)
-target_link_libraries(out6 gtest gtest_main pthread board move)
+target_link_libraries(out2 gtest gtest_main pthread board utils move)
+target_link_libraries(out3 gtest gtest_main pthread board utils move)
+target_link_libraries(out4 gtest gtest_main pthread board utils move)
+target_link_libraries(out5 gtest gtest_main pthread board utils move)
+target_link_libraries(out6 gtest gtest_main pthread board utils move)
 
 
 add_test(test_move ./out1)
