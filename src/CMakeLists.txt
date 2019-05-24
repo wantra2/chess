@@ -3,7 +3,7 @@ add_subdirectory(board)
 add_subdirectory(listener)
 add_subdirectory(pgn_parser)
 add_subdirectory(move)
-
+add_subdirectory(utils)
 
 set(
     CMAKE_RUNTIME_OUTPUT_DIRECTORY
@@ -17,4 +17,5 @@ target_link_libraries(chessengine PRIVATE   ai
                                             listener
                                             pgn_parser
                                             move
+                                            utils
                                             )
