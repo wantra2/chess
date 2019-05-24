@@ -12,10 +12,10 @@ namespace utils
 {
     void pretty_print(board::Board board)
     {
-        int index = 0;
-        board::bitboard bit = 0x1;
+        int index = 64;
+        board::bitboard bit = 0x8000000000000000;
 
-        while (index < 64)
+        while (index > 0)
         {
             if (bit & (board.get_bitboard(board::Color::BLACK)
                        | board.get_bitboard(board::Color::WHITE)))
@@ -36,8 +36,8 @@ namespace utils
                     std::cout << color << " N " << "\e[0m";
             }
 
-            index++;
-            bit <<= 1;
+            index--;
+            bit >>= 1;
             if (index % 8 == 0)
                 std::cout << '\n';
         }
