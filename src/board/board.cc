@@ -196,7 +196,7 @@ namespace board
         bitboard enemies = get_bitboard((Color)(!(bool)color));
 
         bitboard tmp = (piece << (direction * 9) & enemies);
-        if (tmp)
+        if (tmp && !(piece & EdgesMask::RIGHT))
         {
             move::MoveType type = check_promote(tmp, color) ?
                 move::MoveType::PROMOTION : move::MoveType::NORMAL;
@@ -205,7 +205,7 @@ namespace board
                                                , piece_type::PAWN, type));
         }
 
-        if ((tmp = (piece << (direction * 7) & enemies)))
+        if ((tmp = (piece << (direction * 7) & enemies)) && !(piece & EdgesMask::LEFT))
         {
             move::MoveType type = check_promote(tmp, color) ?
                 move::MoveType::PROMOTION : move::MoveType::NORMAL;

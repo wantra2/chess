@@ -38,6 +38,10 @@ namespace utils
                     std::cout << color << " N " << "\e[0m";
             }
 
+            else
+            {
+                std::cout << "   ";
+            }
             index--;
             bit >>= 1;
             if (index % 8 == 0)
