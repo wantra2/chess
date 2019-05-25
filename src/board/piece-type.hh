@@ -21,6 +21,8 @@ namespace board
 
     enum piece_type : int
     {
+        WHITE,
+        BLACK,
         PAWN = 2,
         KNIGHT,
         BISHOP,

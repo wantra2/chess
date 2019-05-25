@@ -18,6 +18,22 @@ namespace board
         DOWN = 0x00000000000000FF
     };
 
+    enum castlings
+    {
+        WHITE_SMALL,
+        WHITE_BIG,
+        BLACK_SMALL,
+        BLACK_BIG
+    };
+
+    enum castlings_sq
+    {
+        WHITE_00 = 0x60,
+        WHITE_000 = 0xe,
+        BLACK_00 = 0x6000000000000000,
+        BLACK_000 = 0x0e00000000000000
+    };
+
     class Board
     {
     public:
@@ -35,7 +51,7 @@ namespace board
         void gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
         void gen_pawn_moves(std::vector<move::Move>& movelist, Color color) const;
-        void gen_castlings(std::vector<move::Move>& movelist, Color color) const;
+        void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, Color color) const;
 
         void check_pawn_capture(const int position, bitboard& piece,
                                 Color color, std::vector<move::Move>& movelist) const;
@@ -51,9 +67,11 @@ namespace board
 
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
+        bool castling_rights_[4];
         int ply_;
 
         /*these are constant*/
+        bitboard pawnAttacks_[2][SQUARE_NB];
         bitboard knightAttacks_[SQUARE_NB];
         bitboard kingAttacks_[SQUARE_NB];
         bitboard bishopAttacks_[5248];
@@ -64,6 +82,9 @@ namespace board
     private:
         void init_Knight_and_KingAttacks();
         void init_slide_attacks();
+        void init_castling_rights();
+        void init_pawn_attacks();
+        bool is_attacked(const int& square, const int& color) const;
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from) const;
         bitboard slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2]) const;
         void init_magics(const int square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);

@@ -11,9 +11,19 @@ namespace board
     Board::Board()
     {
         generate_board();
+        init_pawn_attacks();
         init_slide_attacks();
         init_Knight_and_KingAttacks();
+        init_castling_rights();
         ply_ = 0;
+    }
+
+    void Board::init_castling_rights()
+    {
+        castling_rights_[WHITE_SMALL] = true;
+        castling_rights_[WHITE_BIG] = true;
+        castling_rights_[BLACK_SMALL] = true;
+        castling_rights_[BLACK_BIG] = true;
     }
 
     constexpr void Board::generate_board()
@@ -34,16 +44,60 @@ namespace board
     inline const bitboard& Board::get_bitboard(Color color) const
     {return bitboards_[(int)color];}
 
+    void Board::init_pawn_attacks()
+    {
+        const int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
+        const int black_pawn_offsets[2][2] = {{-1,-1}, {-1,1}};
+        for (int square = A1; square < H8; ++square)
+        {
+            for (int d = 0; d < 2; ++d)
+            {
+                square_set(pawnAttacks_[WHITE][square], rankof(square) + white_pawn_offsets[d][0], fileof(square) + white_pawn_offsets[d][1]);
+                square_set(pawnAttacks_[BLACK][square], rankof(square) + black_pawn_offsets[d][0], fileof(square) + black_pawn_offsets[d][1]);
+            }
+        }
+    }
+
+    void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, Color color) const
+    {
+        if (color == Color::WHITE)
+        {
+            if (castling_rights_[WHITE_SMALL] && (occupied & WHITE_00) == 0 &&
+                !is_attacked(E1, WHITE) && !is_attacked(F1, WHITE))
+            {
+                movelist.emplace_back(move::create_move(E1, G1, KNIGHT, move::CASTLING));
+            }
+            if (castling_rights_[WHITE_BIG] && (occupied & WHITE_000) == 0 &&
+                !is_attacked(E1, WHITE) && !is_attacked(D1, WHITE))
+            {
+                movelist.emplace_back(move::create_move(E1, C1, KNIGHT, move::CASTLING));
+            }
+        }
+        else
+        {
+            if (castling_rights_[BLACK_SMALL] && (occupied & BLACK_00) == 0 &&
+                !is_attacked(E8, BLACK) && !is_attacked(F8, BLACK))
+            {
+                movelist.emplace_back(move::create_move(E8, G8, KNIGHT, move::CASTLING));
+            }
+            if (castling_rights_[BLACK_BIG] && (occupied & BLACK_000) == 0 &&
+                !is_attacked(E8, BLACK) && !is_attacked(D8, BLACK))
+            {
+                movelist.emplace_back(move::create_move(E1, C1, KNIGHT, move::CASTLING));
+            }
+        }
+    }
+
     void Board::init_Knight_and_KingAttacks()
     {
         const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
         const int KingOffsets[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
-        for (int sq = board::A1; sq < SQUARE_NB; ++sq)
+        for (int square = board::A1; square < SQUARE_NB; ++square)
         {
             for (int d = 0; d < 8; ++d)
             {
-                square_set(knightAttacks_[sq], rankof(sq) + KnightOffsets[d][0], fileof(sq) + KnightOffsets[d][1]);
-                square_set(kingAttacks_[sq], rankof(sq) + KingOffsets[d][0], fileof(sq) + KingOffsets[d][1]);
+                square_set(knightAttacks_[square], rankof(square) + KnightOffsets[d][0], fileof(square) + KnightOffsets[d][1]);
+                square_set(kingAttacks_[square], rankof(square) + KingOffsets[d][0], fileof(square) + KingOffsets[d][1]);
             }
         }
     }
@@ -213,5 +267,18 @@ namespace board
                                                     (square)(position + direction * 7)
                                                     , piece_type::PAWN, type));
         }
+    }
+
+    bool Board::is_attacked(const int& square, const int& color) const
+    {
+        bitboard occupied = bitboards_[WHITE]|bitboards_[BLACK];
+        const bitboard bishop_attacks = bishopMagics_[square].offset[bishopMagics_[square].compute_index(occupied)];
+        const bitboard rook_attacks = rookMagics_[square].offset[rookMagics_[square].compute_index(occupied)];
+
+        return pawnAttacks_[color][square] & (bitboards_[PAWN] & bitboards_[!color])
+            || knightAttacks_[square] & (bitboards_[KNIGHT] & bitboards_[!color])
+            || kingAttacks_[square] & (bitboards_[KING] & bitboards_[!color])
+            || bishop_attacks & ((bitboards_[BISHOP]|bitboards_[QUEEN]) & bitboards_[!color])
+            || rook_attacks & ((bitboards_[ROOK]|bitboards_[QUEEN]) & bitboards_[!color]);
     }
 }
