@@ -18,4 +18,5 @@ target_link_libraries(chessengine PRIVATE   ai
                                             pgn_parser
                                             move
                                             utils
+
                                             )
