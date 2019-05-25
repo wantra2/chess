@@ -34,24 +34,6 @@ namespace board
     inline const bitboard& Board::get_bitboard(Color color) const
     {return bitboards_[(int)color];}
 
-    inline const bitboard& Board::knightAttacks(const int square) const
-    {return knightAttacks_[square];}
-
-    inline const bitboard& Board::kingAttacks(const int square) const
-    {return kingAttacks_[square];}
-
-    inline const bitboard& Board::bishopAttacks(const int index) const
-    {return bishopAttacks_[index];}
-
-    inline const bitboard& Board::rookAttacks(const int index) const
-    {return rookAttacks_[index];}
-
-    inline const Magic& Board::bishopMagics(const int square) const
-    {return bishopMagics_[square];}
-
-    inline const Magic& Board::rookMagics(const int square) const
-    {return rookMagics_[square];}
-
     void Board::init_Knight_and_KingAttacks()
     {
         const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
