@@ -8,7 +8,6 @@
 using namespace board;
 
 int main(int, char**) {
-    Board tmp;
-    uint64_t oui = ((RANK_1 | RANK_8) & ~Ranks[0]) | ((FILE_A | FILE_H) & ~Files[0]);
-    std::cout << oui;
+    bitboard prout = 0;
+    std::cout << poplsb(prout);
 }

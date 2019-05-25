@@ -11,8 +11,8 @@ namespace board
     Board::Board()
     {
         generate_board();
-        init_Knight_and_KingAttacks();
         init_slide_attacks();
+        init_Knight_and_KingAttacks();
         ply_ = 0;
     }
 
@@ -151,17 +151,17 @@ namespace board
         while (pieces)
         {
             int sq = poplsb(pieces);
-            bitboard attacks = bishopAttacks_[bishopMagics_[sq].offset[bishopMagics_[sq].compute_index(occupied)]];
+            bitboard attacks = bishopMagics_[sq].offset[bishopMagics_[sq].compute_index(occupied)];
             gen_non_pawn(movelist, attacks & targets, sq);
         }
     }
 
-     void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
+    void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
     {
         while (pieces)
         {
             int sq = poplsb(pieces);
-            bitboard attacks = rookAttacks_[rookMagics_[sq].offset[rookMagics_[sq].compute_index(occupied)]];
+            bitboard attacks = rookMagics_[sq].offset[rookMagics_[sq].compute_index(occupied)];
             gen_non_pawn(movelist, attacks & targets, sq);
         }
     }
