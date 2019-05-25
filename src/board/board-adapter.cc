@@ -21,7 +21,7 @@ namespace board
         piece_type i = piece_type::PAWN;
         for (; i != piece_type::KING; i = (piece_type)((int)i + 1))
         {
-            if (location & board_.get_bitboard(i))
+            if (location & board_.bitboards_[i])
             {
                 found = true;
                 break;
@@ -30,7 +30,7 @@ namespace board
         if (! found)
             return std::nullopt;
 
-        if (location & board_.get_bitboard(Color::WHITE))
+        if (location & board_.bitboards_[(int)Color::WHITE])
             return std::pair<PieceType, Color>(switch_piecetype(i)
                                                , Color::WHITE);
 

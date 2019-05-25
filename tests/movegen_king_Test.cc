@@ -9,7 +9,7 @@ TEST(movegen_king, starting_white_king_moves)
 {
   board::Board boardd;
   std::vector<move::Move> movelist;
-  boardd.gen_KingMoves(movelist, boardd.get_bitboard(board::Color::WHITE) & boardd.get_bitboard(board::KING), 0xFFFFFFFFFFFFFFFF);
+  boardd.gen_KingMoves(movelist, boardd.bitboards_[(int)board::Color::WHITE] & boardd.bitboards_[(int)board::KING], 0xFFFFFFFFFFFFFFFF);
   ASSERT_EQ(5, movelist.size());
   for (auto m : movelist)
   {
