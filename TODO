@@ -4,6 +4,32 @@ MARTIN Esteban - Epita 2021
 
 Chess: TODO
 
-[ ] UML
-[ ] Game Engine
-  ...
+ENGINE:
+
+[x] board representation
+[x] move encryption
+[x] gen knight moves
+[x] gen king moves
+[x] gen castlings
+[meh] gen pawns moves
+[meh] gen bishops
+[meh] gen rooks
+[meh] gen queen
+[x] add piece
+[x] remove piece
+[] do move
+[] undo move
+[] movegen function
+
+MISC:
+
+[x] UML
+[] listeners
+[] options parsing
+
+Possible optimizations to movegen:
+
+-gen castlings
+-std::vector<move> replaced by array[256]
+-gen pawn
+-do/undo move
