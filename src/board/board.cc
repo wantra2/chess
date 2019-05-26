@@ -202,6 +202,13 @@ namespace board
         }
     }
 
+    static inline bitboard shift(bitboard bits, int val)
+    {
+        if (val < 0)
+            return bits >> (val * -1);
+        return bits << val;
+    }
+
     static inline bool check_promote(const bitboard& piece, Color color)
     {
         EdgesMask limit = (bool)color ? EdgesMask::DOWN : EdgesMask::UP;
@@ -222,7 +229,7 @@ namespace board
             if(pieces & bit)
             {
                 check_pawn_capture(ite, bit, color, movelist);
-                bitboard moved = bit << direction;
+                bitboard moved = shift(bit, direction);
                 if ((moved & all) != 0)
                     continue;
                 move::MoveType type = check_promote(moved, color) ?
@@ -230,7 +237,7 @@ namespace board
                 movelist.emplace_back(move::create_move((square)ite,
                                                         (square)(ite + direction)
                                                         , piece_type::PAWN, type));
-                moved <<= direction;
+                moved = shift(moved, direction);
                 if ((bit & starting) && !(moved & all))
                 {
                     movelist.emplace_back(move::create_move((square)ite,
@@ -249,7 +256,7 @@ namespace board
         int direction = (bool)color ? -1 : 1;
         bitboard enemies = get_bitboard((Color)(!(bool)color));
 
-        bitboard tmp = (piece << (direction * 9) & enemies);
+        bitboard tmp = (shift(piece, (direction * 9)) & enemies);
         if (tmp && !(piece & EdgesMask::RIGHT))
         {
             move::MoveType type = check_promote(tmp, color) ?
@@ -259,7 +266,7 @@ namespace board
                                                , piece_type::PAWN, type));
         }
 
-        if ((tmp = (piece << (direction * 7) & enemies)) && !(piece & EdgesMask::LEFT))
+        if ((tmp = (shift(piece, (direction * 7)) & enemies)) && !(piece & EdgesMask::LEFT))
         {
             move::MoveType type = check_promote(tmp, color) ?
                 move::MoveType::PROMOTION : move::MoveType::NORMAL;
