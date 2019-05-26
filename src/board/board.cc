@@ -214,7 +214,7 @@ namespace board
         bitboard starting = (bool)color ? 0x00FF000000000000 : 0x000000000000FF00;
 
         bitboard pieces = get_bitboard(color) & get_bitboard(piece_type::PAWN);
-        bitboard all = get_bitboard(Color::BLACK) & get_bitboard(Color::WHITE);
+        bitboard all = get_bitboard(Color::BLACK) | get_bitboard(Color::WHITE);
 
         bitboard bit = 1ull;
         for (int ite = 0; ite < 64; ite++, bit <<= 1)
