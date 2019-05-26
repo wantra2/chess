@@ -58,9 +58,9 @@ namespace board
         }
     }
 
-    void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, Color color) const
+    void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
     {
-        if (color == Color::WHITE)
+        if (color == WHITE)
         {
             if (castling_rights_[WHITE_SMALL] && (occupied & WHITE_00) == 0 &&
                 !is_attacked(E1, WHITE) && !is_attacked(F1, WHITE))

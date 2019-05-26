@@ -51,7 +51,7 @@ namespace board
         void gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
         void gen_pawn_moves(std::vector<move::Move>& movelist, Color color) const;
-        void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, Color color) const;
+        void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
 
         void check_pawn_capture(const int position, bitboard& piece,
                                 Color color, std::vector<move::Move>& movelist) const;

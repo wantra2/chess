@@ -19,7 +19,7 @@ TEST(movegen_sliding, white_rooks_starting_pos_)
 {
     board::Board boardd;
     std::vector<move::Move> movelist;
-    boardd.gen_queen_rook_moves(movelist, boardd.bitboards_[board::ROOK]&boardd.bitboards_[0], 0x000000000000ff7e, 0x818181818181817e);
+    boardd.gen_queen_rook_moves(movelist, boardd.bitboards_[board::ROOK]&boardd.bitboards_[0], boardd.bitboards_[0]|boardd.bitboards_[1], 0xffffffffffffffff);
     ASSERT_EQ(movelist.size(), 0);
 }
 
