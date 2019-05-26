@@ -30,6 +30,6 @@ MISC:
 Possible optimizations to movegen:
 
 -gen castlings
--std::vector<move> replaced by array[256]
+-std::vector<move> replaced by array[128]
 -gen pawn
 -do/undo move
