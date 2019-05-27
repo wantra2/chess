@@ -36,3 +36,5 @@ Possible optimizations to movegen:
 -gen castlings
 -std::vector<move> replaced by array[128]
 -do/undo move
+
+ADD TONS OF TESTS
