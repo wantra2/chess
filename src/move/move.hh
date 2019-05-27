@@ -52,4 +52,6 @@ namespace move
 
     Move create_move(const int square_from, const int square_to,
             const board::piece_type prom, const MoveType move_type);
+
+    Move create_move(const int square_from, const int square_to);
 }

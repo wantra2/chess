@@ -149,4 +149,9 @@ namespace move
     {
         return (move_type << 12) + ((prom - board::KNIGHT) << 14) + (square_from << 6) + square_to;
     }
+
+    Move create_move(const int square_from, const int square_to)
+    {
+        return (square_from << 6) + square_to;
+    }
 }
