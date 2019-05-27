@@ -165,7 +165,7 @@ namespace board
         while (attacks)
         {
             int target_square = poplsb(attacks);
-            movelist.emplace_back(move::create_move(square_from, target_square, board::KNIGHT, move::NORMAL));
+            movelist.emplace_back(move::create_move(square_from, target_square));
         }
     }
 
@@ -242,12 +242,12 @@ namespace board
         while (push1)
         {
             int sq = poplsb(push1);
-            movelist.emplace_back(move::create_move(sq-direction, sq, KNIGHT, move::NORMAL));
+            movelist.emplace_back(move::create_move(sq-direction, sq));
         }
         while (push2)
         {
             int sq = poplsb(push2);
-            movelist.emplace_back(move::create_move(sq-two_times_direction, sq, KNIGHT, move::NORMAL));
+            movelist.emplace_back(move::create_move(sq-two_times_direction, sq));
         }
 
         //promotions
@@ -286,12 +286,12 @@ namespace board
         while (cap3)
         {
             int sq = poplsb(cap3);
-            movelist.emplace_back(move::create_move(sq-1-direction, sq, KNIGHT, move::NORMAL));
+            movelist.emplace_back(move::create_move(sq-1-direction, sq));
         }
         while (cap4)
         {
             int sq = poplsb(cap4);
-            movelist.emplace_back(move::create_move(sq+1-direction, sq, KNIGHT, move::NORMAL));
+            movelist.emplace_back(move::create_move(sq+1-direction, sq));
         }
         //en passant
         if (en_p_square != SQUARE_NB)
