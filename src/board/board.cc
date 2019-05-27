@@ -16,6 +16,8 @@ namespace board
         init_Knight_and_KingAttacks();
         init_castling_rights();
         ply_ = 0;
+        side_ = WHITE;
+        en_p_square = SQUARE_NB;
     }
 
     void Board::init_castling_rights()
@@ -26,7 +28,7 @@ namespace board
         castling_rights_[BLACK_BIG] = true;
     }
 
-    constexpr void Board::generate_board()
+    void Board::generate_board()
     {
         bitboards_[(int)Color::WHITE] = 0x000000000000FFFF; //WHITES
         bitboards_[(int)Color::BLACK] = 0xFFFF000000000000; //BLACKS
@@ -202,76 +204,9 @@ namespace board
         }
     }
 
-    static inline bool check_promote(const bitboard& piece, Color color)
-    {
-        EdgesMask limit = (bool)color ? EdgesMask::DOWN : EdgesMask::UP;
-        return (piece & limit) != 0;
-    }
-
-    void Board::gen_pawn_moves(std::vector<move::Move>& movelist, Color color) const
-    {
-        int direction = (bool)color ? -8 : 8; // The enum color states that WHITE = false, BLACK = true
-        bitboard starting = (bool)color ? 0x00FF000000000000 : 0x000000000000FF00;
-
-        bitboard pieces = get_bitboard(color) & get_bitboard(piece_type::PAWN);
-        bitboard all = get_bitboard(Color::BLACK) & get_bitboard(Color::WHITE);
-
-        bitboard bit = 1ull;
-        for (int ite = 0; ite < 64; ite++, bit <<= 1)
-        {
-            if(pieces & bit)
-            {
-                check_pawn_capture(ite, bit, color, movelist);
-                bitboard moved = bit << direction;
-                if ((moved & all) != 0)
-                    continue;
-                move::MoveType type = check_promote(moved, color) ?
-                    move::MoveType::PROMOTION : move::MoveType::NORMAL;
-                movelist.emplace_back(move::create_move((square)ite,
-                                                        (square)(ite + direction)
-                                                        , piece_type::PAWN, type));
-                moved <<= direction;
-                if ((bit & starting) && !(moved & all))
-                {
-                    movelist.emplace_back(move::create_move((square)ite,
-                                                            (square)(ite + 2 * direction),
-                                                            piece_type::PAWN,
-                                                            move::MoveType::EN_PASSANT));
-
-                }
-            }
-        }
-    }
-
-    void Board::check_pawn_capture(const int position, bitboard& piece,
-                                   Color color, std::vector<move::Move>& movelist) const
-    {
-        int direction = (bool)color ? -1 : 1;
-        bitboard enemies = get_bitboard((Color)(!(bool)color));
-
-        bitboard tmp = (piece << (direction * 9) & enemies);
-        if (tmp && !(piece & EdgesMask::RIGHT))
-        {
-            move::MoveType type = check_promote(tmp, color) ?
-                move::MoveType::PROMOTION : move::MoveType::NORMAL;
-            movelist.emplace_back(move::create_move((square)position,
-                                               (square)(position + direction * 9)
-                                               , piece_type::PAWN, type));
-        }
-
-        if ((tmp = (piece << (direction * 7) & enemies)) && !(piece & EdgesMask::LEFT))
-        {
-            move::MoveType type = check_promote(tmp, color) ?
-                move::MoveType::PROMOTION : move::MoveType::NORMAL;
-            movelist.emplace_back(move::create_move((square)position,
-                                                    (square)(position + direction * 7)
-                                                    , piece_type::PAWN, type));
-        }
-    }
-
     bool Board::is_attacked(const int& square, const int& color) const
     {
-        bitboard occupied = bitboards_[WHITE]|bitboards_[BLACK];
+        const bitboard occupied = bitboards_[WHITE]|bitboards_[BLACK];
         const bitboard bishop_attacks = bishopMagics_[square].offset[bishopMagics_[square].compute_index(occupied)];
         const bitboard rook_attacks = rookMagics_[square].offset[rookMagics_[square].compute_index(occupied)];
 
@@ -280,5 +215,89 @@ namespace board
             || kingAttacks_[square] & (bitboards_[KING] & bitboards_[!color])
             || bishop_attacks & ((bitboards_[BISHOP]|bitboards_[QUEEN]) & bitboards_[!color])
             || rook_attacks & ((bitboards_[ROOK]|bitboards_[QUEEN]) & bitboards_[!color]);
+    }
+
+    void Board::gen_pawn_moves(std::vector<move::Move>& movelist, const int& color) const
+    {
+        const int direction = color == WHITE ? 8 : -8;
+        const int two_times_direction = color == WHITE ? 16 : -16;
+        const bitboard fileh = color == WHITE ? FILE_H : NOTHING;
+        const bitboard filea = color == BLACK ? FILE_A : NOTHING;
+        const bitboard fileh2 = color == WHITE ? FILE_H : NOTHING;
+        const bitboard filea2 = color == WHITE ? FILE_A : NOTHING;
+        const bitboard rank7 = color == WHITE ? RANK_7 : RANK_2;
+        const bitboard rank3 = color == WHITE ? RANK_3 : RANK_6;
+        const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
+        const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
+        const bitboard ennemy = bitboards_[!color];
+        const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
+        //standard non-capture
+        bitboard push1 = (pawns_not_on_rank7 << direction) & empty;
+        bitboard push2 = ((push1 & rank3) << direction) & empty;
+
+        while (push1)
+        {
+            int sq = poplsb(push1);
+            movelist.emplace_back(move::create_move(sq-direction, sq, KNIGHT, move::NORMAL));
+        }
+        while (push2)
+        {
+            int sq = poplsb(push2);
+            movelist.emplace_back(move::create_move(sq-two_times_direction, sq, KNIGHT, move::NORMAL));
+        }
+
+        //promotions
+        bitboard cap1 = (pawns_on_rank7 << (direction+1) & ~filea) & ennemy;
+        bitboard cap2 = ((pawns_on_rank7 << (direction-1)) & ~fileh) & ennemy;
+        bitboard prom = (pawns_on_rank7 << (direction)) & empty;
+
+        while (cap1)
+        {
+            int sq = poplsb(cap1);
+            movelist.emplace_back(move::create_move(sq-1-direction, sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-1-direction, sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-1-direction, sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-1-direction, sq, QUEEN, move::PROMOTION));
+        }
+        while (cap2)
+        {
+            int sq = poplsb(cap2);
+            movelist.emplace_back(move::create_move(sq+1-direction, sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq+1-direction, sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq+1-direction, sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq+1-direction, sq, QUEEN, move::PROMOTION));
+        }
+        while (prom)
+        {
+            int sq = poplsb(prom);
+            movelist.emplace_back(move::create_move(sq-direction, sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-direction, sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-direction, sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move(sq-direction, sq, QUEEN, move::PROMOTION));
+        }
+        //captures
+        bitboard cap3 = (pawns_not_on_rank7 << (direction+1) & ~filea2) & ennemy;
+        bitboard cap4 = (pawns_not_on_rank7 << (direction-1) & ~fileh2) & ennemy;
+
+        while (cap3)
+        {
+            int sq = poplsb(cap3);
+            movelist.emplace_back(move::create_move(sq-1-direction, sq, KNIGHT, move::NORMAL));
+        }
+        while (cap4)
+        {
+            int sq = poplsb(cap4);
+            movelist.emplace_back(move::create_move(sq+1-direction, sq, KNIGHT, move::NORMAL));
+        }
+        //en passant
+        if (en_p_square != SQUARE_NB)
+        {
+            bitboard en_p_candidates = pawns_not_on_rank7 & pawnAttacks_[!color][en_p_square];
+            while (en_p_candidates)
+            {
+                int sq = poplsb(en_p_candidates);
+                movelist.emplace_back(move::create_move(sq, en_p_square, KNIGHT, move::EN_PASSANT));
+            }
+        }
     }
 }

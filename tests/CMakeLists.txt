@@ -9,7 +9,7 @@ add_executable(out6 movegen_slidin_Test.cc)
 add_executable(out7 movegen_castlings_Test.cc)
 
 
-target_link_libraries(out1 gtest gtest_main pthread move)
+target_link_libraries(out1 gtest gtest_main pthread board utils move)
 target_link_libraries(out2 gtest gtest_main pthread board utils move)
 target_link_libraries(out3 gtest gtest_main pthread board utils move)
 target_link_libraries(out4 gtest gtest_main pthread board utils move)

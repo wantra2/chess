@@ -19,22 +19,22 @@ namespace utils
 
         while (index > 0)
         {
-            if (bit & (board.get_bitboard(board::Color::BLACK)
-                       | board.get_bitboard(board::Color::WHITE)))
+            if (bit & (board.bitboards_[board::BLACK]
+                       | board.bitboards_[board::WHITE]))
             {
-                std::string color = (board.get_bitboard(board::Color::BLACK) & bit) ?
+                std::string color = (board.bitboards_[board::BLACK] & bit) ?
                     "\e[91m\e[1m" : "\e[1m";
-                if (bit & board.get_bitboard(board::piece_type::PAWN))
+                if (bit & board.bitboards_[board::PAWN])
                     std::cout << color << " P " << "\e[0m";
-                else if (bit & board.get_bitboard(board::piece_type::ROOK))
+                else if (bit & board.bitboards_[board::ROOK])
                     std::cout << color << " R " << "\e[0m";
-                else if (bit & board.get_bitboard(board::piece_type::BISHOP))
+                else if (bit & board.bitboards_[board::BISHOP])
                     std::cout << color << " B " << "\e[0m";
-                else if (bit & board.get_bitboard(board::piece_type::KING))
+                else if (bit & board.bitboards_[board::KING])
                     std::cout << color << " K " << "\e[0m";
-                else if (bit & board.get_bitboard(board::piece_type::QUEEN))
+                else if (bit & board.bitboards_[board::QUEEN])
                     std::cout << color << " Q " << "\e[0m";
-                else if (bit & board.get_bitboard(board::piece_type::KNIGHT))
+                else if (bit & board.bitboards_[board::KNIGHT])
                     std::cout << color << " N " << "\e[0m";
             }
 

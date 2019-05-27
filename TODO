@@ -11,10 +11,10 @@ ENGINE:
 [x] gen knight moves
 [x] gen king moves
 [x] gen castlings
-[meh] gen pawns moves
-[meh] gen bishops
-[meh] gen rooks
-[meh] gen queen
+[x] gen pawns moves
+[x] gen bishops
+[x] gen rooks
+[x] gen queen
 [x] add piece
 [x] remove piece
 [] do move
@@ -31,5 +31,4 @@ Possible optimizations to movegen:
 
 -gen castlings
 -std::vector<move> replaced by array[128]
--gen pawn
 -do/undo move

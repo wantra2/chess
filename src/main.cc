@@ -11,15 +11,10 @@ using namespace board;
 int main()
 {
     board::Board boardd;
-    boardd.bitboards_[(int)board::Color::BLACK] = 0x0000000000010000;
-    boardd.bitboards_[(int)board::Color::WHITE] = 0x000000000000FF00;
-    boardd.bitboards_[(int)board::piece_type::PAWN] = 0x000800000001FF00;
-    utils::pretty_print(boardd);
     std::vector<move::Move> movelist;
-    boardd.gen_pawn_moves(movelist, board::Color::WHITE);
-    std::cout << "COUNT: " << movelist.size() << '\n';
+    boardd.gen_queen_rook_moves(movelist, boardd.bitboards_[board::ROOK]&boardd.bitboards_[0], boardd.bitboards_[0]|boardd.bitboards_[1], 0xffffffffffffffff);
     for (auto m : movelist)
     {
-        std::cout << "TYPE: " << move::mv_type(m) << '\n';
+        std::cout << move::move_src(m) << "-"<< move::move_dst(m)<<'\n';
     }
 }

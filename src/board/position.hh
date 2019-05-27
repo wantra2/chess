@@ -49,6 +49,8 @@ namespace board
 
     enum
     {
+        NOTHING = 0,
+
         RANK_8 = 0xFF00000000000000ull,
         RANK_7 = 0x00FF000000000000ull,
         RANK_6 = 0x0000FF0000000000ull,
