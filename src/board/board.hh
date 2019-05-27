@@ -54,6 +54,8 @@ namespace board
         void add_piece(File file, Rank rank, piece_type type, Color color);
         void add_piece(const bitboard& piece, piece_type type, Color color);
 
+        piece_type_with_color at(square s);
+
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
         piece_type_with_color pieces_[SQUARE_NB];

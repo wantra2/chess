@@ -37,4 +37,9 @@ namespace board
         bitboards_[type] |= piece;
         bitboards_[(int)color] |= piece;
     }
+
+    piece_type_with_color Board::at(square s)
+    {
+        return pieces_[s];
+    }
 }
