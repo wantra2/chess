@@ -10,11 +10,5 @@ using namespace board;
 
 int main()
 {
-    board::Board boardd;
-    std::vector<move::Move> movelist;
-    boardd.gen_queen_rook_moves(movelist, boardd.bitboards_[board::ROOK]&boardd.bitboards_[0], boardd.bitboards_[0]|boardd.bitboards_[1], 0xffffffffffffffff);
-    for (auto m : movelist)
-    {
-        std::cout << move::move_src(m) << "-"<< move::move_dst(m)<<'\n';
-    }
+    return 0;
 }

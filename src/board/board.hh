@@ -47,12 +47,12 @@ namespace board
         void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
 
         void remove_piece(square position, piece_type type, int color);
-        void remove_piece(File file, Rank rank, piece_type type, Color color);
-        void remove_piece(const bitboard& piece, piece_type type, Color color);
+        /*void remove_piece(File file, Rank rank, piece_type type, Color color);
+        void remove_piece(const bitboard& piece, piece_type type, Color color);*/
 
         void add_piece(square position, piece_type type, int color);
-        void add_piece(File file, Rank rank, piece_type type, Color color);
-        void add_piece(const bitboard& piece, piece_type type, Color color);
+        /*void add_piece(File file, Rank rank, piece_type type, Color color);
+        void add_piece(const bitboard& piece, piece_type type, Color color);*/
 
         piece_type_with_color at(const square s) const;
 

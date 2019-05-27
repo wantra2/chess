@@ -38,14 +38,14 @@ TEST(movegen_pawn, promotion_white_pawns_moves)
 TEST(movegen_pawn, all)
 {
     board::Board b;
-    b.add_piece(board::A3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::B3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::C3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::D3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::E3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::F3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::G3, board::PAWN, board::Color::BLACK);
-    b.add_piece(board::H3, board::PAWN, board::Color::BLACK);
+    b.add_piece(board::A3, board::PAWN, board::BLACK);
+    b.add_piece(board::B3, board::PAWN, board::BLACK);
+    b.add_piece(board::C3, board::PAWN, board::BLACK);
+    b.add_piece(board::D3, board::PAWN, board::BLACK);
+    b.add_piece(board::E3, board::PAWN, board::BLACK);
+    b.add_piece(board::F3, board::PAWN, board::BLACK);
+    b.add_piece(board::G3, board::PAWN, board::BLACK);
+    b.add_piece(board::H3, board::PAWN, board::BLACK);
     std::vector<move::Move> ml;
     b.gen_pawn_moves(ml, board::WHITE);
     ASSERT_EQ(14, ml.size());

@@ -19,9 +19,9 @@ TEST(movegen_castlings, starting_position_queen_side)
 {
     board::Board boardd;
     std::vector<move::Move> movelist;
-    boardd.remove_piece(board::B1, board::KNIGHT, board::Color::WHITE);
-    boardd.remove_piece(board::C1, board::BISHOP, board::Color::WHITE);
-    boardd.remove_piece(board::D1, board::QUEEN, board::Color::WHITE);
+    boardd.remove_piece(board::B1, board::KNIGHT, board::WHITE);
+    boardd.remove_piece(board::C1, board::BISHOP, board::WHITE);
+    boardd.remove_piece(board::D1, board::QUEEN, board::WHITE);
     boardd.gen_castlings(movelist, boardd.bitboards_[0]|boardd.bitboards_[1], board::WHITE);
     boardd.gen_castlings(movelist, boardd.bitboards_[0]|boardd.bitboards_[1], board::BLACK);
     ASSERT_EQ(movelist.size(), 1);
