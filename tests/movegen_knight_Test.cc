@@ -9,7 +9,7 @@ TEST(movegen_knight, starting_white_knights_moves)
 {
   board::Board boardd;
   std::vector<move::Move> movelist;
-  boardd.gen_KnightMoves(movelist, boardd.bitboards_[(int)board::Color::WHITE] & boardd.bitboards_[board::KNIGHT], 0xFFFFFFFFFFFFFFFF);
+  boardd.gen_KnightMoves(movelist, board::WHITE, 0xFFFFFFFFFFFFFFFF);
   ASSERT_EQ(6, movelist.size());
   for (auto m : movelist)
   {

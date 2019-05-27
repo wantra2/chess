@@ -27,6 +27,10 @@ MISC:
 [] listeners
 [] options parsing
 
+BUGS:
+
+-undefined reference when using get_bitboards
+
 Possible optimizations to movegen:
 
 -gen castlings

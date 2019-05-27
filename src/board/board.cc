@@ -169,8 +169,9 @@ namespace board
         }
     }
 
-    void Board::gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets) const
+    void Board::gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const
     {
+        bitboard knights = bitboards_[KNIGHT] & bitboards_[color];
         while (knights)
         {
             int from_square = poplsb(knights);
@@ -178,14 +179,16 @@ namespace board
         }
     }
 
-    void Board::gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets) const
+    void Board::gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const
     {
+        bitboard king = bitboards_[KING] & bitboards_[color];
         int from_square = poplsb(king);
         gen_non_pawn(movelist, kingAttacks_[from_square] & targets, from_square);
     }
 
-    void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
+    void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const
     {
+        bitboard pieces = (bitboards_[QUEEN]|bitboards_[BISHOP]) & bitboards_[color];
         while (pieces)
         {
             int sq = poplsb(pieces);
@@ -194,8 +197,9 @@ namespace board
         }
     }
 
-    void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const
+    void Board::gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const
     {
+        bitboard pieces = (bitboards_[QUEEN]|bitboards_[ROOK]) & bitboards_[color];
         while (pieces)
         {
             int sq = poplsb(pieces);

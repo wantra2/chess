@@ -10,14 +10,6 @@
 
 namespace board
 {
-    enum EdgesMask
-    {
-        UP = 0xFF00000000000000,
-        LEFT = 0x0101010101010101,
-        RIGHT = 0x8080808080808080,
-        DOWN = 0x00000000000000FF
-    };
-
     enum castlings
     {
         WHITE_SMALL,
@@ -34,11 +26,6 @@ namespace board
         BLACK_000 = 0x0e00000000000000
     };
 
-    enum Gentype
-    {
-        CAPTURE,
-    };
-
     class Board
     {
     public:
@@ -52,10 +39,10 @@ namespace board
         const bitboard& get_bitboard(Color color) const;
 
         void gen_pawn_moves(std::vector<move::Move>&, const int& color) const;
-        void gen_KnightMoves(std::vector<move::Move>& movelist, bitboard knights, const bitboard& targets) const;
-        void gen_KingMoves(std::vector<move::Move>& movelist, bitboard king, const bitboard& targets) const;
-        void gen_queen_bishop_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
-        void gen_queen_rook_moves(std::vector<move::Move>& movelist, bitboard pieces, const bitboard& occupied, const bitboard& targets) const;
+        void gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
+        void gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
+        void gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
+        void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
         void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
 
         void remove_piece(square position, piece_type type, Color color);
