@@ -68,12 +68,6 @@ namespace board
 
     }
 
-    inline const bitboard& Board::get_bitboard(piece_type type) const
-    {return bitboards_[(int)type];}
-
-    inline const bitboard& Board::get_bitboard(Color color) const
-    {return bitboards_[(int)color];}
-
     void Board::init_pawn_attacks()
     {
         const int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
@@ -95,12 +89,12 @@ namespace board
             if (castling_rights_[WHITE_SMALL] && (occupied & WHITE_00) == 0 &&
                 !is_attacked(E1, WHITE) && !is_attacked(F1, WHITE))
             {
-                movelist.emplace_back(move::create_move(E1, G1, KNIGHT, move::CASTLING));
+                movelist.emplace_back(move::create_move(E1, G1, move::CASTLING));
             }
             if (castling_rights_[WHITE_BIG] && (occupied & WHITE_000) == 0 &&
                 !is_attacked(E1, WHITE) && !is_attacked(D1, WHITE))
             {
-                movelist.emplace_back(move::create_move(E1, C1, KNIGHT, move::CASTLING));
+                movelist.emplace_back(move::create_move(E1, C1, move::CASTLING));
             }
         }
         else
@@ -108,12 +102,12 @@ namespace board
             if (castling_rights_[BLACK_SMALL] && (occupied & BLACK_00) == 0 &&
                 !is_attacked(E8, BLACK) && !is_attacked(F8, BLACK))
             {
-                movelist.emplace_back(move::create_move(E8, G8, KNIGHT, move::CASTLING));
+                movelist.emplace_back(move::create_move(E8, G8, move::CASTLING));
             }
             if (castling_rights_[BLACK_BIG] && (occupied & BLACK_000) == 0 &&
                 !is_attacked(E8, BLACK) && !is_attacked(D8, BLACK))
             {
-                movelist.emplace_back(move::create_move(E1, C1, KNIGHT, move::CASTLING));
+                movelist.emplace_back(move::create_move(E1, C1, move::CASTLING));
             }
         }
     }
@@ -328,7 +322,7 @@ namespace board
             while (en_p_candidates)
             {
                 int sq = poplsb(en_p_candidates);
-                movelist.emplace_back(move::create_move(sq, en_p_square, KNIGHT, move::EN_PASSANT));
+                movelist.emplace_back(move::create_move(sq, en_p_square, move::EN_PASSANT));
             }
         }
     }

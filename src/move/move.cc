@@ -154,4 +154,9 @@ namespace move
     {
         return (square_from << 6) + square_to;
     }
+
+    Move create_move(const int square_from, const int square_to, const MoveType move_type)
+    {
+        return (move_type << 12) + (square_from << 6) + square_to;
+    }
 }

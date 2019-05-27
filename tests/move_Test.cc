@@ -30,7 +30,7 @@ TEST(move, promo_knight)
 
 TEST(move, castling)
 {
-  move::Move m = move::create_move(board::A1, board::H8, board::KNIGHT, move::CASTLING);
+  move::Move m = move::create_move(board::A1, board::H8, move::CASTLING);
   ASSERT_EQ(move::mv_type(m), move::CASTLING);
   ASSERT_EQ(move::move_src(m), board::A1);
   ASSERT_EQ(move::move_dst(m), board::H8);

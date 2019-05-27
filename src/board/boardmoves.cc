@@ -8,18 +8,6 @@ namespace board
         bitboards_[color] ^= (0x1 << position);
         pieces_[position] = board::piece_type_with_color::VOID;
     }
-/*
-    void Board::remove_piece(File file, Rank rank, piece_type type, Color color)
-    {
-        bitboards_[type] ^= (0x1 << to_square((int)rank, (int)file));
-        bitboards_[(int)color] ^= (0x1 << to_square((int)rank, (int)file));
-    }
-
-    void Board::remove_piece(const bitboard& piece, piece_type type, Color color)
-    {
-        bitboards_[type] ^= piece;
-        bitboards_[(int)color] ^= piece;
-    }*/
 
     void Board::add_piece(square position, piece_type type, int color)
     {
@@ -27,18 +15,6 @@ namespace board
         bitboards_[(int)color] |= (0x1 << position);
         pieces_[position] = (piece_type_with_color)(type - 1 + color * 6);
     }
-/*
-    void Board::add_piece(File file, Rank rank, piece_type type, Color color)
-    {
-        bitboards_[type] |= (0x1 << to_square((int)rank, (int)file));
-        bitboards_[(int)color] |= (0x1 << to_square((int)rank, (int)file));
-    }
-
-    void Board::add_piece(const bitboard& piece, piece_type type, Color color)
-    {
-        bitboards_[type] |= piece;
-        bitboards_[(int)color] |= piece;
-    }*/
 
     piece_type_with_color Board::at(const square s) const
     {
