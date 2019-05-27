@@ -332,4 +332,17 @@ namespace board
             }
         }
     }
+
+    void Board::do_castling(square src, square dst)
+    {
+        const int shift = side_ == piece_type::WHITE ? 0 : 56;
+        bitboard rook = (dst>src) ? 1ull<<shift+7 : 1ull<<shift;
+        const square rookpos = (square)poplsb(rook);
+        const square rookdst = (dst>src) ? (square)(dst-1) : (square)(dst+1);
+
+        remove_piece(src, piece_type::KING, side_);
+        remove_piece(rookpos, piece_type::ROOK, side_);
+        add_piece(dst, piece_type::KING, side_);
+        add_piece(rookdst, piece_type::ROOK, side_);
+    }
 }

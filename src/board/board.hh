@@ -46,15 +46,16 @@ namespace board
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
         void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
 
-        void remove_piece(square position, piece_type type, Color color);
+        void remove_piece(square position, piece_type type, int color);
         void remove_piece(File file, Rank rank, piece_type type, Color color);
         void remove_piece(const bitboard& piece, piece_type type, Color color);
 
-        void add_piece(square position, piece_type type, Color color);
+        void add_piece(square position, piece_type type, int color);
         void add_piece(File file, Rank rank, piece_type type, Color color);
         void add_piece(const bitboard& piece, piece_type type, Color color);
 
-        piece_type_with_color at(square s);
+        piece_type_with_color at(const square s) const;
+
 
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
@@ -83,5 +84,8 @@ namespace board
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from) const;
         bitboard slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2]) const;
         void init_magics(const int square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);
+
+        void do_move(move::Move m);
+        void do_castling(square src, square dst);
     };
 }
