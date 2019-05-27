@@ -11,6 +11,7 @@ namespace board
     Board::Board()
     {
         generate_board();
+        generate_pieces();
         init_pawn_attacks();
         init_slide_attacks();
         init_Knight_and_KingAttacks();
@@ -38,6 +39,33 @@ namespace board
         bitboards_[ROOK] = 0x8100000000000081; //ROOKS
         bitboards_[QUEEN] = 0x0800000000000008; //QUEENS
         bitboards_[KING] = 0x1000000000000010; //KINGS
+    }
+
+    void Board::generate_pieces()
+    {
+        pieces_[0] = piece_type_with_color::WHITE_ROOK;
+        pieces_[1] = piece_type_with_color::WHITE_KNIGHT;
+        pieces_[2] = piece_type_with_color::WHITE_BISHOP;
+        pieces_[3] = piece_type_with_color::WHITE_QUEEN;
+        pieces_[4] = piece_type_with_color::WHITE_KING;
+        pieces_[5] = piece_type_with_color::WHITE_BISHOP;
+        pieces_[6] = piece_type_with_color::WHITE_KNIGHT;
+        pieces_[7] = piece_type_with_color::WHITE_ROOK;
+        for (int i = 8; i < 16; ++i)
+            pieces_[i] = piece_type_with_color::WHITE_PAWN;
+        for (int i = 16; i < 48; ++i)
+            pieces_[i] = piece_type_with_color::VOID;
+        for (int i = 48; i < 56; ++i)
+            pieces_[i] = piece_type_with_color::BLACK_PAWN;
+        pieces_[56] = piece_type_with_color::BLACK_ROOK;
+        pieces_[57] = piece_type_with_color::BLACK_KNIGHT;
+        pieces_[58] = piece_type_with_color::BLACK_BISHOP;
+        pieces_[59] = piece_type_with_color::BLACK_QUEEN;
+        pieces_[60] = piece_type_with_color::BLACK_KING;
+        pieces_[61] = piece_type_with_color::BLACK_BISHOP;
+        pieces_[62] = piece_type_with_color::BLACK_KNIGHT;
+        pieces_[63] = piece_type_with_color::BLACK_ROOK;
+
     }
 
     inline const bitboard& Board::get_bitboard(piece_type type) const

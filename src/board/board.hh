@@ -34,6 +34,7 @@ namespace board
         ~Board() = default;
 
         void generate_board();
+        void generate_pieces();
 
         const bitboard& get_bitboard(piece_type type) const;
         const bitboard& get_bitboard(Color color) const;
@@ -55,6 +56,7 @@ namespace board
 
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
+        piece_type_with_color pieces_[SQUARE_NB];
         bool castling_rights_[4];
         int ply_;
         int side_;
