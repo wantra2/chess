@@ -42,6 +42,7 @@ namespace board
         void add_piece(const square& position, const piece_type& type, const int& color);
 
         piece_type_with_color at(const square& s) const;
+        void do_move(const move::Move& m);
 
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
@@ -74,7 +75,6 @@ namespace board
         bitboard slider_attacks(const square& from_square, const bitboard& occupied, const int offsets[4][2]) const;
         void init_magics(const square& square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);
 
-        void do_move(const move::Move& m);
         void do_castling(const square& src, const square& dst);
     };
 }
