@@ -93,14 +93,14 @@ namespace board
 
             if ((castling_rights_[color] & 1) &&
                 ((occupied & castlings_sq[color][index_00]) == 0) &&
-                !king_attacked && !is_attacked(f1_sq, color))
+                !king_attacked && !is_attacked((square)f1_sq, color))
             {
                 movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare+2), move::CASTLING));
             }
 
             if ((castling_rights_[color] & 2) &&
                 ((occupied & castlings_sq[color][index_000]) == 0) &&
-                !king_attacked && !is_attacked(d1_sq, color))
+                !king_attacked && !is_attacked((square)d1_sq, color))
             {
                 movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare-2), move::CASTLING));
             }
@@ -224,7 +224,7 @@ namespace board
         }
     }
 
-    bool Board::is_attacked(const int& square, const int& color) const
+    bool Board::is_attacked(const square& square, const int& color) const
     {
         const bitboard occupied = bitboards_[WHITE]|bitboards_[BLACK];
         const bitboard bishop_attacks = bishopMagics_[square].offset[bishopMagics_[square].compute_index(occupied)];

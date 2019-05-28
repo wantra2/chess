@@ -69,7 +69,7 @@ namespace board
         void init_castling();
         void init_pawn_attacks();
 
-        bool is_attacked(const int& square, const int& color) const;
+        bool is_attacked(const square& square, const int& color) const;
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const;
         bitboard slider_attacks(const square& from_square, const bitboard& occupied, const int offsets[4][2]) const;
         void init_magics(const square& square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);
