@@ -52,37 +52,37 @@ namespace move
         }
     }
 
-    board::square move_src(const Move move)
+    board::square move_src(const Move& move)
     {
         return board::square((move >> 6) & 0x3F);
     }
 
-    board::square move_dst(const Move move)
+    board::square move_dst(const Move& move)
     {
         return board::square(move & 0x3F);
     }
 
-    bool is_castling(const Move move)
+    bool is_castling(const Move& move)
     {
         return ((move >> 12) & 0x3) == MoveType::CASTLING;
     }
 
-    bool is_passant(const Move move)
+    bool is_passant(const Move& move)
     {
         return ((move >> 12) & 0x3) == MoveType::EN_PASSANT;
     }
 
-    bool is_promotion(const Move move)
+    bool is_promotion(const Move& move)
     {
         return ((move >> 12) & 0x3) == MoveType::PROMOTION;
     }
 
-    move::MoveType mv_type(const Move move)
+    move::MoveType mv_type(const Move& move)
     {
         return move::MoveType((move >> 12) & 0x3);
     }
 
-    board::piece_type promotion_type(const Move move)
+    board::piece_type promotion_type(const Move& move)
     {
         return board::piece_type(3 + ((move >> 14) & 0x3));
     }
@@ -145,7 +145,7 @@ namespace move
     }
 
     Move create_move(const board::square& square_from, const board::square& square_to,
-            const board::piece_type prom, const MoveType move_type)
+            const board::piece_type& prom, const MoveType& move_type)
     {
         return (move_type << 12) + ((prom - board::KNIGHT) << 14) + (square_from << 6) + square_to;
     }
@@ -155,7 +155,7 @@ namespace move
         return (square_from << 6) + square_to;
     }
 
-    Move create_move(const board::square& square_from, const board::square& square_to, const MoveType move_type)
+    Move create_move(const board::square& square_from, const board::square& square_to, const MoveType& move_type)
     {
         return (move_type << 12) + (square_from << 6) + square_to;
     }

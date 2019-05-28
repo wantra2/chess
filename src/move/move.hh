@@ -33,8 +33,8 @@ namespace move
     /*
       Returns a Move's source/destination formated as a Position
      */
-    board::square move_src(const Move move);
-    board::square move_dst(const Move move);
+    board::square move_src(const Move& move);
+    board::square move_dst(const Move& move);
 
     /*
       Move flags handler
@@ -51,7 +51,7 @@ namespace move
     int pos_to_int(board::Position pos);
 
     Move create_move(const board::square& square_from, const board::square& square_to,
-                    const board::piece_type& prom, const MoveType& move_type);
+            const board::piece_type& prom, const MoveType& move_type);
 
     Move create_move(const board::square& square_from, const board::square& square_to);
 
