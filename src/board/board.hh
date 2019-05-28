@@ -12,18 +12,16 @@ namespace board
 {
     enum castlings
     {
-        WHITE_SMALL,
-        WHITE_BIG,
-        BLACK_SMALL,
-        BLACK_BIG
+        NO_CASTLING,            //00
+        SMALL,           //01
+        BIG,             //10
+        BOTH = BIG|SMALL //11
     };
 
-    enum castlings_sq
+    enum castlings_sq_index
     {
-        WHITE_00 = 0x60,
-        WHITE_000 = 0xe,
-        BLACK_00 = 0x6000000000000000,
-        BLACK_000 = 0x0e00000000000000
+        index_00,
+        index_000
     };
 
     class Board
@@ -52,12 +50,13 @@ namespace board
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
         piece_type_with_color pieces_[SQUARE_NB];
-        bool castling_rights_[4];
+        int castling_rights_[2];
         int ply_;
         int side_;
         int en_p_square;
 
         /*these are constant*/
+        bitboard castlings_sq[2][2];
         bitboard pawnAttacks_[2][SQUARE_NB];
         bitboard knightAttacks_[SQUARE_NB];
         bitboard kingAttacks_[SQUARE_NB];
@@ -69,7 +68,7 @@ namespace board
     private:
         void init_Knight_and_KingAttacks();
         void init_slide_attacks();
-        void init_castling_rights();
+        void init_castling();
         void init_pawn_attacks();
 
         bool is_attacked(const int& square, const int& color) const;

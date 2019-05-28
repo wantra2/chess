@@ -23,12 +23,13 @@ namespace board
     {
         WHITE,
         BLACK,
-        PAWN = 2,
+        PAWN,
         KNIGHT,
         BISHOP,
         ROOK,
         QUEEN,
-        KING
+        KING,
+        NONE
     };
 
     enum piece_type_with_color : int
@@ -47,6 +48,8 @@ namespace board
         BLACK_QUEEN,
         BLACK_KING
     };
+
+    piece_type type(const int& pt);
 
     using opt_piecetype_t = std::optional<PieceType>;
 

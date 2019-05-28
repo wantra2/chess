@@ -15,24 +15,26 @@ namespace board
         init_pawn_attacks();
         init_slide_attacks();
         init_Knight_and_KingAttacks();
-        init_castling_rights();
+        init_castling();
         ply_ = 0;
         side_ = WHITE;
         en_p_square = SQUARE_NB;
     }
 
-    void Board::init_castling_rights()
+    void Board::init_castling()
     {
-        castling_rights_[WHITE_SMALL] = true;
-        castling_rights_[WHITE_BIG] = true;
-        castling_rights_[BLACK_SMALL] = true;
-        castling_rights_[BLACK_BIG] = true;
+        castling_rights_[WHITE] = BOTH;
+        castling_rights_[BLACK] = BOTH;
+        castlings_sq[WHITE][index_00] = 0x60;
+        castlings_sq[WHITE][index_000] = 0xe;
+        castlings_sq[BLACK][index_00] =  0x6000000000000000;
+        castlings_sq[BLACK][index_000] = 0x0e00000000000000;
     }
 
     void Board::generate_board()
     {
-        bitboards_[(int)Color::WHITE] = 0x000000000000FFFF; //WHITES
-        bitboards_[(int)Color::BLACK] = 0xFFFF000000000000; //BLACKS
+        bitboards_[WHITE] = 0x000000000000FFFF; //WHITES
+        bitboards_[BLACK] = 0xFFFF000000000000; //BLACKS
         bitboards_[PAWN] = 0x00FF00000000FF00; //PAWNS
         bitboards_[KNIGHT] = 0x4200000000000042; //KNIGHTS
         bitboards_[BISHOP] = 0x2400000000000024; //BISHOPS
@@ -84,32 +86,24 @@ namespace board
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
     {
-        if (color == WHITE)
-        {
-            if (castling_rights_[WHITE_SMALL] && (occupied & WHITE_00) == 0 &&
-                !is_attacked(E1, WHITE) && !is_attacked(F1, WHITE))
+            const int kingsquare = side_ == WHITE ? E1 : E8;
+            const int f1_sq = side_ == WHITE ? F1 : F8;
+            const int d1_sq = side_ == WHITE ? D1 : D8;
+            const bool king_attacked = is_attacked(kingsquare, color);
+
+            if ((castling_rights_[color] & 1) &&
+                ((occupied & castlings_sq[color][index_00]) == 0) &&
+                !king_attacked && !is_attacked(f1_sq, color))
             {
-                movelist.emplace_back(move::create_move(E1, G1, move::CASTLING));
+                movelist.emplace_back(move::create_move(kingsquare, kingsquare+2, move::CASTLING));
             }
-            if (castling_rights_[WHITE_BIG] && (occupied & WHITE_000) == 0 &&
-                !is_attacked(E1, WHITE) && !is_attacked(D1, WHITE))
+
+            if ((castling_rights_[color] & 2) &&
+                ((occupied & castlings_sq[color][index_000]) == 0) &&
+                !king_attacked && !is_attacked(d1_sq, color))
             {
-                movelist.emplace_back(move::create_move(E1, C1, move::CASTLING));
+                movelist.emplace_back(move::create_move(kingsquare, kingsquare-2, move::CASTLING));
             }
-        }
-        else
-        {
-            if (castling_rights_[BLACK_SMALL] && (occupied & BLACK_00) == 0 &&
-                !is_attacked(E8, BLACK) && !is_attacked(F8, BLACK))
-            {
-                movelist.emplace_back(move::create_move(E8, G8, move::CASTLING));
-            }
-            if (castling_rights_[BLACK_BIG] && (occupied & BLACK_000) == 0 &&
-                !is_attacked(E8, BLACK) && !is_attacked(D8, BLACK))
-            {
-                movelist.emplace_back(move::create_move(E1, C1, move::CASTLING));
-            }
-        }
     }
 
     void Board::init_Knight_and_KingAttacks()
@@ -330,7 +324,7 @@ namespace board
     void Board::do_castling(square src, square dst)
     {
         const int shift = side_ == piece_type::WHITE ? 0 : 56;
-        bitboard rook = (dst>src) ? 1ull<<shift+7 : 1ull<<shift;
+        bitboard rook = (dst>src) ? 1ull << (shift+7) : (1ull<<shift);
         const square rookpos = (square)poplsb(rook);
         const square rookdst = (dst>src) ? (square)(dst-1) : (square)(dst+1);
 

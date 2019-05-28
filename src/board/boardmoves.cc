@@ -12,7 +12,7 @@ namespace board
     void Board::add_piece(square position, piece_type type, int color)
     {
         bitboards_[type] |= (0x1 << position);
-        bitboards_[(int)color] |= (0x1 << position);
+        bitboards_[color] |= (0x1 << position);
         pieces_[position] = (piece_type_with_color)(type - 1 + color * 6);
     }
 
@@ -23,19 +23,32 @@ namespace board
 
     void Board::do_move(move::Move m)
     {
-        square dst = move::move_dst(m);
-        square src = move::move_src(m);
-        piece_type_with_color eventually_captured_piece = pieces_[dst];
-        if (move::mv_type(m) == move::MoveType::EN_PASSANT)
+        const int direction = side_ == WHITE ? 8 : -8;
+        const square dst = move::move_dst(m);
+        const square src = move::move_src(m);
+        const move::MoveType movetype = move::mv_type(m);
+        square cap_sq = dst;
+        int captured_piece = pieces_[dst];
+
+        if (movetype == move::MoveType::EN_PASSANT)
         {
-            if (side_ == piece_type::WHITE)
-                eventually_captured_piece = board::piece_type_with_color::BLACK_PAWN;
-            else
-                eventually_captured_piece = board::piece_type_with_color::WHITE_PAWN;
+            captured_piece = WHITE_PAWN + (6 * side_);
+            cap_sq = (square)(dst - direction);
         }
-        if (move::mv_type(m) == move::MoveType::CASTLING)
+
+        if (movetype == move::MoveType::CASTLING)
+        {
             do_castling(src, dst);
-        side_ = not side_;
-        ++ply_;
+            captured_piece = VOID;
+            castling_rights_[side_] = NO_CASTLING;
+        }
+
+        if (captured_piece != VOID)
+            remove_piece(cap_sq, type(captured_piece), !side_);
+
+        if (en_p_square != SQUARE_NB)
+            en_p_square = SQUARE_NB;
+
+
     }
 }
