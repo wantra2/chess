@@ -50,5 +50,34 @@ namespace board
             en_p_square = SQUARE_NB;
 
 
+        piece_type src_pt = type(pieces_[src]);
+        if (src_pt == piece_type::KING)
+            castling_rights_[side_] = NO_CASTLING;
+        else
+        {
+            const square a1 = side_ == WHITE ? A1 : A8;
+            const square h1 = side_ == WHITE ? H1 : H8;
+            if (src == a1)
+                castling_rights_[side_] &= ~2;
+            if (src == h1)
+                castling_rights_[side_] &= ~1;
+        }
+
+        remove_piece(src, src_pt, side_);
+        add_piece(dst, src_pt, side_);
+
+        const int pos = side_ == WHITE ? 16 : -16;
+        if (src_pt == piece_type::PAWN)
+        {
+            if (dst == src + pos)
+                en_p_square = (square)(src + direction);
+            if (movetype == move::PROMOTION)
+            {
+                remove_piece(dst, src_pt, side_);
+                add_piece(dst, move::promotion_type(m), side_);
+            }
+        }
+        ++ply_;
+        side_ = not side_;
     }
 }
