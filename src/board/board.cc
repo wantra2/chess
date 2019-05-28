@@ -19,6 +19,8 @@ namespace board
         ply_ = 0;
         side_ = WHITE;
         en_p_square = SQUARE_NB;
+        State st{NONE};
+        states_ = std::vector<State>{st};
     }
 
     void Board::init_castling()
@@ -323,14 +325,27 @@ namespace board
 
     void Board::do_castling(const square& src, const square& dst)
     {
-        const int shift = side_ == piece_type::WHITE ? 0 : 56;
-        bitboard rook = (dst>src) ? 1ull << (shift+7) : (1ull<<shift);
-        const square rookpos = (square)poplsb(rook);
-        const square rookdst = (dst>src) ? (square)(dst-1) : (square)(dst+1);
+        const square a1sq = side_ == WHITE ? A1 : A8;
+        const square h1sq = side_ == WHITE ? H1 : H8;
+        const square rookpos = (dst > src) ? h1sq : a1sq;
+        const square rookdst = (rookpos == a1sq) ? (square)(dst+1) : (square)(dst-1);
 
         remove_piece(src, piece_type::KING, side_);
         remove_piece(rookpos, piece_type::ROOK, side_);
         add_piece(dst, piece_type::KING, side_);
         add_piece(rookdst, piece_type::ROOK, side_);
+    }
+
+    void Board::undo_castling(const square& src, const square& dst)
+    {
+        const square a1sq = side_ == WHITE ? A1 : A8;
+        const square h1sq = side_ == WHITE ? H1 : H8;
+        const square rooksrc = (dst > src) ? h1sq : a1sq;
+        const square rookpos = (rooksrc == a1sq) ? (square)(dst+1) : (square)(dst-1);
+
+        remove_piece(dst, piece_type::KING, side_);
+        remove_piece(rookpos, piece_type::ROOK, side_);
+        add_piece(src, piece_type::KING, side_);
+        add_piece(rooksrc, piece_type::ROOK, side_);
     }
 }

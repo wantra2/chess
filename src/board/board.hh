@@ -24,6 +24,11 @@ namespace board
         index_000
     };
 
+    struct State
+    {
+        piece_type captured;
+    };
+
     class Board
     {
     public:
@@ -43,6 +48,7 @@ namespace board
 
         piece_type_with_color at(const square& s) const;
         void do_move(const move::Move& m);
+        void undo_move(const move::Move& m);
 
         /*these needs to be updated after each move*/
         bitboard bitboards_[8];
@@ -51,6 +57,7 @@ namespace board
         int ply_;
         int side_;
         square en_p_square;
+        std::vector<State> states_;
 
         /*these are constant*/
         bitboard castlings_sq[2][2];
@@ -76,5 +83,6 @@ namespace board
         void init_magics(const square& square, Magic* table, const bitboard& magic_number, const int offsets[4][2]);
 
         void do_castling(const square& src, const square& dst);
+        void undo_castling(const square& src, const square& dst);
     };
 }

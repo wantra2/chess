@@ -23,6 +23,7 @@ namespace board
 
     void Board::do_move(const move::Move& m)
     {
+        states_.push_back(State{NONE});
         const int direction = side_ == WHITE ? 8 : -8;
         const square dst = move::move_dst(m);
         const square src = move::move_src(m);
@@ -77,7 +78,43 @@ namespace board
                 add_piece(dst, move::promotion_type(m), side_);
             }
         }
+        states_[states_.size()-1].captured = type(captured_piece);
         ++ply_;
-        side_ = not side_;
+        side_ = !side_;
+    }
+
+    void Board::undo_move(const move::Move& m)
+    {
+        side_ = !side_;
+        const int direction = side_ == WHITE ? 8 : -8;
+        const square src = move::move_src(m);
+        const square dst = move::move_dst(m);
+        const piece_type_with_color colored_pt = at(dst);
+        piece_type pt = type(colored_pt);
+        const move::MoveType movetype = move::mv_type(m);
+        if (movetype == move::PROMOTION)
+        {
+            remove_piece(dst, pt, side_);
+            add_piece(dst, PAWN, side_);
+            pt = PAWN;
+        }
+        if (movetype == move::CASTLING)
+        {
+            undo_castling(src, dst);
+        }
+        else
+        {
+            remove_piece(dst, pt, side_);
+            add_piece(src, pt, side_);
+            if (states_[states_.size()-1].captured != NONE)
+            {
+                if (movetype == move::EN_PASSANT)
+                    add_piece((square)(dst-direction), PAWN, !side_);
+                else
+                    add_piece(dst, states_[states_.size()-1].captured, !side_);
+            }
+        }
+        --ply_;
+        states_.pop_back();
     }
 }

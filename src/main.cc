@@ -9,15 +9,11 @@
 int main()
 {
     board::Board b;
-    utils::pretty_print(b);
-    std::cout << "---------------\n";
     b.do_move(move::create_move(board::E2, board::E4));
+    b.do_move(move::create_move(board::D7, board::D5));
+    b.do_move(move::create_move(board::E4, board::D5));
     utils::pretty_print(b);
-    std::cout << "---------------\n";
-    b.do_move(move::create_move(board::E7, board::E5));
-    utils::pretty_print(b);
-    std::cout << "---------------\n";
-    b.do_move(move::create_move(board::D2, board::D4));
+    b.undo_move(move::create_move(board::E4, board::D5));
     utils::pretty_print(b);
     return 0;
 }
