@@ -40,7 +40,7 @@ namespace utils
 
             else
             {
-                std::cout << "   ";
+                std::cout << " . ";
             }
             index--;
             bit >>= 1;
