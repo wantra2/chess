@@ -4,15 +4,15 @@ namespace board
 {
     void Board::remove_piece(const square& position, const piece_type& type, const int& color)
     {
-        bitboards_[type] ^= (0x1 << position);
-        bitboards_[color] ^= (0x1 << position);
+        bitboards_[type] ^= (1ull << position);
+        bitboards_[color] ^= (1ull << position);
         pieces_[position] = board::piece_type_with_color::VOID;
     }
 
     void Board::add_piece(const square& position, const piece_type& type, const int& color)
     {
-        bitboards_[type] |= (0x1 << position);
-        bitboards_[color] |= (0x1 << position);
+        bitboards_[type] |= (1ull << position);
+        bitboards_[color] |= (1ull << position);
         pieces_[position] = (piece_type_with_color)(type - 1 + color * 6);
     }
 
