@@ -144,18 +144,18 @@ namespace move
             + file_to_int(pos.file_get());
     }
 
-    Move create_move(const int square_from, const int square_to,
+    Move create_move(const board::square& square_from, const board::square& square_to,
             const board::piece_type prom, const MoveType move_type)
     {
         return (move_type << 12) + ((prom - board::KNIGHT) << 14) + (square_from << 6) + square_to;
     }
 
-    Move create_move(const int square_from, const int square_to)
+    Move create_move(const board::square& square_from, const board::square& square_to)
     {
         return (square_from << 6) + square_to;
     }
 
-    Move create_move(const int square_from, const int square_to, const MoveType move_type)
+    Move create_move(const board::square& square_from, const board::square& square_to, const MoveType move_type)
     {
         return (move_type << 12) + (square_from << 6) + square_to;
     }

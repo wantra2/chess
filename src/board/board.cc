@@ -74,19 +74,19 @@ namespace board
     {
         const int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
         const int black_pawn_offsets[2][2] = {{-1,-1}, {-1,1}};
-        for (int square = A1; square < H8; ++square)
+        for (int sq = A1; sq < H8; ++sq)
         {
             for (int d = 0; d < 2; ++d)
             {
-                square_set(pawnAttacks_[WHITE][square], rankof(square) + white_pawn_offsets[d][0], fileof(square) + white_pawn_offsets[d][1]);
-                square_set(pawnAttacks_[BLACK][square], rankof(square) + black_pawn_offsets[d][0], fileof(square) + black_pawn_offsets[d][1]);
+                square_set(pawnAttacks_[WHITE][sq], rankof((square)sq) + white_pawn_offsets[d][0], fileof((square)sq) + white_pawn_offsets[d][1]);
+                square_set(pawnAttacks_[BLACK][sq], rankof((square)sq) + black_pawn_offsets[d][0], fileof((square)sq) + black_pawn_offsets[d][1]);
             }
         }
     }
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
     {
-            const int kingsquare = side_ == WHITE ? E1 : E8;
+            const square kingsquare = side_ == WHITE ? E1 : E8;
             const int f1_sq = side_ == WHITE ? F1 : F8;
             const int d1_sq = side_ == WHITE ? D1 : D8;
             const bool king_attacked = is_attacked(kingsquare, color);
@@ -95,14 +95,14 @@ namespace board
                 ((occupied & castlings_sq[color][index_00]) == 0) &&
                 !king_attacked && !is_attacked(f1_sq, color))
             {
-                movelist.emplace_back(move::create_move(kingsquare, kingsquare+2, move::CASTLING));
+                movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare+2), move::CASTLING));
             }
 
             if ((castling_rights_[color] & 2) &&
                 ((occupied & castlings_sq[color][index_000]) == 0) &&
                 !king_attacked && !is_attacked(d1_sq, color))
             {
-                movelist.emplace_back(move::create_move(kingsquare, kingsquare-2, move::CASTLING));
+                movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare-2), move::CASTLING));
             }
     }
 
@@ -110,12 +110,12 @@ namespace board
     {
         const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
         const int KingOffsets[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
-        for (int square = board::A1; square < SQUARE_NB; ++square)
+        for (int sq = A1; sq < SQUARE_NB; ++sq)
         {
             for (int d = 0; d < 8; ++d)
             {
-                square_set(knightAttacks_[square], rankof(square) + KnightOffsets[d][0], fileof(square) + KnightOffsets[d][1]);
-                square_set(kingAttacks_[square], rankof(square) + KingOffsets[d][0], fileof(square) + KingOffsets[d][1]);
+                square_set(knightAttacks_[sq], rankof((square)sq) + KnightOffsets[d][0], fileof((square)sq) + KnightOffsets[d][1]);
+                square_set(kingAttacks_[sq], rankof((square)sq) + KingOffsets[d][0], fileof((square)sq) + KingOffsets[d][1]);
             }
         }
     }
@@ -128,14 +128,14 @@ namespace board
         const int bishop_offsets[4][2] = {{-1,-1}, {-1, 1}, { 1,-1}, { 1, 1}};
         const int rook_offsets[4][2]   = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
 
-        for (int square = A1; square < H8; ++square)
+        for (int sq = A1; sq < H8; ++sq)
         {
-            init_magics(square, bishopMagics_, BishopMagicNumbers[square], bishop_offsets);
-            init_magics(square, rookMagics_, RookMagicNumbers[square], rook_offsets);
+            init_magics((square)sq, bishopMagics_, BishopMagicNumbers[sq], bishop_offsets);
+            init_magics((square)sq, rookMagics_, RookMagicNumbers[sq], rook_offsets);
         }
     }
 
-    bitboard Board::slider_attacks(const int from_square, const bitboard& occupied, const int offsets[4][2]) const
+    bitboard Board::slider_attacks(const square& from_square, const bitboard& occupied, const int offsets[4][2]) const
     {
         int rank, file;
         bitboard tbr = 0ull;
@@ -156,7 +156,7 @@ namespace board
         return tbr;
     }
 
-    void Board::init_magics(const int square, Magic* table, const bitboard& magic_number, const int offsets[4][2])
+    void Board::init_magics(const square& square, Magic* table, const bitboard& magic_number, const int offsets[4][2])
     {
         const bitboard edgesmask = ((RANK_1 | RANK_8) & ~Ranks[rankof(square)]) | ((FILE_A | FILE_H) & ~Files[fileof(square)]);
         table[square].magic_number = magic_number;
@@ -176,12 +176,12 @@ namespace board
         }
     }
 
-    void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const int square_from) const
+    void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const
     {
         while (attacks)
         {
-            int target_square = poplsb(attacks);
-            movelist.emplace_back(move::create_move(square_from, target_square));
+            const int target_square = poplsb(attacks);
+            movelist.emplace_back(move::create_move(square_from, (square)target_square));
         }
     }
 
@@ -190,16 +190,16 @@ namespace board
         bitboard knights = bitboards_[KNIGHT] & bitboards_[color];
         while (knights)
         {
-            int from_square = poplsb(knights);
-            gen_non_pawn(movelist, knightAttacks_[from_square] & targets, from_square);
+            const int from_square = poplsb(knights);
+            gen_non_pawn(movelist, knightAttacks_[from_square] & targets, (square)from_square);
         }
     }
 
     void Board::gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const
     {
         bitboard king = bitboards_[KING] & bitboards_[color];
-        int from_square = poplsb(king);
-        gen_non_pawn(movelist, kingAttacks_[from_square] & targets, from_square);
+        const int from_square = poplsb(king);
+        gen_non_pawn(movelist, kingAttacks_[from_square] & targets, (square)from_square);
     }
 
     void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const
@@ -207,9 +207,9 @@ namespace board
         bitboard pieces = (bitboards_[QUEEN]|bitboards_[BISHOP]) & bitboards_[color];
         while (pieces)
         {
-            int sq = poplsb(pieces);
+            const int sq = poplsb(pieces);
             bitboard attacks = bishopMagics_[sq].offset[bishopMagics_[sq].compute_index(occupied)];
-            gen_non_pawn(movelist, attacks & targets, sq);
+            gen_non_pawn(movelist, attacks & targets, (square)sq);
         }
     }
 
@@ -218,9 +218,9 @@ namespace board
         bitboard pieces = (bitboards_[QUEEN]|bitboards_[ROOK]) & bitboards_[color];
         while (pieces)
         {
-            int sq = poplsb(pieces);
+            const int sq = poplsb(pieces);
             bitboard attacks = rookMagics_[sq].offset[rookMagics_[sq].compute_index(occupied)];
-            gen_non_pawn(movelist, attacks & targets, sq);
+            gen_non_pawn(movelist, attacks & targets, (square)sq);
         }
     }
 
@@ -257,13 +257,13 @@ namespace board
 
         while (push1)
         {
-            int sq = poplsb(push1);
-            movelist.emplace_back(move::create_move(sq-direction, sq));
+            const int sq = poplsb(push1);
+            movelist.emplace_back(move::create_move((square)(sq-direction), (square)sq));
         }
         while (push2)
         {
-            int sq = poplsb(push2);
-            movelist.emplace_back(move::create_move(sq-two_times_direction, sq));
+            const int sq = poplsb(push2);
+            movelist.emplace_back(move::create_move((square)(sq-two_times_direction), (square)sq));
         }
 
         //promotions
@@ -273,27 +273,27 @@ namespace board
 
         while (cap1)
         {
-            int sq = poplsb(cap1);
-            movelist.emplace_back(move::create_move(sq-1-direction, sq, KNIGHT, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-1-direction, sq, BISHOP, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-1-direction, sq, ROOK, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-1-direction, sq, QUEEN, move::PROMOTION));
+            const int sq = poplsb(cap1);
+            movelist.emplace_back(move::create_move((square)(sq-1-direction), (square)sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-1-direction), (square)sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-1-direction), (square)sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-1-direction), (square)sq, QUEEN, move::PROMOTION));
         }
         while (cap2)
         {
-            int sq = poplsb(cap2);
-            movelist.emplace_back(move::create_move(sq+1-direction, sq, KNIGHT, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq+1-direction, sq, BISHOP, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq+1-direction, sq, ROOK, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq+1-direction, sq, QUEEN, move::PROMOTION));
+            const int sq = poplsb(cap2);
+            movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, QUEEN, move::PROMOTION));
         }
         while (prom)
         {
-            int sq = poplsb(prom);
-            movelist.emplace_back(move::create_move(sq-direction, sq, KNIGHT, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-direction, sq, BISHOP, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-direction, sq, ROOK, move::PROMOTION));
-            movelist.emplace_back(move::create_move(sq-direction, sq, QUEEN, move::PROMOTION));
+            const int sq = poplsb(prom);
+            movelist.emplace_back(move::create_move((square)(sq-direction), (square)sq, KNIGHT, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-direction), (square)sq, BISHOP, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-direction), (square)sq, ROOK, move::PROMOTION));
+            movelist.emplace_back(move::create_move((square)(sq-direction), (square)sq, QUEEN, move::PROMOTION));
         }
         //captures
         bitboard cap3 = (pawns_not_on_rank7 << (direction+1) & ~filea2) & ennemy;
@@ -301,13 +301,13 @@ namespace board
 
         while (cap3)
         {
-            int sq = poplsb(cap3);
-            movelist.emplace_back(move::create_move(sq-1-direction, sq));
+            const int sq = poplsb(cap3);
+            movelist.emplace_back(move::create_move((square)(sq-1-direction), (square)sq));
         }
         while (cap4)
         {
-            int sq = poplsb(cap4);
-            movelist.emplace_back(move::create_move(sq+1-direction, sq));
+            const int sq = poplsb(cap4);
+            movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq));
         }
         //en passant
         if (en_p_square != SQUARE_NB)
@@ -315,13 +315,13 @@ namespace board
             bitboard en_p_candidates = pawns_not_on_rank7 & pawnAttacks_[!color][en_p_square];
             while (en_p_candidates)
             {
-                int sq = poplsb(en_p_candidates);
-                movelist.emplace_back(move::create_move(sq, en_p_square, move::EN_PASSANT));
+                const int sq = poplsb(en_p_candidates);
+                movelist.emplace_back(move::create_move((square)sq, en_p_square, move::EN_PASSANT));
             }
         }
     }
 
-    void Board::do_castling(square src, square dst)
+    void Board::do_castling(const square& src, const square& dst)
     {
         const int shift = side_ == piece_type::WHITE ? 0 : 56;
         bitboard rook = (dst>src) ? 1ull << (shift+7) : (1ull<<shift);

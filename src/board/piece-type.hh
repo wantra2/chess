@@ -49,7 +49,7 @@ namespace board
         BLACK_KING
     };
 
-    piece_type type(const int& pt);
+    piece_type type(const piece_type_with_color& pt);
 
     using opt_piecetype_t = std::optional<PieceType>;
 

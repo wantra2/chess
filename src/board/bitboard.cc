@@ -3,7 +3,7 @@
 
 namespace board
 {
-    void square_set(bitboard& bboard, const int rank, const int file)
+    void square_set(bitboard& bboard, const int& rank, const int& file)
     {
         if ((rank >= 0 && rank <= 7) && (file >= 0 && file <= 7))
             bboard = bboard | (1ull << to_square(rank, file));
@@ -21,7 +21,7 @@ namespace board
         return lsb;
     }
 
-    int popcount(bitboard& bboard)
+    int popcount(const bitboard& bboard)
     {
         return __builtin_popcountll(bboard);
     }

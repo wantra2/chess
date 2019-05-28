@@ -39,21 +39,21 @@ namespace move
     /*
       Move flags handler
      */
-    bool is_castling(const Move move);
-    bool is_passant(const Move move);
+    bool is_castling(const Move& move);
+    bool is_passant(const Move& move);
 
-    bool is_promotion(const Move move);
+    bool is_promotion(const Move& move);
 
-    move::MoveType mv_type(const Move move);
+    MoveType mv_type(const Move& move);
 
-    board::piece_type promotion_type(const Move move);
+    board::piece_type promotion_type(const Move& move);
 
     int pos_to_int(board::Position pos);
 
-    Move create_move(const int square_from, const int square_to,
-            const board::piece_type prom, const MoveType move_type);
+    Move create_move(const board::square& square_from, const board::square& square_to,
+                    const board::piece_type& prom, const MoveType& move_type);
 
-    Move create_move(const int square_from, const int square_to);
+    Move create_move(const board::square& square_from, const board::square& square_to);
 
-    Move create_move(const int square_from, const int square_to, const MoveType move_type);
+    Move create_move(const board::square& square_from, const board::square& square_to, const MoveType& move_type);
 }

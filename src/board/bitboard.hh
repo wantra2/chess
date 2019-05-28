@@ -64,8 +64,8 @@ namespace board
         0x0400000260142410, 0x0800633408100500, 0xFC087E8E4BB2F736, 0x43FF9E4EF4CA2C89
     };
 
-    void square_set(bitboard& bboard, const int rank, const int file);
+    void square_set(bitboard& bboard, const int& rank, const int& file);
     int getlsb(const bitboard& bboard);
     int poplsb(bitboard& bboard);
-    int popcount(bitboard& bboard);
+    int popcount(const bitboard& bboard);
 }

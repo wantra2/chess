@@ -29,7 +29,7 @@ namespace board
         }
     }
 
-    piece_type type(const int& pt)
+    piece_type type(const piece_type_with_color& pt)
     {
         switch(pt)
         {

@@ -73,13 +73,13 @@ namespace board
     const uint64_t Files[8] = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H};
     const uint64_t Ranks[8] = {RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
 
-    int rankof(const int square);
+    int rankof(const square& square);// returns integer between 0 and 7
 
-    int fileof(const int square);
+    int fileof(const square& square);// idem
 
-    int to_square(const int rank, const int file);
+    square to_square(const int& rank, const int& file);
 
-    bool valid_coordinates(const int rank, const int file);
+    bool valid_coordinates(const int& rank, const int& file);
 
     /* Position represent a coordinate on the board */
     class Position final
