@@ -34,9 +34,12 @@ int main(int argc, char* argv[])
     board::Board b;
     b.do_move(move::create_move(board::E2, board::E4));
     b.do_move(move::create_move(board::D7, board::D5));
-    b.do_move(move::create_move(board::E4, board::D5));
+    b.do_move(move::create_move(board::E4, board::E5));
+    b.do_move(move::create_move(board::F7, board::F5));
+    b.do_move(move::create_move(board::E5, board::D6, move::EN_PASSANT));
+
     utils::pretty_print(b);
-    b.undo_move(move::create_move(board::E4, board::D5));
+    b.undo_move(move::create_move(board::E5, board::D6, move::EN_PASSANT));
     utils::pretty_print(b);
     return 0;
 }

@@ -239,19 +239,13 @@ namespace board
             || rook_attacks & ((bitboards_[ROOK]|bitboards_[QUEEN]) & bitboards_[!color]);
     }
 
-    void Board::gen_pawn_moves(std::vector<move::Move>& movelist, const int& color) const
+    void Board::gen_pawn_moves_quiet(std::vector<move::Move>& movelist, const int& color) const
     {
         const int direction = color == WHITE ? 8 : -8;
         const int two_times_direction = color == WHITE ? 16 : -16;
-        const bitboard fileh = color == WHITE ? FILE_H : NOTHING;
-        const bitboard filea = color == BLACK ? FILE_A : NOTHING;
-        const bitboard fileh2 = color == WHITE ? FILE_H : NOTHING;
-        const bitboard filea2 = color == WHITE ? FILE_A : NOTHING;
         const bitboard rank7 = color == WHITE ? RANK_7 : RANK_2;
-        const bitboard rank3 = color == WHITE ? RANK_3 : RANK_6;
-        const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
         const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
-        const bitboard ennemy = bitboards_[!color];
+        const bitboard rank3 = color == WHITE ? RANK_3 : RANK_6;
         const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
         //standard non-capture
         bitboard push1 = (pawns_not_on_rank7 << direction) & empty;
@@ -267,6 +261,20 @@ namespace board
             const int sq = poplsb(push2);
             movelist.emplace_back(move::create_move((square)(sq-two_times_direction), (square)sq));
         }
+    }
+
+    void Board::gen_pawn_moves_noisy(std::vector<move::Move>& movelist, const int& color) const
+    {
+        const int direction = color == WHITE ? 8 : -8;
+        const bitboard fileh = color == WHITE ? FILE_H : NOTHING;
+        const bitboard filea = color == BLACK ? FILE_A : NOTHING;
+        const bitboard fileh2 = color == WHITE ? FILE_H : NOTHING;
+        const bitboard filea2 = color == WHITE ? FILE_A : NOTHING;
+        const bitboard rank7 = color == WHITE ? RANK_7 : RANK_2;
+        const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
+        const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
+        const bitboard ennemy = bitboards_[!color];
+        const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
 
         //promotions
         bitboard cap1 = (pawns_on_rank7 << (direction+1) & ~filea) & ennemy;
@@ -347,5 +355,26 @@ namespace board
         remove_piece(rookpos, piece_type::ROOK, side_);
         add_piece(src, piece_type::KING, side_);
         add_piece(rooksrc, piece_type::ROOK, side_);
+    }
+
+    void Board::gen_all(std::vector<move::Move>& movelist)
+    {
+        const bitboard ennemy = bitboards_[!side_];
+        const bitboard allies = bitboards_[side_];
+        const bitboard occupied = ennemy|allies;
+        const bitboard empty = ~occupied;
+
+        gen_pawn_moves_noisy(movelist, side_);
+        gen_KnightMoves(movelist, side_, ennemy);
+        gen_queen_bishop_moves(movelist, side_, occupied, ennemy);
+        gen_queen_rook_moves(movelist, side_, occupied, ennemy);
+        gen_KingMoves(movelist, side_, ennemy);
+
+        gen_pawn_moves_quiet(movelist, side_);
+        gen_KnightMoves(movelist, side_, empty);
+        gen_queen_bishop_moves(movelist, side_, occupied, empty);
+        gen_queen_rook_moves(movelist, side_, occupied, empty);
+        gen_KingMoves(movelist, side_, empty);
+        gen_castlings(movelist, occupied, side_);
     }
 }

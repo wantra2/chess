@@ -36,12 +36,14 @@ namespace board
         Board();
         ~Board() = default;
 
-        void gen_pawn_moves(std::vector<move::Move>&, const int& color) const;
+        void gen_pawn_moves_quiet(std::vector<move::Move>&, const int& color) const;
+        void gen_pawn_moves_noisy(std::vector<move::Move>&, const int& color) const;
         void gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
         void gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
         void gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
         void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
+        void gen_all(std::vector<move::Move>& movelist);
 
         void remove_piece(const square& position, const piece_type& type, const int& color);
         void add_piece(const square& position, const piece_type& type, const int& color);
