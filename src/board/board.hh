@@ -8,6 +8,7 @@
 #include "board/color.hh"
 #include "board/piece-type.hh"
 #include "board/bitboard.hh"
+#include "listener/listener.hh"
 
 namespace board
 {
@@ -36,6 +37,9 @@ namespace board
         Board();
         ~Board() = default;
 
+        void set_listeners(std::vector<listener::Listener*> listeners)
+        {listeners_ = listeners;}
+
         void gen_pawn_moves_quiet(std::vector<move::Move>&, const int& color) const;
         void gen_pawn_moves_noisy(std::vector<move::Move>&, const int& color) const;
         void gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
@@ -59,10 +63,10 @@ namespace board
         State state_;
         bitboard bitboards_[8]; //updated in addpiece/removepiece
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece
-
         int side_; //updated manually
 
     private:
+        std::vector<listener::Listener*> listeners_;
         bool is_attacked(const square& square, const int& color) const;
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const;
     };

@@ -23,6 +23,7 @@ namespace board
                 listeners_.emplace_back(listener);
             }
         }
+        board_.set_listeners(listeners_);
     }
 
     BoardAdapter::~BoardAdapter()

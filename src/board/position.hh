@@ -86,6 +86,7 @@ namespace board
     {
     public:
         Position(File file, Rank rank);
+        Position(const square& sq);
 
         File file_get() const;
         Rank rank_get() const;

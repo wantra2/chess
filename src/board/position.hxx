@@ -5,6 +5,11 @@ namespace board
         , rank_(rank)
     {}
 
+    inline Position::Position(const square& sq)
+    :file_((File)fileof(sq))
+    ,rank_((Rank)rankof(sq))
+    {}
+
     inline bool Position::operator==(const Position& pos) const
     {
         return file_get() == pos.file_get() && rank_get() == pos.rank_get();
