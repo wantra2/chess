@@ -115,5 +115,6 @@ namespace utils
         default:
             break;
         }
+        return board::PAWN;
     }
 }

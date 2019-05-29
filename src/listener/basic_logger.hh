@@ -16,16 +16,16 @@ namespace listener
 
 
         void on_piece_moved(const board::PieceType piece,
-                                    const board::Position& from,
-                                    const board::Position& to) override;
+                                    const board::Position&,
+                                    const board::Position&) override;
 
 
         void on_piece_taken(const board::PieceType piece,
                                     const board::Position& at) override;
 
 
-        void on_piece_promoted(const board::PieceType piece,
-                                       const board::Position& at) override;
+        void on_piece_promoted(const board::PieceType,
+                                       const board::Position&) override;
 
 
         void on_kingside_castling(const board::Color color) override;
