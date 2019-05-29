@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 #include "move/move.hh"
 #include "board/color.hh"
@@ -31,7 +32,7 @@ namespace board
     {
     public:
 
-        Board(const std::string& fen);
+        Board(std::string& fen);
         Board();
         ~Board() = default;
 
@@ -58,7 +59,7 @@ namespace board
         State state_;
         bitboard bitboards_[8]; //updated in addpiece/removepiece
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece
-        int ply_; //updated manually
+
         int side_; //updated manually
 
     private:

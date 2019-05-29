@@ -79,7 +79,6 @@ namespace board
             }
         }
         newstate.captured = type(captured_piece);
-        ++ply_;
         side_ = !side_;
         state_ = newstate;
         gamestates.push_back(newstate);
@@ -88,7 +87,6 @@ namespace board
     void Board::undo_move(const move::Move& m)
     {
         side_ = !side_;
-        --ply_;
         const int direction = side_ == WHITE ? 8 : -8;
         const square src = move::move_src(m);
         const square dst = move::move_dst(m);

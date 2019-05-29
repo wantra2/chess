@@ -8,3 +8,5 @@ set(BOARD_SRC pgn-move.cc
                    )
 
 add_library(board ${BOARD_SRC})
+
+target_link_libraries(board utils)

@@ -10,26 +10,62 @@ namespace board
 {
     std::vector<State> gamestates;
 
-    Board::Board(const std::string& fen)
-    {/*
+    Board::Board(std::string& fen)
+    {
+        //init pieces bb
+        bitboards_[WHITE] = 0ull; //WHITES
+        bitboards_[BLACK] = 0ull; //BLACKS
+        bitboards_[PAWN] = 0ull; //PAWNS
+        bitboards_[KNIGHT] = 0ull; //KNIGHTS
+        bitboards_[BISHOP] = 0ull; //BISHOPS
+        bitboards_[ROOK] = 0ull; //ROOKS
+        bitboards_[QUEEN] = 0ull; //QUEENS
+        bitboards_[KING] = 0ull; //KINGS
+        //pieces square array
+        for (int i = 0; i < SQUARE_NB; ++i)
+            pieces_[i] = piece_type_with_color::VOID;
+
         int sq = A8;
-        auto it = fen.begin();
-        while()
+
+        State st{NONE, {NO_CASTLING, NO_CASTLING}, SQUARE_NB};
+        std::string::iterator it;
+        for (it = fen.begin(); it != fen.end() && !isspace(*it); ++it)
         {
-            if (isspace(c))
-                break;
-            if (isdigit(c))
-                sq += (c - '0');
-            else if (c == '/')
+            if (isdigit(*it))
+                sq += (*it - '0');
+            else if (*it == '/')
                 sq -= 16;
             else
             {
-                const int color = isupper(c) ? WHITE : BLACK;
-                add_piece((square)sq, utils::char_to_piece(c), color);
+                const int color = isupper(*it) ? WHITE : BLACK;
+                add_piece((square)sq, utils::char_to_piece(*it), color);
                 ++sq;
             }
         }
-        side_ = */
+
+        side_ = *(it++) == 'w' ? WHITE : BLACK;
+
+        while(it != fen.end() && !isspace(*it))
+        {
+            const int color = islower(*it) ? BLACK : WHITE;
+            const char token = toupper(*it);
+            if (token == 'K')
+                st.castling_rights[color] |= 1;
+            if (token == 'Q')
+                st.castling_rights[color] |= 2;
+            ++it;
+        }
+        ++it;
+
+        if (*it != '-')
+        {
+            const char file = *it;
+            const char rank = *(++it);
+            st.en_p_square = to_square(rank-49, file-97);
+        }
+
+        gamestates.emplace_back(st);
+        state_ = st;
     }
 
     Board::Board()
@@ -71,7 +107,6 @@ namespace board
         gamestates.push_back(state_);
 
         side_ = WHITE;
-        ply_ = 0;
     }
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
