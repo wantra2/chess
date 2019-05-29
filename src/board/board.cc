@@ -8,33 +8,33 @@
 
 namespace board
 {
+    std::vector<State> gamestates;
+
+    Board::Board(const std::string& fen)
+    {/*
+        int sq = A8;
+        auto it = fen.begin();
+        while()
+        {
+            if (isspace(c))
+                break;
+            if (isdigit(c))
+                sq += (c - '0');
+            else if (c == '/')
+                sq -= 16;
+            else
+            {
+                const int color = isupper(c) ? WHITE : BLACK;
+                add_piece((square)sq, utils::char_to_piece(c), color);
+                ++sq;
+            }
+        }
+        side_ = */
+    }
+
     Board::Board()
     {
-        generate_board();
-        generate_pieces();
-        init_pawn_attacks();
-        init_slide_attacks();
-        init_Knight_and_KingAttacks();
-        init_castling();
-        ply_ = 0;
-        side_ = WHITE;
-        en_p_square = SQUARE_NB;
-        State st{NONE};
-        states_ = std::vector<State>{st};
-    }
-
-    void Board::init_castling()
-    {
-        castling_rights_[WHITE] = BOTH;
-        castling_rights_[BLACK] = BOTH;
-        castlings_sq[WHITE][index_00] = 0x60;
-        castlings_sq[WHITE][index_000] = 0xe;
-        castlings_sq[BLACK][index_00] =  0x6000000000000000;
-        castlings_sq[BLACK][index_000] = 0x0e00000000000000;
-    }
-
-    void Board::generate_board()
-    {
+        //init pieces bb
         bitboards_[WHITE] = 0x000000000000FFFF; //WHITES
         bitboards_[BLACK] = 0xFFFF000000000000; //BLACKS
         bitboards_[PAWN] = 0x00FF00000000FF00; //PAWNS
@@ -43,10 +43,7 @@ namespace board
         bitboards_[ROOK] = 0x8100000000000081; //ROOKS
         bitboards_[QUEEN] = 0x0800000000000008; //QUEENS
         bitboards_[KING] = 0x1000000000000010; //KINGS
-    }
-
-    void Board::generate_pieces()
-    {
+        //init pieces square array
         pieces_[0] = piece_type_with_color::WHITE_ROOK;
         pieces_[1] = piece_type_with_color::WHITE_KNIGHT;
         pieces_[2] = piece_type_with_color::WHITE_BISHOP;
@@ -69,21 +66,12 @@ namespace board
         pieces_[61] = piece_type_with_color::BLACK_BISHOP;
         pieces_[62] = piece_type_with_color::BLACK_KNIGHT;
         pieces_[63] = piece_type_with_color::BLACK_ROOK;
+        //set gamestate
+        state_ = {NONE, {BOTH, BOTH}, SQUARE_NB};
+        gamestates.push_back(state_);
 
-    }
-
-    void Board::init_pawn_attacks()
-    {
-        const int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
-        const int black_pawn_offsets[2][2] = {{-1,-1}, {-1,1}};
-        for (int sq = A1; sq < H8; ++sq)
-        {
-            for (int d = 0; d < 2; ++d)
-            {
-                square_set(pawnAttacks_[WHITE][sq], rankof((square)sq) + white_pawn_offsets[d][0], fileof((square)sq) + white_pawn_offsets[d][1]);
-                square_set(pawnAttacks_[BLACK][sq], rankof((square)sq) + black_pawn_offsets[d][0], fileof((square)sq) + black_pawn_offsets[d][1]);
-            }
-        }
+        side_ = WHITE;
+        ply_ = 0;
     }
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
@@ -93,89 +81,19 @@ namespace board
             const int d1_sq = side_ == WHITE ? D1 : D8;
             const bool king_attacked = is_attacked(kingsquare, color);
 
-            if ((castling_rights_[color] & 1) &&
+            if ((state_.castling_rights[color] & 1) &&
                 ((occupied & castlings_sq[color][index_00]) == 0) &&
                 !king_attacked && !is_attacked((square)f1_sq, color))
             {
                 movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare+2), move::CASTLING));
             }
 
-            if ((castling_rights_[color] & 2) &&
+            if ((state_.castling_rights[color] & 2) &&
                 ((occupied & castlings_sq[color][index_000]) == 0) &&
                 !king_attacked && !is_attacked((square)d1_sq, color))
             {
                 movelist.emplace_back(move::create_move(kingsquare, (square)(kingsquare-2), move::CASTLING));
             }
-    }
-
-    void Board::init_Knight_and_KingAttacks()
-    {
-        const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
-        const int KingOffsets[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
-        for (int sq = A1; sq < SQUARE_NB; ++sq)
-        {
-            for (int d = 0; d < 8; ++d)
-            {
-                square_set(knightAttacks_[sq], rankof((square)sq) + KnightOffsets[d][0], fileof((square)sq) + KnightOffsets[d][1]);
-                square_set(kingAttacks_[sq], rankof((square)sq) + KingOffsets[d][0], fileof((square)sq) + KingOffsets[d][1]);
-            }
-        }
-    }
-
-    void Board::init_slide_attacks()
-    {
-        bishopMagics_[0].offset = bishopAttacks_;
-        rookMagics_[0].offset = rookAttacks_;
-
-        const int bishop_offsets[4][2] = {{-1,-1}, {-1, 1}, { 1,-1}, { 1, 1}};
-        const int rook_offsets[4][2]   = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
-
-        for (int sq = A1; sq < H8; ++sq)
-        {
-            init_magics((square)sq, bishopMagics_, BishopMagicNumbers[sq], bishop_offsets);
-            init_magics((square)sq, rookMagics_, RookMagicNumbers[sq], rook_offsets);
-        }
-    }
-
-    bitboard Board::slider_attacks(const square& from_square, const bitboard& occupied, const int offsets[4][2]) const
-    {
-        int rank, file;
-        bitboard tbr = 0ull;
-        for (int d = 0; d < 4; ++d)
-        {
-            for (rank = rankof(from_square) + offsets[d][0],
-                 file = fileof(from_square) + offsets[d][1]
-                 ;
-                 valid_coordinates(rank, file)
-                 ;
-                 rank += offsets[d][0], file += offsets[d][1])
-            {
-                square_set(tbr, rank, file);
-                if (occupied & (1ull << to_square(rank, file)))
-                    break;
-            }
-        }
-        return tbr;
-    }
-
-    void Board::init_magics(const square& square, Magic* table, const bitboard& magic_number, const int offsets[4][2])
-    {
-        const bitboard edgesmask = ((RANK_1 | RANK_8) & ~Ranks[rankof(square)]) | ((FILE_A | FILE_H) & ~Files[fileof(square)]);
-        table[square].magic_number = magic_number;
-        table[square].mask = slider_attacks(square, 0ull, offsets) & ~edgesmask;
-        table[square].shift_needed = 64 - popcount(table[square].mask);
-        if (square < H8)
-            table[square + 1].offset = table[square].offset + (1ull << popcount(table[square].mask));
-        bitboard occupied = 0ull;
-        unsigned index = table[square].compute_index(occupied);
-        table[square].offset[index] = slider_attacks(square, occupied, offsets);
-        occupied = (occupied - table[square].mask) & table[square].mask;
-        while (occupied)
-        {
-            index = table[square].compute_index(occupied);
-            table[square].offset[index] = slider_attacks(square, occupied, offsets);
-            occupied = (occupied - table[square].mask) & table[square].mask;
-        }
     }
 
     void Board::gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const
@@ -320,13 +238,13 @@ namespace board
             movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq));
         }
         //en passant
-        if (en_p_square != SQUARE_NB)
+        if (state_.en_p_square != SQUARE_NB)
         {
-            bitboard en_p_candidates = pawns_not_on_rank7 & pawnAttacks_[!color][en_p_square];
+            bitboard en_p_candidates = pawns_not_on_rank7 & pawnAttacks_[!color][state_.en_p_square];
             while (en_p_candidates)
             {
                 const int sq = poplsb(en_p_candidates);
-                movelist.emplace_back(move::create_move((square)sq, en_p_square, move::EN_PASSANT));
+                movelist.emplace_back(move::create_move((square)sq, state_.en_p_square, move::EN_PASSANT));
             }
         }
     }

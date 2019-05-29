@@ -9,37 +9,37 @@
 #include "utils/misc.hh"
 #include "utils/options.hh"
 
+using namespace board;
 
 int main(int argc, char* argv[])
 {
-    auto vm = utils::parse_options(argc, argv);
-    if (!vm)
-        return 1;
-    if (vm->count("pgn"))
-    {
-        std::cout << "the pgn file is: " << (*vm)["pgn"].as<std::string>() << '\n';
-    }
-    if (vm->count("listeners"))
-    {
-        std::cout << "the listener plugins are: \t";
-        for (auto i : (*vm)["listeners"].as<std::vector<std::string>>())
-            std::cout << i << '\t';
-        std::cout << '\n';
-    }
-    if (vm->count("perft"))
-    {
-        std::cout << "the perft file is: " << (*vm)["perft"].as<std::string>() << '\n';
-    }
-
-    board::Board b;
-    b.do_move(move::create_move(board::E2, board::E4));
-    b.do_move(move::create_move(board::D7, board::D5));
-    b.do_move(move::create_move(board::E4, board::E5));
-    b.do_move(move::create_move(board::F7, board::F5));
-    b.do_move(move::create_move(board::E5, board::D6, move::EN_PASSANT));
-
+    Board b;
     utils::pretty_print(b);
-    b.undo_move(move::create_move(board::E5, board::D6, move::EN_PASSANT));
+    std::cout << "\n\n";
+    b.do_move(move::create_move(G1, H3));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(E7, E5));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(E2, E4));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(A7, A5));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(F1, E2));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(H7, H6));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    b.do_move(move::create_move(E1, G1, move::CASTLING));
+    utils::pretty_print(b);
+    std::cout << "\n\n";
+    std::cout << b.at(D1);
+    std::cout << "\n" << std::hex << (b.bitboards_[QUEEN]&b.bitboards_[WHITE]);
+    b.undo_move(move::create_move(E1, G1, move::CASTLING));
     utils::pretty_print(b);
     return 0;
 }

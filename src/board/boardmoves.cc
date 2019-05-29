@@ -23,7 +23,7 @@ namespace board
 
     void Board::do_move(const move::Move& m)
     {
-        states_.push_back(State{NONE});
+        State newstate{NONE, {BOTH, BOTH}, SQUARE_NB};
         const int direction = side_ == WHITE ? 8 : -8;
         const square dst = move::move_dst(m);
         const square src = move::move_src(m);
@@ -41,27 +41,27 @@ namespace board
         {
             do_castling(src, dst);
             captured_piece = VOID;
-            castling_rights_[side_] = NO_CASTLING;
+            newstate.castling_rights[side_] = NO_CASTLING;
         }
 
         if (captured_piece != VOID)
             remove_piece(cap_sq, type(captured_piece), !side_);
 
-        if (en_p_square != SQUARE_NB)
-            en_p_square = SQUARE_NB;
+        if (state_.en_p_square != SQUARE_NB)
+            newstate.en_p_square = SQUARE_NB;
 
 
         piece_type src_pt = type(pieces_[src]);
         if (src_pt == piece_type::KING)
-            castling_rights_[side_] = NO_CASTLING;
+            newstate.castling_rights[side_] = NO_CASTLING;
         else
         {
             const square a1 = side_ == WHITE ? A1 : A8;
             const square h1 = side_ == WHITE ? H1 : H8;
             if (src == a1)
-                castling_rights_[side_] &= ~2;
+                newstate.castling_rights[side_] &= ~2;
             if (src == h1)
-                castling_rights_[side_] &= ~1;
+                newstate.castling_rights[side_] &= ~1;
         }
 
         remove_piece(src, src_pt, side_);
@@ -71,21 +71,24 @@ namespace board
         if (src_pt == piece_type::PAWN)
         {
             if (dst == src + pos)
-                en_p_square = (square)(src + direction);
+                newstate.en_p_square = (square)(src + direction);
             if (movetype == move::PROMOTION)
             {
                 remove_piece(dst, src_pt, side_);
                 add_piece(dst, move::promotion_type(m), side_);
             }
         }
-        states_[states_.size()-1].captured = type(captured_piece);
+        newstate.captured = type(captured_piece);
         ++ply_;
         side_ = !side_;
+        state_ = newstate;
+        gamestates.push_back(newstate);
     }
 
     void Board::undo_move(const move::Move& m)
     {
         side_ = !side_;
+        --ply_;
         const int direction = side_ == WHITE ? 8 : -8;
         const square src = move::move_src(m);
         const square dst = move::move_dst(m);
@@ -106,15 +109,15 @@ namespace board
         {
             remove_piece(dst, pt, side_);
             add_piece(src, pt, side_);
-            if (states_[states_.size()-1].captured != NONE)
+            if (state_.captured != NONE)
             {
                 if (movetype == move::EN_PASSANT)
                     add_piece((square)(dst-direction), PAWN, !side_);
                 else
-                    add_piece(dst, states_[states_.size()-1].captured, !side_);
+                    add_piece(dst, state_.captured, !side_);
             }
         }
-        --ply_;
-        states_.pop_back();
+        gamestates.pop_back();
+        state_ = gamestates.back();
     }
 }

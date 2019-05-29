@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "board/position.hh"
+#include "board/piece-type.hh"
 
 namespace board
 {
@@ -22,6 +23,12 @@ namespace board
                 return ((occupied & mask) * magic_number) >> shift_needed;
             #endif
         }
+    };
+
+    enum castlings_sq_index
+    {
+        index_00,
+        index_000
     };
 
     constexpr bitboard RookMagicNumbers[SQUARE_NB] =
@@ -64,6 +71,16 @@ namespace board
         0x0400000260142410, 0x0800633408100500, 0xFC087E8E4BB2F736, 0x43FF9E4EF4CA2C89
     };
 
+    extern bitboard castlings_sq[2][2];
+    extern bitboard pawnAttacks_[2][SQUARE_NB];
+    extern bitboard knightAttacks_[SQUARE_NB];
+    extern bitboard kingAttacks_[SQUARE_NB];
+    extern bitboard bishopAttacks_[5248];
+    extern bitboard rookAttacks_[102400];
+    extern Magic bishopMagics_[SQUARE_NB];
+    extern Magic rookMagics_[SQUARE_NB];
+
+    void init_internal_bitboards();
     void square_set(bitboard& bboard, const int& rank, const int& file);
     int getlsb(const bitboard& bboard);
     int poplsb(bitboard& bboard);

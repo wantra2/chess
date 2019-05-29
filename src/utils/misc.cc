@@ -71,4 +71,49 @@ namespace utils
             std::cout << str;
         std::cout << '\n';
     }
+
+    board::piece_type char_to_piece(const char& c)
+    {
+        switch (c)
+        {
+        case 'p':
+            return board::PAWN;
+            break;
+        case 'P':
+            return board::PAWN;
+            break;
+        case 'n':
+            return board::KNIGHT;
+            break;
+        case 'N':
+            return board::KNIGHT;
+            break;
+        case 'b':
+            return board::BISHOP;
+            break;
+        case 'B':
+            return board::BISHOP;
+            break;
+        case 'r':
+            return board::ROOK;
+            break;
+        case 'R':
+            return board::ROOK;
+            break;
+        case 'q':
+            return board::QUEEN;
+            break;
+        case 'Q':
+            return board::QUEEN;
+            break;
+        case 'k':
+            return board::KING;
+            break;
+        case 'K':
+            return board::KING;
+            break;
+        default:
+            break;
+        }
+    }
 }
