@@ -17,24 +17,28 @@ ENGINE:
 [x] gen queen
 [x] add piece
 [x] remove piece
-[] do move
-[] undo move
-[] movegen function
+[x] do move
+[x] undo move
+[x] movegen function
 
 MISC:
 
 [x] UML
-[] listeners
-[] options parsing
+[x] listeners
+[x] options parsing
+
+IA:
+
+[] Evaluation
+[] Basic Min-Max
+[] Alphabeta
+[]  ...
+
+UCI:
+
+[] Communication with the server
 
 BUGS:
 
--undefined reference when using get_bitboards
-
-Possible optimizations to movegen:
-
--gen castlings
--std::vector<move> replaced by array[128]
--do/undo move
 
 ADD TONS OF TESTS
