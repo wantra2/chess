@@ -7,9 +7,29 @@
 
 namespace board
 {
-    BoardAdapter::BoardAdapter(Board& board)
-        :board_(board)
-    {}
+    BoardAdapter::BoardAdapter(Board& board, std::vector<std::string> listeners)
+        : board_(board)
+    {
+        for (auto& i : listeners)
+        {
+            auto handle = dlopen(i.c_str(), RTLD_LAZY);
+            handles_.emplace_back(handle);
+            auto symbol = dlsym(handle, "listener_create");
+            if (symbol == nullptr)
+                std::cout << "symbol not found\n";
+            else
+            {
+                listener::Listener* listener = reinterpret_cast<listener::Listener*(*)()>(symbol)();
+                listeners_.emplace_back(listener);
+            }
+        }
+    }
+
+    BoardAdapter::~BoardAdapter()
+    {
+        for (auto i : handles_)
+            dlclose(i);
+    }
 
     ChessboardInterface::opt_piece_t
     BoardAdapter::operator[](const Position& position) const

@@ -19,4 +19,5 @@ target_link_libraries(chessengine PRIVATE   ai
                                             move
                                             utils
                                             Boost::program_options
+                                            ${CMAKE_DL_LIBS}
                                             )
