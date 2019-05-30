@@ -35,34 +35,38 @@ int main(int argc, char* argv[])
         std::cout << "the perft file is: " << (*vm)["perft"].as<std::string>() << '\n';
     }
 
-    std::cout << "listeners list: ";
-    for (auto i : listeners)
-        std::cout << i << ", ";
-    std::cout << " end of list\n";
+    // std::cout << "listeners list: ";
+    // for (auto i : listeners)
+    //     std::cout << i << ", ";
+    // std::cout << " end of list\n";
     Board b;
     BoardAdapter ba(b, listeners);
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(G1, H3));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(E7, E5));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(E2, E4));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(A7, A5));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(F1, E2));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //utils::pretty_print(b);
+    //std::cout << "\n\n";
     b.do_move(move::create_move(H7, H6));
     utils::pretty_print(b);
-    std::cout << "\n\n";
-    b.do_move(move::create_move(E1, G1, move::CASTLING));
-    utils::pretty_print(b);
-    std::cout << "\n\n";
+    //std::cout << "\n\n";
+    utils::print_bitboard(b.bitboards_[board::WHITE]); //Printing WHITE board: everything is correct
+    utils::print_bitboard(b.bitboards_[board::KING]);  // Printing the King board: all good
+    b.do_move(move::create_move(E1, G1, move::CASTLING)); //Doing the castling
+    utils::pretty_print(b); // The board is now incoherent
+    utils::print_bitboard(b.bitboards_[board::WHITE]); // The KING position for the whites was correctyl updated but the old one was not erased fron the bitboard
+    utils::print_bitboard(b.bitboards_[board::KING]); // This error is only for the color bitboard
+    //std::cout << "\n\n";
     return 0;
 }

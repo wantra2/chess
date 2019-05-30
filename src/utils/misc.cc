@@ -12,7 +12,7 @@
 
 namespace utils
 {
-    void pretty_print(board::Board board)
+    void pretty_print(const board::Board& board)
     {
         int index = 64;
         board::bitboard bit = 0x8000000000000000;
@@ -50,7 +50,7 @@ namespace utils
     }
 
 
-    void print_bitboard(board::bitboard bb)
+    void print_bitboard(const board::bitboard& bb)
     {
         int index = 63;
         std::list<std::string> s;
