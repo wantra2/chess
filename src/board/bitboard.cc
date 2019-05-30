@@ -8,8 +8,8 @@ namespace board
     bitboard pawnAttacks_[2][SQUARE_NB] = {0};
     bitboard knightAttacks_[SQUARE_NB] = {0};
     bitboard kingAttacks_[SQUARE_NB] = {0};
-    bitboard bishopAttacks_[5248];
-    bitboard rookAttacks_[102400];
+    bitboard bishopAttacks_[5248] = {0};
+    bitboard rookAttacks_[102400] = {0};
     Magic bishopMagics_[SQUARE_NB];
     Magic rookMagics_[SQUARE_NB];
 

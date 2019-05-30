@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include "board/position.hh"
 #include "board/piece-type.hh"
+#ifdef USE_PEXT
+#include <immintrin.h>
+#endif
 
 namespace board
 {
