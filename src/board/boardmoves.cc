@@ -1,11 +1,13 @@
 #include "board/board.hh"
 
+#include <iostream>
+#include "utils/misc.hh"
 namespace board
 {
     void Board::remove_piece(const square& position, const piece_type& type, const int& color)
     {
-        bitboards_[type] ^= (1ull << position);
-        bitboards_[color] ^= (1ull << position);
+        bitboards_[type] &= ~(1ull << position);
+        bitboards_[color] &= ~(1ull << position);
         pieces_[position] = board::piece_type_with_color::VOID;
     }
 
