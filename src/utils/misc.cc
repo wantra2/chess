@@ -320,8 +320,31 @@ namespace utils
         return "";
     }
 
+    std::string prom_to_char(const board::piece_type& piece)
+    {
+        switch (piece)
+        {
+        case board::KNIGHT:
+            return "n";
+            break;
+        case board::BISHOP:
+            return "b";
+            break;
+        case board::ROOK:
+            return "r";
+            break;
+        case board::QUEEN:
+            return "q";
+            break;
+        default:
+            return "";
+            break;
+        }
+    }
+
     std::string move_to_uci(const move::Move& m)
     {
-        return square_to_uci(move::move_src(m))+square_to_uci(move::move_dst(m));
+        std::string prom = prom_to_char(move::promotion_type(m));
+        return square_to_uci(move::move_src(m))+square_to_uci(move::move_dst(m))+prom;
     }
 }
