@@ -26,6 +26,8 @@ MISC:
 [x] UML
 [x] listeners
 [x] options parsing
+[] pgn parsing
+[] perft
 
 IA:
 
@@ -36,7 +38,7 @@ IA:
 
 UCI:
 
-[] Communication with the server
+[x] Communication with the GUI
 
 BUGS:
 
