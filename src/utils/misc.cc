@@ -180,11 +180,11 @@ namespace utils
         int src_file = uci_move[0] - 'a';
         int src_rank = uci_move[1] - '1';
         int dst_file = uci_move[2] - 'a';
-        int dst_rank = uci_move[4] - '1';
+        int dst_rank = uci_move[3] - '1';
         board::square src_square = board::to_square(src_rank, src_file);
         board::square dst_square = board::to_square(dst_rank, dst_file);
         board::piece_type src_pt = board::type(b.at(src_square));
-        if (uci_move[5])
+        if (uci_move[4])
             return move::create_move(src_square, dst_square, char_to_prom(uci_move[5]), move::PROMOTION);
         if (src_pt == board::KING && abs(dst_file - src_file > 1))
             return move::create_move(src_square, dst_square, move::CASTLING);

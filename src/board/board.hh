@@ -34,7 +34,6 @@ namespace board
     public:
 
         Board(std::string& fen);
-        Board();
         ~Board() = default;
 
         void set_listeners(std::vector<listener::Listener*> listeners)

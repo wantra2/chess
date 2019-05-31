@@ -26,87 +26,49 @@ namespace board
             pieces_[i] = piece_type_with_color::VOID;
 
         int sq = A8;
-
+        char *fen_ptr = &fen[0u];
         State st{NONE, {NO_CASTLING, NO_CASTLING}, SQUARE_NB};
-        std::string::iterator it;
-        for (it = fen.begin(); it != fen.end() && !isspace(*it); ++it)
+        for (; !isspace(*fen_ptr); ++fen_ptr)
         {
-            if (isdigit(*it))
-                sq += (*it - '0');
-            else if (*it == '/')
+            if (isdigit(*fen_ptr))
+                sq += (*fen_ptr - '0');
+            else if (*fen_ptr == '/')
                 sq -= 16;
             else
             {
-                const int color = isupper(*it) ? WHITE : BLACK;
-                add_piece((square)sq, utils::char_to_piece(*it), color);
+                const int color = isupper(*fen_ptr) ? WHITE : BLACK;
+                piece_type pt = utils::char_to_piece(*fen_ptr);
+                add_piece((square)sq, pt, color);
                 ++sq;
             }
         }
 
-        side_ = *(it++) == 'w' ? WHITE : BLACK;
+        side_ = *(++fen_ptr) == 'w' ? WHITE : BLACK;
+        ++fen_ptr;
+        ++fen_ptr;
 
-        while(it != fen.end() && !isspace(*it))
+        for(; !isspace(*fen_ptr) && *fen_ptr != '-'; ++fen_ptr)
         {
-            const int color = islower(*it) ? BLACK : WHITE;
-            const char token = toupper(*it);
+            const int color = islower(*fen_ptr) ? BLACK : WHITE;
+            const char token = toupper(*fen_ptr);
             if (token == 'K')
                 st.castling_rights[color] |= 1;
             if (token == 'Q')
                 st.castling_rights[color] |= 2;
-            ++it;
         }
-        ++it;
+        if (*fen_ptr == '-')
+            ++fen_ptr;
+        ++fen_ptr;
 
-        if (*it != '-')
+        if (*fen_ptr != '-')
         {
-            const char file = *it;
-            const char rank = *(++it);
+            const char file = *fen_ptr;
+            const char rank = *(++fen_ptr);
             st.en_p_square = to_square(rank-49, file-97);
         }
 
         gamestates.emplace_back(st);
         state_ = st;
-    }
-
-    Board::Board()
-    {
-        //init pieces bb
-        bitboards_[WHITE] = 0x000000000000FFFF; //WHITES
-        bitboards_[BLACK] = 0xFFFF000000000000; //BLACKS
-        bitboards_[PAWN] = 0x00FF00000000FF00; //PAWNS
-        bitboards_[KNIGHT] = 0x4200000000000042; //KNIGHTS
-        bitboards_[BISHOP] = 0x2400000000000024; //BISHOPS
-        bitboards_[ROOK] = 0x8100000000000081; //ROOKS
-        bitboards_[QUEEN] = 0x0800000000000008; //QUEENS
-        bitboards_[KING] = 0x1000000000000010; //KINGS
-        //init pieces square array
-        pieces_[0] = piece_type_with_color::WHITE_ROOK;
-        pieces_[1] = piece_type_with_color::WHITE_KNIGHT;
-        pieces_[2] = piece_type_with_color::WHITE_BISHOP;
-        pieces_[3] = piece_type_with_color::WHITE_QUEEN;
-        pieces_[4] = piece_type_with_color::WHITE_KING;
-        pieces_[5] = piece_type_with_color::WHITE_BISHOP;
-        pieces_[6] = piece_type_with_color::WHITE_KNIGHT;
-        pieces_[7] = piece_type_with_color::WHITE_ROOK;
-        for (int i = 8; i < 16; ++i)
-            pieces_[i] = piece_type_with_color::WHITE_PAWN;
-        for (int i = 16; i < 48; ++i)
-            pieces_[i] = piece_type_with_color::VOID;
-        for (int i = 48; i < 56; ++i)
-            pieces_[i] = piece_type_with_color::BLACK_PAWN;
-        pieces_[56] = piece_type_with_color::BLACK_ROOK;
-        pieces_[57] = piece_type_with_color::BLACK_KNIGHT;
-        pieces_[58] = piece_type_with_color::BLACK_BISHOP;
-        pieces_[59] = piece_type_with_color::BLACK_QUEEN;
-        pieces_[60] = piece_type_with_color::BLACK_KING;
-        pieces_[61] = piece_type_with_color::BLACK_BISHOP;
-        pieces_[62] = piece_type_with_color::BLACK_KNIGHT;
-        pieces_[63] = piece_type_with_color::BLACK_ROOK;
-        //set gamestate
-        state_ = {NONE, {BOTH, BOTH}, SQUARE_NB};
-        gamestates.push_back(state_);
-
-        side_ = WHITE;
     }
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
