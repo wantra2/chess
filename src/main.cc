@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
     if (vm->count("pgn"))
     {
         std::cout << "the pgn file is: " << (*vm)["pgn"].as<std::string>() << '\n';
+        return 0;
     }
     if (vm->count("listeners"))
     {
@@ -73,6 +74,7 @@ int main(int argc, char* argv[])
     if (vm->count("perft"))
     {
         std::cout << "the perft file is: " << (*vm)["perft"].as<std::string>() << '\n';
+        return 0;
     }
 
     uci_loop();
