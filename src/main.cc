@@ -74,6 +74,8 @@ int main(int argc, char* argv[])
     {
         std::cout << "the perft file is: " << (*vm)["perft"].as<std::string>() << '\n';
     }
+
+    uci_loop();
     //call uci_loop if no arguments are given
     return 0;
 }
