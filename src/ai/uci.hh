@@ -26,8 +26,7 @@ namespace ai
      * - position startpos
      * - position startpos moves e2e4
      * - position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-     * - position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
-     * moves f7f5
+     * - position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1 moves f7f5
      */
     std::string get_board();
 } // namespace ai
