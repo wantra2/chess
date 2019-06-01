@@ -17,7 +17,6 @@ using namespace board;
 
 void uci_loop()
 {
-    init_internal_bitboards();
     ai::init("ThugChess");
     while (1)
     {
@@ -55,6 +54,7 @@ void uci_loop()
 
 int main(int argc, char* argv[])
 {
+    init_internal_bitboards();
     std::vector<std::string> listeners;
     auto vm = utils::parse_options(argc, argv);
     if (!vm)
