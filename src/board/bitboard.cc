@@ -3,16 +3,6 @@
 
 namespace board
 {
-
-    bitboard castlings_sq[2][2];
-    bitboard pawnAttacks_[2][SQUARE_NB] = {0};
-    bitboard knightAttacks_[SQUARE_NB] = {0};
-    bitboard kingAttacks_[SQUARE_NB] = {0};
-    bitboard bishopAttacks_[5248] = {0};
-    bitboard rookAttacks_[102400] = {0};
-    Magic bishopMagics_[SQUARE_NB];
-    Magic rookMagics_[SQUARE_NB];
-
     void square_set(bitboard& bboard, const int& rank, const int& file)
     {
         if ((rank >= 0 && rank <= 7) && (file >= 0 && file <= 7))
@@ -77,16 +67,18 @@ namespace board
         }
     }
 
+    bitboard pawnAttacks_[2][SQUARE_NB] = {0};
+    bitboard knightAttacks_[SQUARE_NB] = {0};
+    bitboard kingAttacks_[SQUARE_NB] = {0};
+    bitboard bishopAttacks_[5248] = {0};
+    bitboard rookAttacks_[102400] = {0};
+    Magic bishopMagics_[SQUARE_NB];
+    Magic rookMagics_[SQUARE_NB];
+
     void init_internal_bitboards()
     {
-        //castling squares that must not contain piece in order to castle
-        castlings_sq[WHITE][index_00] = 0x60;
-        castlings_sq[WHITE][index_000] = 0xe;
-        castlings_sq[BLACK][index_00] =  0x6000000000000000;
-        castlings_sq[BLACK][index_000] = 0x0e00000000000000;
         //init pawns attack
-        const int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
-        const int black_pawn_offsets[2][2] = {{-1,-1}, {-1,1}};
+
         for (int sq = A1; sq < H8; ++sq)
         {
             for (int d = 0; d < 2; ++d)
@@ -97,8 +89,7 @@ namespace board
         }
 
         //init knight and king attacks
-        const int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
-        const int KingOffsets[8][2]   = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
+
         for (int sq = A1; sq < SQUARE_NB; ++sq)
         {
             for (int d = 0; d < 8; ++d)
@@ -112,8 +103,6 @@ namespace board
         bishopMagics_[0].offset = bishopAttacks_;
         rookMagics_[0].offset = rookAttacks_;
 
-        const int bishop_offsets[4][2] = {{-1,-1}, {-1, 1}, { 1,-1}, { 1, 1}};
-        const int rook_offsets[4][2]   = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
 
         for (int sq = A1; sq < H8; ++sq)
         {

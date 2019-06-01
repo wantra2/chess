@@ -74,7 +74,14 @@ namespace board
         0x0400000260142410, 0x0800633408100500, 0xFC087E8E4BB2F736, 0x43FF9E4EF4CA2C89
     };
 
-    extern bitboard castlings_sq[2][2];
+    constexpr int white_pawn_offsets[2][2] = {{ 1,-1}, { 1,1}};
+    constexpr int black_pawn_offsets[2][2] = {{-1,-1}, {-1,1}};
+    constexpr int KnightOffsets[8][2] = {{-2,-1}, {-2, 1}, {-1,-2}, {-1, 2},{ 1,-2}, { 1, 2}, { 2,-1}, { 2, 1}};
+    constexpr int KingOffsets[8][2] = {{-1,-1}, {-1, 0}, {-1, 1}, { 0,-1},{ 0, 1}, { 1,-1}, { 1, 0}, { 1, 1}};
+    constexpr int bishop_offsets[4][2] = {{-1,-1}, {-1, 1}, { 1,-1}, { 1, 1}};
+    constexpr int rook_offsets[4][2] = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
+    constexpr bitboard castlings_sq[2][2] = {{0x60,0xe}, {0x6000000000000000,0x0e00000000000000}};
+
     extern bitboard pawnAttacks_[2][SQUARE_NB];
     extern bitboard knightAttacks_[SQUARE_NB];
     extern bitboard kingAttacks_[SQUARE_NB];
