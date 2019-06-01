@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include "move/move.hh"
 #include "board/color.hh"
@@ -60,7 +61,8 @@ namespace board
         void do_castling(const square& src, const square& dst);
         void undo_castling(const square& src, const square& dst);
 
-        State state_;
+
+        State state_; //updated in do_move/undo_move
         bitboard bitboards_[8]; //updated in addpiece/removepiece
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece
         int side_; //updated manually

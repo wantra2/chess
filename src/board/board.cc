@@ -22,8 +22,8 @@ namespace board
         bitboards_[QUEEN] = 0ull; //QUEENS
         bitboards_[KING] = 0ull; //KINGS
         //pieces square array
-        for (int i = 0; i < SQUARE_NB; ++i)
-            pieces_[i] = piece_type_with_color::VOID;
+        for (int i = A1; i < SQUARE_NB; i++)
+            pieces_[i] = VOID;
 
         int sq = A8;
         char *fen_ptr = &fen[0u];
@@ -108,7 +108,7 @@ namespace board
         while (knights)
         {
             const int from_square = poplsb(knights);
-            gen_non_pawn(movelist, knightAttacks_[from_square] & targets, (square)from_square);
+            gen_non_pawn(movelist, int_bb.knightAttacks_[from_square] & targets, (square)from_square);
         }
     }
 
@@ -116,7 +116,7 @@ namespace board
     {
         bitboard king = bitboards_[KING] & bitboards_[color];
         const int from_square = poplsb(king);
-        gen_non_pawn(movelist, kingAttacks_[from_square] & targets, (square)from_square);
+        gen_non_pawn(movelist, int_bb.kingAttacks_[from_square] & targets, (square)from_square);
     }
 
     void Board::gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const
@@ -125,7 +125,7 @@ namespace board
         while (pieces)
         {
             const int sq = poplsb(pieces);
-            bitboard attacks = bishopMagics_[sq].offset[bishopMagics_[sq].compute_index(occupied)];
+            bitboard attacks = int_bb.bishopMagics_[sq].offset[int_bb.bishopMagics_[sq].compute_index(occupied)];
             gen_non_pawn(movelist, attacks & targets, (square)sq);
         }
     }
@@ -136,7 +136,7 @@ namespace board
         while (pieces)
         {
             const int sq = poplsb(pieces);
-            bitboard attacks = rookMagics_[sq].offset[rookMagics_[sq].compute_index(occupied)];
+            bitboard attacks = int_bb.rookMagics_[sq].offset[int_bb.rookMagics_[sq].compute_index(occupied)];
             gen_non_pawn(movelist, attacks & targets, (square)sq);
         }
     }
@@ -144,12 +144,12 @@ namespace board
     bool Board::is_attacked(const square& square, const int& color) const
     {
         const bitboard occupied = bitboards_[WHITE]|bitboards_[BLACK];
-        const bitboard bishop_attacks = bishopMagics_[square].offset[bishopMagics_[square].compute_index(occupied)];
-        const bitboard rook_attacks = rookMagics_[square].offset[rookMagics_[square].compute_index(occupied)];
+        const bitboard bishop_attacks = int_bb.bishopMagics_[square].offset[int_bb.bishopMagics_[square].compute_index(occupied)];
+        const bitboard rook_attacks = int_bb.rookMagics_[square].offset[int_bb.rookMagics_[square].compute_index(occupied)];
 
-        return pawnAttacks_[color][square] & (bitboards_[PAWN] & bitboards_[!color])
-            || knightAttacks_[square] & (bitboards_[KNIGHT] & bitboards_[!color])
-            || kingAttacks_[square] & (bitboards_[KING] & bitboards_[!color])
+        return int_bb.pawnAttacks_[color][square] & (bitboards_[PAWN] & bitboards_[!color])
+            || int_bb.knightAttacks_[square] & (bitboards_[KNIGHT] & bitboards_[!color])
+            || int_bb.kingAttacks_[square] & (bitboards_[KING] & bitboards_[!color])
             || bishop_attacks & ((bitboards_[BISHOP]|bitboards_[QUEEN]) & bitboards_[!color])
             || rook_attacks & ((bitboards_[ROOK]|bitboards_[QUEEN]) & bitboards_[!color]);
     }
@@ -237,7 +237,7 @@ namespace board
         //en passant
         if (state_.en_p_square != SQUARE_NB)
         {
-            bitboard en_p_candidates = pawns_not_on_rank7 & pawnAttacks_[!color][state_.en_p_square];
+            bitboard en_p_candidates = pawns_not_on_rank7 & int_bb.pawnAttacks_[!color][state_.en_p_square];
             while (en_p_candidates)
             {
                 const int sq = poplsb(en_p_candidates);

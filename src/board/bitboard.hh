@@ -82,15 +82,20 @@ namespace board
     constexpr int rook_offsets[4][2] = {{-1, 0}, { 0,-1}, { 0, 1}, { 1, 0}};
     constexpr bitboard castlings_sq[2][2] = {{0x60,0xe}, {0x6000000000000000,0x0e00000000000000}};
 
-    extern bitboard pawnAttacks_[2][SQUARE_NB];
-    extern bitboard knightAttacks_[SQUARE_NB];
-    extern bitboard kingAttacks_[SQUARE_NB];
-    extern bitboard bishopAttacks_[5248];
-    extern bitboard rookAttacks_[102400];
-    extern Magic bishopMagics_[SQUARE_NB];
-    extern Magic rookMagics_[SQUARE_NB];
+    struct internal_bitboards
+    {
+        bitboard pawnAttacks_[2][SQUARE_NB];
+        bitboard knightAttacks_[SQUARE_NB];
+        bitboard kingAttacks_[SQUARE_NB];
+        bitboard bishopAttacks_[5248];
+        bitboard rookAttacks_[102400];
+        Magic bishopMagics_[SQUARE_NB];
+        Magic rookMagics_[SQUARE_NB];
+    };
 
-    void init_internal_bitboards();
+    extern internal_bitboards int_bb;
+
+    void init_internal_bitboards(internal_bitboards& bb);
     void square_set(bitboard& bboard, const int& rank, const int& file);
     int getlsb(const bitboard& bboard);
     int poplsb(bitboard& bboard);

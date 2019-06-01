@@ -54,7 +54,7 @@ void uci_loop()
 
 int main(int argc, char* argv[])
 {
-    init_internal_bitboards();
+    init_internal_bitboards(int_bb);
     std::vector<std::string> listeners;
     auto vm = utils::parse_options(argc, argv);
     if (!vm)
