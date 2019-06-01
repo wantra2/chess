@@ -4,12 +4,12 @@
 
 namespace ai
 {
-    constexpr int pawn_value = 1;
-    constexpr int knight_value = 3;
-    constexpr int bishop_value = 3;
-    constexpr int rook_value = 5;
-    constexpr int queen_value = 9;
-    constexpr int king_value = 100000;
+    constexpr int pawn_value = 100;
+    constexpr int knight_value = 325;
+    constexpr int bishop_value = 350;
+    constexpr int rook_value = 500;
+    constexpr int queen_value = 900;
+    constexpr int king_value = 1000000;
 
     int eval(const board::Board& b);
 }

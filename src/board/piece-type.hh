@@ -29,7 +29,7 @@ namespace board
         ROOK,
         QUEEN,
         KING,
-        NONE
+        NONE = 0,
     };
 
     enum piece_type_with_color : int

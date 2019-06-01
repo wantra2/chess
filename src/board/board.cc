@@ -292,4 +292,17 @@ namespace board
         gen_KingMoves(movelist, side_, empty);
         gen_castlings(movelist, occupied, side_);
     }
+
+    void Board::gen_captures(std::vector<move::Move>& movelist)
+    {
+        const bitboard ennemy = bitboards_[!side_];
+        const bitboard allies = bitboards_[side_];
+        const bitboard occupied = ennemy|allies;
+
+        gen_pawn_moves_noisy(movelist, side_);
+        gen_KnightMoves(movelist, side_, ennemy);
+        gen_queen_bishop_moves(movelist, side_, occupied, ennemy);
+        gen_queen_rook_moves(movelist, side_, occupied, ennemy);
+        gen_KingMoves(movelist, side_, ennemy);
+    }
 }

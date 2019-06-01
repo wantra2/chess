@@ -11,6 +11,7 @@
 #include "utils/options.hh"
 #include "board/board-adapter.hh"
 #include "ai/uci.hh"
+#include "ai/minmax.hh"
 
 using namespace board;
 
@@ -46,9 +47,9 @@ void uci_loop()
             b.do_move(m);
             token = std::strtok(NULL, " ");
         }
-        std::vector<move::Move> ml;
-        b.gen_all(ml);
-        ai::play_move(utils::move_to_uci(ml[0]));
+        ai::search_infos infos{0, 5, 0};
+        ai::search(b, infos);
+        ai::play_move(utils::move_to_uci(infos.best_move));
     }
 }
 

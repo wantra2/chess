@@ -47,6 +47,7 @@ namespace board
         void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
         void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
         void gen_all(std::vector<move::Move>& movelist);
+        void gen_captures(std::vector<move::Move>& movelist);
 
         void remove_piece(const square& position, const piece_type& type, const int& color);
         void add_piece(const square& position, const piece_type& type, const int& color);
