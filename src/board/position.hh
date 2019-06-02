@@ -70,8 +70,8 @@ namespace board
         FILE_H = 0x8080808080808080ull,
     };
 
-    const uint64_t Files[8] = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H};
-    const uint64_t Ranks[8] = {RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
+    constexpr uint64_t Files[8] = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H};
+    constexpr uint64_t Ranks[8] = {RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
 
     int rankof(const square& square);// returns integer between 0 and 7
 

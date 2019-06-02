@@ -5,6 +5,7 @@ set(BOARD_SRC pgn-move.cc
               bitboard.cc
               position.cc
               boardmoves.cc
+              hash_keys.cc
                    )
 
 add_library(board ${BOARD_SRC})

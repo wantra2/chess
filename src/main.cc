@@ -12,6 +12,7 @@
 #include "board/board-adapter.hh"
 #include "ai/uci.hh"
 #include "ai/minmax.hh"
+#include "board/hash_keys.hh"
 
 using namespace board;
 
@@ -55,6 +56,8 @@ void uci_loop()
 int main(int argc, char* argv[])
 {
     init_internal_bitboards(int_bb);
+    init_hash_keys(h_keys);
+
     std::vector<std::string> listeners;
     auto vm = utils::parse_options(argc, argv);
     if (!vm)

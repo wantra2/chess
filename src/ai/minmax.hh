@@ -1,9 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include <unordered_map>
 #include "board/board.hh"
 #include "ai/eval.hh"
 #include "utils/misc.hh"
+#include "move/move.hh"
 
 namespace ai
 {
@@ -26,5 +29,6 @@ namespace ai
 /*Q*/   {0, 0, 4200, 4425 , 4450 , 4600 , 6010 , 26100},
 /*K*/   {0, 0, 3100, 3325 , 3350 , 3500 , 3900 , 26000}
     };
+    extern std::unordered_map<uint64_t, move::Move> h_map;
     void search(board::Board& b, search_infos& infos);
 }

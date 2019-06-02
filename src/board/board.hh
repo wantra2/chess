@@ -10,6 +10,7 @@
 #include "board/piece-type.hh"
 #include "board/bitboard.hh"
 #include "listener/listener.hh"
+#include "board/hash_keys.hh"
 
 namespace board
 {
@@ -57,19 +58,25 @@ namespace board
 
         void do_move(const move::Move& m);
         void undo_move(const move::Move& m);
+        void do_move_null();
+        void undo_move_null();
 
         void do_castling(const square& src, const square& dst);
         void undo_castling(const square& src, const square& dst);
 
+        bool is_attacked(const square& square, const int& color) const;
 
+        move::Move killers_[2][16];// 16 = max depth
+        move::Move pv_[16]; //16 = max depth
+        uint64_t key_;
         State state_; //updated in do_move/undo_move
         bitboard bitboards_[8]; //updated in addpiece/removepiece
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece
         int side_; //updated manually
+        int ply_; //updated manually (not used for 50 rule!)
 
     private:
         std::vector<listener::Listener*> listeners_;
-        bool is_attacked(const square& square, const int& color) const;
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const;
     };
 }
