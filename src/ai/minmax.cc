@@ -160,7 +160,7 @@ namespace ai
             std::cout << "principal variation ";
             for (int i = 0; i < pv_num; ++i)
             {
-                std::cout << utils::uci_to_move(b.pv_[i]) << " ";
+                std::cout << utils::move_to_uci(b.pv_[i]) << " ";
             }
             std::cout << "\n";
         }
