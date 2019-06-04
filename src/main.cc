@@ -14,6 +14,7 @@
 #include "ai/minmax.hh"
 #include "board/hash_keys.hh"
 #include "utils/perft.hh"
+#include "pgn_parser/pgn.hh"
 
 using namespace board;
 
@@ -63,11 +64,6 @@ int main(int argc, char* argv[])
     auto vm = utils::parse_options(argc, argv);
     if (!vm)
         return 1;
-    if (vm->count("pgn"))
-    {
-        std::cout << "the pgn file is: " << (*vm)["pgn"].as<std::string>() << '\n';
-        return 0;
-    }
     if (vm->count("listeners"))
     {
         std::cout << "the listener plugins are: \t";
@@ -75,6 +71,10 @@ int main(int argc, char* argv[])
         for (auto i : (*vm)["listeners"].as<std::vector<std::string>>())
             std::cout << i << '\t';
         std::cout << '\n';
+    }
+    if (vm->count("pgn"))
+    {
+        return pgn_parser::pgn_play((*vm)["pgn"].as<std::string>(), listeners);
     }
     if (vm->count("perft"))
     {

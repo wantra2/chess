@@ -28,7 +28,6 @@ namespace board
         void report_set(ReportType report);
 
 
-    private:
         // The original position of the piece
         const Position start_;
 

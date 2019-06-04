@@ -29,6 +29,27 @@ namespace board
         }
     }
 
+    piece_type switch_piecetype(const PieceType type)
+    {
+        switch(type)
+        {
+        case (PieceType::PAWN):
+            return piece_type::PAWN;
+        case (PieceType::KNIGHT):
+            return piece_type::KNIGHT;
+        case (PieceType::BISHOP):
+            return piece_type::BISHOP;
+        case (PieceType::ROOK):
+            return piece_type::ROOK;
+        case (PieceType::QUEEN):
+            return piece_type::QUEEN;
+        case (PieceType::KING):
+            return piece_type::KING;
+        default:
+            throw std::out_of_range("Non-corresponding piece types");
+        }
+    }
+
     piece_type type(const piece_type_with_color& pt)
     {
         switch(pt)

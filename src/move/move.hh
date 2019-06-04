@@ -29,6 +29,8 @@ namespace move
      */
     board::Rank int_to_rank(int i);
     board::File int_to_file(int i);
+    int file_to_int(board::File f);
+    int rank_to_int(board::Rank r);
 
     /*
       Returns a Move's source/destination formated as a Position

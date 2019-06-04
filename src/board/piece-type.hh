@@ -59,5 +59,6 @@ namespace board
         PieceType::KNIGHT, PieceType::PAWN, PieceType::KING};
 
     PieceType switch_piecetype(const piece_type type);
+    piece_type switch_piecetype(const PieceType type);
 
 } // namespace board
