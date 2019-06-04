@@ -66,7 +66,6 @@ namespace board
 
         bool is_attacked(const square& square, const int& color) const;
 
-        move::Move killers_[2][16];// 16 = max depth
         move::Move pv_[16]; //16 = max depth
         uint64_t key_;
         State state_; //updated in do_move/undo_move

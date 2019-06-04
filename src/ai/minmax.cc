@@ -133,11 +133,6 @@ namespace ai
             {
                 if (score >= beta)
                 {
-                    if (b.at(move::move_dst(ml[i])) == board::VOID)
-                    {
-                        b.killers_[1][b.ply_] = b.killers_[0][b.ply_];
-                        b.killers_[0][b.ply_] = ml[i];
-                    }
                     return beta;
                 }
                 alpha = score;
@@ -165,7 +160,7 @@ namespace ai
             std::cout << "principal variation ";
             for (int i = 0; i < pv_num; ++i)
             {
-                std::cout << b.pv_[i] << " ";
+                std::cout << utils::uci_to_move(b.pv_[i]) << " ";
             }
             std::cout << "\n";
         }

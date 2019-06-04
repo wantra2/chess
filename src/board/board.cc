@@ -12,14 +12,11 @@ namespace board
 
     Board::Board(std::string& fen)
     {
-        for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 16; ++j)
         {
-            for (int j = 0; j < 16; ++j)
-            {
-                killers_[i][j] = 0;
-                pv_[j] = 0;
-            }
+            pv_[j] = 0;
         }
+        
         //hash key
         key_ = 0ull;
         //init pieces bb
@@ -99,8 +96,6 @@ namespace board
             {
                 move::Move m = move::create_move(kingsquare, (square)(kingsquare+2), move::CASTLING);
                 movelist.emplace_back(m);
-                if (m == killers_[0][ply_] || m == killers_[1][ply_])
-                    return;
             }
 
             if ((state_.castling_rights[color] & 2) &&
@@ -118,8 +113,6 @@ namespace board
             const int target_square = poplsb(attacks);
             move::Move m = move::create_move(square_from, (square)target_square);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_])
-                    return;
         }
     }
 
@@ -192,16 +185,12 @@ namespace board
             const int sq = poplsb(push1);
             move::Move m = move::create_move((square)(sq-direction), (square)sq);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_])
-                    return;
         }
         while (push2)
         {
             const int sq = poplsb(push2);
             move::Move m = move::create_move((square)(sq-two_times_direction), (square)sq);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_])
-                    return;
         }
     }
 
@@ -244,16 +233,12 @@ namespace board
             const int sq = poplsb(prom);
             move::Move m = move::create_move((square)(sq-direction), (square)sq, KNIGHT, move::PROMOTION);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_]){return;}
             m = move::create_move((square)(sq-direction), (square)sq, BISHOP, move::PROMOTION);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_]){return;}
             m = move::create_move((square)(sq-direction), (square)sq, ROOK, move::PROMOTION);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_]){return;}
             m = move::create_move((square)(sq-direction), (square)sq, QUEEN, move::PROMOTION);
             movelist.emplace_back(m);
-            if (m == killers_[0][ply_] || m == killers_[1][ply_]){return;}
         }
         //captures
         bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea2) & ennemy;
