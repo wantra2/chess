@@ -192,4 +192,11 @@ namespace utils
             return move::create_move(src_square, dst_square, move::EN_PASSANT);
         return move::create_move(src_square, dst_square);
     }
+    
+    bitboard shift(bitboard& bits, const int val)
+    {
+        if (val < 0)
+            return bits >> (val * -1);
+        return bits << val;
+    }
 }

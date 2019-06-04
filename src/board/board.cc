@@ -184,8 +184,8 @@ namespace board
         const bitboard rank3 = color == WHITE ? RANK_3 : RANK_6;
         const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
         //standard non-capture
-        bitboard push1 = (pawns_not_on_rank7 << direction) & empty;
-        bitboard push2 = ((push1 & rank3) << direction) & empty;
+        bitboard push1 = (utils::shift(pawns_not_on_rank7, direction)) & empty;
+        bitboard push2 = (utils::shift((push1 & rank3), direction)) & empty;
 
         while (push1)
         {
@@ -219,9 +219,9 @@ namespace board
         const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
 
         //promotions
-        bitboard cap1 = (pawns_on_rank7 << (direction+1) & ~filea) & ennemy;
-        bitboard cap2 = ((pawns_on_rank7 << (direction-1)) & ~fileh) & ennemy;
-        bitboard prom = (pawns_on_rank7 << (direction)) & empty;
+        bitboard cap1 = ((utils::shift(pawns_on_rank7, (direction+1)))) & ~filea & ennemy;
+        bitboard cap2 = ((utils::shift(pawns_on_rank7, (direction-1)))) & ~fileh & ennemy;
+        bitboard prom = (utils::shift(pawns_on_rank7, (direction))) & empty;
 
         while (cap1)
         {
@@ -256,8 +256,8 @@ namespace board
             if (m == killers_[0][ply_] || m == killers_[1][ply_]){return;}
         }
         //captures
-        bitboard cap3 = (pawns_not_on_rank7 << (direction+1) & ~filea2) & ennemy;
-        bitboard cap4 = (pawns_not_on_rank7 << (direction-1) & ~fileh2) & ennemy;
+        bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea2) & ennemy;
+        bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~fileh2) & ennemy;
 
         while (cap3)
         {
