@@ -57,4 +57,9 @@ namespace board
 
         return std::pair<PieceType, Color>(switch_piecetype(i), Color::BLACK);
     }
+
+    void BoardAdapter::do_move(move::Move move)
+    {
+        board_.do_move(move);
+    }
 }

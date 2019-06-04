@@ -6,6 +6,7 @@
 #include "board/chessboard-interface.hh"
 #include "board/board.hh"
 #include "listener/listener.hh"
+#include "move/move.hh"
 
 namespace board
 {
@@ -16,6 +17,7 @@ namespace board
         ~BoardAdapter();
 
         opt_piece_t operator[](const Position& position) const override;
+        void do_move(move::Move move);
 
     private:
         Board& board_;
