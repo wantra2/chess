@@ -18,8 +18,6 @@ namespace utils
         for (auto& move : list)
         {
             board.do_move(move);
-            utils::pretty_print(board);
-            std::cout << '\n';
             if (depth > 1)
                 res += perft_scnd(board, depth - 1);
             board.undo_move(move);

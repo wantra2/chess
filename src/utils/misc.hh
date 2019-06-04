@@ -11,5 +11,5 @@ namespace utils
     board::piece_type char_to_piece(const char& c);
     std::string move_to_uci(const move::Move& m);
     move::Move uci_to_move(const std::string& uci_move, const board::Board& b);
-    bitboard shift(bitboard& bits, const int val);
+    board::bitboard shift(const board::bitboard& bits, const int val);
 }
