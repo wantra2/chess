@@ -12,14 +12,15 @@ namespace utils
 {
     int perft_scnd(board::Board& board, int depth)
     {
+        if (!depth)
+            return 1;
         auto list = std::vector<move::Move>();
         board.gen_all(list);
-        int res = list.size();
+        int res = 0;
         for (auto& move : list)
         {
             board.do_move(move);
-            if (depth > 1)
-                res += perft_scnd(board, depth - 1);
+            res += perft_scnd(board, depth - 1);
             board.undo_move(move);
         }
         return res;
