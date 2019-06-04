@@ -13,6 +13,7 @@
 #include "ai/uci.hh"
 #include "ai/minmax.hh"
 #include "board/hash_keys.hh"
+#include "utils/perft.hh"
 
 using namespace board;
 
@@ -77,7 +78,7 @@ int main(int argc, char* argv[])
     }
     if (vm->count("perft"))
     {
-        std::cout << "the perft file is: " << (*vm)["perft"].as<std::string>() << '\n';
+        std::cout << utils::perft((*vm)["perft"].as<std::string>()) << '\n';
         return 0;
     }
 
