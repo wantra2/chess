@@ -32,6 +32,7 @@ namespace board
         const square dst = move::move_dst(m);
         const square src = move::move_src(m);
         const move::MoveType movetype = move::mv_type(m);
+        piece_type src_pt = type(pieces_[src]);
         square cap_sq = dst;
         piece_type_with_color captured_piece = pieces_[dst];
 
@@ -55,8 +56,6 @@ namespace board
 //        {
 //            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
 //        }
-
-        piece_type src_pt = type(pieces_[src]);
 
         if (src_pt == piece_type::KING)
         {
