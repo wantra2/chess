@@ -99,6 +99,8 @@ namespace board
         Rank rank_;
     };
 
+    Position to_position(const square cell);
+
 } // namespace board
 
 #include "position.hxx"
