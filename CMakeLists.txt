@@ -11,7 +11,7 @@ include(CPack)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 
-add_compile_options(-Wall -Wextra -std=c++17 -O3 -flto -static -DUSE_POPCNT -msse3 -mpopcnt -DUSE_PEXT -mbmi2)
+add_compile_options(-march=native -flto -static -Wall -Wextra -std=c++17 -O3)
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
