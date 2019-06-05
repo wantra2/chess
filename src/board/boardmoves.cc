@@ -9,7 +9,7 @@ namespace board
         bitboards_[type] &= ~(1ull << position);
         bitboards_[color] &= ~(1ull << position);
         pieces_[position] = board::piece_type_with_color::VOID;
-        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
+//        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
     }
 
     void Board::add_piece(const square& position, const piece_type& type, const int& color)
@@ -17,7 +17,7 @@ namespace board
         bitboards_[type] |= (1ull << position);
         bitboards_[color] |= (1ull << position);
         pieces_[position] = (piece_type_with_color)(type - 1 + color * 6);
-        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
+//        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
     }
 
     piece_type_with_color Board::at(const square& s) const
@@ -51,10 +51,10 @@ namespace board
         if (captured_piece != VOID)
             remove_piece(cap_sq, type(captured_piece), !side_);
 
-        if (state_.en_p_square != SQUARE_NB)
-        {
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
-        }
+//        if (state_.en_p_square != SQUARE_NB)
+//        {
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        }
 
         piece_type src_pt = type(pieces_[src]);
 
@@ -85,7 +85,7 @@ namespace board
             if (dst == src + pos)
             {
                 newstate.en_p_square = (square)(src + direction);
-                key_ ^= h_keys.piece_keys[VOID][newstate.en_p_square];
+//                key_ ^= h_keys.piece_keys[VOID][newstate.en_p_square];
             }
             if (movetype == move::PROMOTION)
             {
@@ -95,7 +95,7 @@ namespace board
         }
         newstate.captured = type(captured_piece);
         side_ = !side_;
-        key_ ^= h_keys.side_key;
+//        key_ ^= h_keys.side_key;
         state_ = newstate;
         gamestates.push_back(newstate);
         ++ply_;
@@ -105,17 +105,17 @@ namespace board
     {
         --ply_;
         side_ = !side_;
-        key_ ^= h_keys.side_key;
+//        key_ ^= h_keys.side_key;
         const int direction = side_ == WHITE ? 8 : -8;
         const square src = move::move_src(m);
         const square dst = move::move_dst(m);
         const piece_type_with_color colored_pt = at(dst);
         piece_type pt = type(colored_pt);
         const move::MoveType movetype = move::mv_type(m);
-        if (state_.en_p_square != SQUARE_NB)
-        {
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
-        }
+//        if (state_.en_p_square != SQUARE_NB)
+//        {
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        }
         if (movetype == move::PROMOTION)
         {
             remove_piece(dst, pt, side_);
@@ -140,19 +140,19 @@ namespace board
         }
         gamestates.pop_back();
         state_ = gamestates.back();
-        if (state_.en_p_square != SQUARE_NB)
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        if (state_.en_p_square != SQUARE_NB)
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
     }
 
     void Board::do_move_null()
     {
         State newstate{NONE, {state_.castling_rights[WHITE], state_.castling_rights[BLACK]}, SQUARE_NB};
-        if (state_.en_p_square != SQUARE_NB)
-        {
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
-        }
+//        if (state_.en_p_square != SQUARE_NB)
+//        {
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        }
         side_ = !side_;
-        key_ ^= h_keys.side_key;
+//        key_ ^= h_keys.side_key;
         state_ = newstate;
         gamestates.push_back(newstate);
         ++ply_;
@@ -162,14 +162,14 @@ namespace board
     {
         --ply_;
         side_ = !side_;
-        key_ ^= h_keys.side_key;
-        if (state_.en_p_square != SQUARE_NB)
-        {
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
-        }
+//        key_ ^= h_keys.side_key;
+//        if (state_.en_p_square != SQUARE_NB)
+//        {
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        }
         gamestates.pop_back();
         state_ = gamestates.back();
-        if (state_.en_p_square != SQUARE_NB)
-            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        if (state_.en_p_square != SQUARE_NB)
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
     }
 }

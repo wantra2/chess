@@ -66,8 +66,8 @@ namespace board
 
         bool is_attacked(const square& square, const int& color) const;
 
-        move::Move pv_[16]; //16 = max depth
-        uint64_t key_;
+//        move::Move pv_[16]; //16 = max depth
+//        uint64_t key_;
         State state_; //updated in do_move/undo_move
         bitboard bitboards_[8]; //updated in addpiece/removepiece
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece

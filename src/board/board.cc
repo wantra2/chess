@@ -12,13 +12,13 @@ namespace board
 
     Board::Board(std::string& fen)
     {
-        for (int j = 0; j < 16; ++j)
-        {
-            pv_[j] = 0;
-        }
+//        for (int j = 0; j < 16; ++j)
+//        {
+//            pv_[j] = 0;
+//        }
         
         //hash key
-        key_ = 0ull;
+//        key_ = 0ull;
         //init pieces bb
         bitboards_[WHITE] = 0ull; //WHITES
         bitboards_[BLACK] = 0ull; //BLACKS
@@ -77,10 +77,10 @@ namespace board
         gamestates.emplace_back(st);
         state_ = st;
         //generate board hash (piece hash is handled in addpiece/remove piece)
-        if (side_ == WHITE)
-            key_ ^= h_keys.side_key;
-        if (st.en_p_square != SQUARE_NB)
-            key_ ^= h_keys.piece_keys[VOID][st.en_p_square];
+//        if (side_ == WHITE)
+//            key_ ^= h_keys.side_key;
+//        if (st.en_p_square != SQUARE_NB)
+//            key_ ^= h_keys.piece_keys[VOID][st.en_p_square];
     }
 
     void Board::gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const
