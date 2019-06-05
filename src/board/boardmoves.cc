@@ -76,8 +76,8 @@ namespace board
 
         remove_piece(src, src_pt, side_);
         add_piece(dst, src_pt, side_);
-        if (listeners_.size() > 0)
-            listeners_[0]->on_piece_moved(switch_piecetype(src_pt), to_position(src), to_position(dst));
+        for (const auto l : listeners_)
+            l->on_piece_moved(switch_piecetype(src_pt), to_position(src), to_position(dst));
 
         const int pos = side_ == WHITE ? 16 : -16;
         if (src_pt == piece_type::PAWN)
