@@ -8,15 +8,13 @@ namespace ai
 
         int score = 0;
 
-        score += (popcount(b.bitboards_[PAWN]&b.bitboards_[WHITE]) - popcount(b.bitboards_[PAWN]&b.bitboards_[BLACK])) * pawn_value;
-        score += (popcount(b.bitboards_[KNIGHT]&b.bitboards_[WHITE]) - popcount(b.bitboards_[KNIGHT]&b.bitboards_[BLACK])) * knight_value;
-        score += (popcount(b.bitboards_[BISHOP]&b.bitboards_[WHITE]) - popcount(b.bitboards_[BISHOP]&b.bitboards_[BLACK])) * bishop_value;
-        score += (popcount(b.bitboards_[ROOK]&b.bitboards_[WHITE]) - popcount(b.bitboards_[ROOK]&b.bitboards_[BLACK])) * rook_value;
-        score += (popcount(b.bitboards_[QUEEN]&b.bitboards_[WHITE]) - popcount(b.bitboards_[QUEEN]&b.bitboards_[BLACK])) * queen_value;
-        score += (popcount(b.bitboards_[KING]&b.bitboards_[WHITE]) - popcount(b.bitboards_[KING]&b.bitboards_[BLACK])) * king_value;
+        score += (popcount(b.bitboards_[PAWN]&b.bitboards_[b.side_]) - popcount(b.bitboards_[PAWN]&b.bitboards_[!b.side_])) * pawn_value;
+        score += (popcount(b.bitboards_[KNIGHT]&b.bitboards_[b.side_]) - popcount(b.bitboards_[KNIGHT]&b.bitboards_[!b.side_])) * knight_value;
+        score += (popcount(b.bitboards_[BISHOP]&b.bitboards_[b.side_]) - popcount(b.bitboards_[BISHOP]&b.bitboards_[!b.side_])) * bishop_value;
+        score += (popcount(b.bitboards_[ROOK]&b.bitboards_[b.side_]) - popcount(b.bitboards_[ROOK]&b.bitboards_[!b.side_])) * rook_value;
+        score += (popcount(b.bitboards_[QUEEN]&b.bitboards_[b.side_]) - popcount(b.bitboards_[QUEEN]&b.bitboards_[!b.side_])) * queen_value;
+        score += (popcount(b.bitboards_[KING]&b.bitboards_[b.side_]) - popcount(b.bitboards_[KING]&b.bitboards_[!b.side_])) * king_value;
 
-        if (b.side_ == BLACK)
-            return -score;
         return score;
     }
 }
