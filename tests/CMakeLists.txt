@@ -8,6 +8,7 @@
 #add_executable(out6 movegen_slidin_Test.cc)
 #add_executable(out7 movegen_castlings_Test.cc)
 add_executable(undo_move_test undo_move_test.cc)
+add_executable(is_attacked is_attacked_test.cc)
 
 
 #target_link_libraries(out1 gtest gtest_main pthread board move)
@@ -18,6 +19,7 @@ add_executable(undo_move_test undo_move_test.cc)
 #target_link_libraries(out6 gtest gtest_main pthread board move)
 #target_link_libraries(out7 gtest gtest_main pthread board move)
 target_link_libraries(undo_move_test gtest gtest_main pthread board move)
+target_link_libraries(is_attacked gtest gtest_main pthread board move)
 
 #add_test(test_move ./out1)
 #add_test(test_adapter ./out2)
@@ -27,3 +29,4 @@ target_link_libraries(undo_move_test gtest gtest_main pthread board move)
 #add_test(test_movegen_sliding ./out6)
 #add_test(test_movegen_castlings ./out7)
 add_test(test_undo_move ./undo_move_test)
+add_test(test_is_attacked ./is_attacked)
