@@ -5,7 +5,7 @@ namespace ai
     static int quiescence(board::Board& board, int alpha, int beta)
     {
         int score = eval(board);
-        if (board.ply_ > 30)
+        if (board.ply_ > 10)
         {
             return score;
         }
