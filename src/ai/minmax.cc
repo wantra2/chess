@@ -2,11 +2,37 @@
 
 namespace ai
 {
+    static int quiescence(board::Board& board, int alpha, int beta)
+    {
+        int score = eval(board);
+        if (board.ply_ > 30)
+        {
+            return score;
+        }
+        if (score >= beta)
+            return beta;
+        if (score > alpha)
+            alpha = score;
+        std::vector<move::Move> move_list;
+        board.gen_captures(move_list);
+        for (const auto& move : move_list)
+        {
+            board.do_move(move);
+            score = -1 * quiescence(board, -1 * beta, -1 * alpha);
+            board.undo_move(move);
+            if (score >= beta)
+                return beta;
+            if (score > alpha)
+                alpha = score;
+        }
+        return alpha;
+    }
+
     static int alpha_beta(board::Board& board, int alpha, int beta, int depth)
     {
         if (depth <= 0)
         {
-            return eval(board);
+            return quiescence(board, alpha, beta);
         }
         std::vector<move::Move> move_list;
         board.gen_all(move_list);
