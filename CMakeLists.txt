@@ -17,3 +17,15 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 add_subdirectory(tests)
 add_subdirectory(src)
+
+add_executable(chessengine src/main.cc)
+
+target_link_libraries(chessengine PRIVATE   ai
+        board
+        listener
+        pgn_parser
+        move
+        utils
+        Boost::program_options
+        ${CMAKE_DL_LIBS}
+        )
