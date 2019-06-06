@@ -4,7 +4,21 @@
 
 namespace ai
 {
-    constexpr int32_t pieceSquareTable[8][64]=
+    #define MIRROR64(sq) (Mirror64[(sq)])
+
+    constexpr int Mirror64[64] = {
+        56,57,58,59,60,61,62,63,
+        48,49,50,51,52,53,54,55,
+        40,41,42,43,44,45,46,47,
+        32,33,34,35,36,37,38,39,
+        24,25,26,27,28,29,30,31,
+        16,17,18,19,20,21,22,23,
+        8, 9,10,11,12,13,14,15,
+        0, 1, 2, 3, 4, 5, 6, 7
+    };
+
+
+    constexpr int pieceSquareTable[8][64]= //IF WHITE USE MIRROR
             {
             {0},
             {0},
@@ -69,12 +83,9 @@ namespace ai
                 20, 30, 10,  0,  0, 10, 30, 20
             }
             };
-    constexpr int pawn_value = 100;
-    constexpr int knight_value = 325;
-    constexpr int bishop_value = 350;
-    constexpr int rook_value = 500;
-    constexpr int queen_value = 900;
-    constexpr int king_value = 1000000;
+
+    constexpr int materials[8] = {0, 0, 100, 325, 350, 500, 900, 1000000};
 
     int eval(const board::Board& b);
+    board::square relative(const board::square& sq, const int& color);
 }

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "utils/misc.hh"
+#include "ai/eval.hh"
 namespace board
 {
     void Board::remove_piece(const square& position, const piece_type& type, const int& color)
@@ -9,7 +10,9 @@ namespace board
         bitboards_[type] &= ~(1ull << position);
         bitboards_[color] &= ~(1ull << position);
         pieces_[position] = board::piece_type_with_color::VOID;
-//        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
+        material_[color] -= ai::materials[type];
+        position_[color] -= ai::pieceSquareTable[type][ai::relative(position, color)];
+        hash_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
     }
 
     void Board::add_piece(const square& position, const piece_type& type, const int& color)
@@ -17,7 +20,9 @@ namespace board
         bitboards_[type] |= (1ull << position);
         bitboards_[color] |= (1ull << position);
         pieces_[position] = (piece_type_with_color)(type - 1 + color * 6);
-//        key_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
+        material_[color] += ai::materials[type];
+        position_[color] += ai::pieceSquareTable[type][ai::relative(position, color)];
+        hash_ ^= h_keys.piece_keys[type - 1 + color * 6][position];
     }
 
     piece_type_with_color Board::at(const square& s) const
@@ -94,7 +99,7 @@ namespace board
         }
         newstate.captured = type(captured_piece);
         side_ = !side_;
-//        key_ ^= h_keys.side_key;
+        hash_ ^= h_keys.side_key;
         state_ = newstate;
         gamestates.push_back(newstate);
         ++ply_;
@@ -104,7 +109,7 @@ namespace board
     {
         --ply_;
         side_ = !side_;
-//        key_ ^= h_keys.side_key;
+        hash_ ^= h_keys.side_key;
         const int direction = side_ == WHITE ? 8 : -8;
         const square src = move::move_src(m);
         const square dst = move::move_dst(m);

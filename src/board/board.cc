@@ -18,7 +18,11 @@ namespace board
 //        }
         
         //hash key
-//        key_ = 0ull;
+        hash_ = 0ull;
+        material_[WHITE] = 0;
+        material_[BLACK] = 0;
+        position_[WHITE] = 0;
+        position_[BLACK] = 0;
         //init pieces bb
         bitboards_[WHITE] = 0ull; //WHITES
         bitboards_[BLACK] = 0ull; //BLACKS
@@ -77,8 +81,8 @@ namespace board
         gamestates.emplace_back(st);
         state_ = st;
         //generate board hash (piece hash is handled in addpiece/remove piece)
-//        if (side_ == WHITE)
-//            key_ ^= h_keys.side_key;
+        if (side_ == WHITE)
+            hash_ ^= h_keys.side_key;
 //        if (st.en_p_square != SQUARE_NB)
 //            key_ ^= h_keys.piece_keys[VOID][st.en_p_square];
     }
@@ -176,6 +180,22 @@ namespace board
         const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
         const bitboard rank3 = color == WHITE ? RANK_3 : RANK_6;
         const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
+        const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
+        
+        //promotion
+        bitboard prom = (utils::shift(pawns_on_rank7, (direction))) & empty;
+        while (prom)
+        {
+            const int sq = poplsb(prom);
+            move::Move m = move::create_move((square)(sq-direction), (square)sq, KNIGHT, move::PROMOTION);
+            movelist.emplace_back(m);
+            m = move::create_move((square)(sq-direction), (square)sq, BISHOP, move::PROMOTION);
+            movelist.emplace_back(m);
+            m = move::create_move((square)(sq-direction), (square)sq, ROOK, move::PROMOTION);
+            movelist.emplace_back(m);
+            m = move::create_move((square)(sq-direction), (square)sq, QUEEN, move::PROMOTION);
+            movelist.emplace_back(m);
+        }
         //standard non-capture
         bitboard push1 = (utils::shift(pawns_not_on_rank7, direction)) & empty;
         bitboard push2 = (utils::shift((push1 & rank3), direction)) & empty;
@@ -205,12 +225,10 @@ namespace board
         const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
         const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
         const bitboard ennemy = bitboards_[!color];
-        const bitboard empty = ~(bitboards_[WHITE]|bitboards_[BLACK]);
 
-        //promotions
+        //promotions cap
         bitboard cap1 = ((utils::shift(pawns_on_rank7, (direction+1)))) & ~filea & ennemy;
         bitboard cap2 = ((utils::shift(pawns_on_rank7, (direction-1)))) & ~fileh & ennemy;
-        bitboard prom = (utils::shift(pawns_on_rank7, (direction))) & empty;
 
         while (cap1)
         {
@@ -228,18 +246,7 @@ namespace board
             movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, ROOK, move::PROMOTION));
             movelist.emplace_back(move::create_move((square)(sq+1-direction), (square)sq, QUEEN, move::PROMOTION));
         }
-        while (prom)
-        {
-            const int sq = poplsb(prom);
-            move::Move m = move::create_move((square)(sq-direction), (square)sq, KNIGHT, move::PROMOTION);
-            movelist.emplace_back(m);
-            m = move::create_move((square)(sq-direction), (square)sq, BISHOP, move::PROMOTION);
-            movelist.emplace_back(m);
-            m = move::create_move((square)(sq-direction), (square)sq, ROOK, move::PROMOTION);
-            movelist.emplace_back(m);
-            m = move::create_move((square)(sq-direction), (square)sq, QUEEN, move::PROMOTION);
-            movelist.emplace_back(m);
-        }
+        
         //captures
         bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea2) & ennemy;
         bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~fileh2) & ennemy;

@@ -6,4 +6,5 @@ set(
 add_library(utils ${MISC_SRC})
 
 target_link_libraries(utils
-                        Boost::program_options)
+                        Boost::program_options
+                        )

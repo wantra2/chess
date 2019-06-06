@@ -5,7 +5,3 @@ add_subdirectory(pgn_parser)
 add_subdirectory(move)
 add_subdirectory(utils)
 
-
-
-
-

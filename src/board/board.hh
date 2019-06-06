@@ -12,6 +12,7 @@
 #include "listener/listener.hh"
 #include "board/hash_keys.hh"
 
+
 namespace board
 {
     enum castlings
@@ -73,6 +74,10 @@ namespace board
         piece_type_with_color pieces_[SQUARE_NB]; //updated in addpiece/removepiece
         int side_; //updated manually
         int ply_; //updated manually (not used for 50 rule!)
+        int material_[2];
+        int position_[2];
+        std::unordered_map<uint64_t, move::Move> table_;
+        uint64_t hash_;
 
     private:
         std::vector<listener::Listener*> listeners_;
