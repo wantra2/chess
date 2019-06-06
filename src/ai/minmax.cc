@@ -42,7 +42,7 @@ namespace ai
         {
             score = alpha_beta(board, -INFINITE, INFINITE, i, bestest);
             best_move = bestest[i];
-            std::cout << "best move: " << best_move << " score: " << score << '\n';
+            std::cout << "best move: " << utils::move_to_uci(best_move) << " score: " << score << '\n';
         }
         return bestest[0];
     }
