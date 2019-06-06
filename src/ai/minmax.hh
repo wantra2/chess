@@ -30,5 +30,5 @@ namespace ai
 /*K*/   {0, 0, 3100, 3325 , 3350 , 3500 , 3900 , 26000}
     };
     extern std::unordered_map<uint64_t, move::Move> h_map;
-    move::Move search(board::Board& b, int depth);
+    int root_search(board::Board& board, int alpha, int beta, int depth, move::Move* best_move);
 }

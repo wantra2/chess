@@ -49,8 +49,10 @@ void uci_loop()
             b.do_move(m);
             token = std::strtok(NULL, " ");
         }
-        move::Move move = ai::search(b, 6);
-        ai::play_move(utils::move_to_uci(move));
+        move::Move bite = 0;
+        move::Move* best = &bite;
+        ai::root_search(b, -ai::INFINITE, ai::INFINITE, 5, best);
+        ai::play_move(utils::move_to_uci(*best));
 //        ai::search_infos infos{0, 6, 0};
 //        ai::search(b, infos);
 //        ai::play_move(utils::move_to_uci(infos.best_move));
