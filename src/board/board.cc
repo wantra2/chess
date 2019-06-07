@@ -190,7 +190,13 @@ namespace board
                 return false;
             undo_move(move);
         }
-        return is_attacked((square)king, side_);
+        if (is_attacked((square)king, side_))
+        {
+            for (auto l : listeners_)
+                l->on_game_finished();
+            return true;
+        }
+        return false;
     }
 
     void Board::gen_pawn_moves_quiet(std::vector<move::Move>& movelist, const int& color) const
