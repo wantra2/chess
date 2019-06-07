@@ -217,8 +217,8 @@ namespace board
     void Board::gen_pawn_moves_noisy(std::vector<move::Move>& movelist, const int& color) const
     {
         const int direction = color == WHITE ? 8 : -8;
-        const bitboard fileh = color == WHITE ? FILE_H : NOTHING;
-        const bitboard filea = color == BLACK ? FILE_A : NOTHING;
+        const bitboard fileh = color == WHITE ? FILE_H : FILE_A;
+        const bitboard filea = color == BLACK ? FILE_H : FILE_A;
         const bitboard rank7 = color == WHITE ? RANK_7 : RANK_2;
         const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
         const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
@@ -246,8 +246,8 @@ namespace board
         }
         
         //captures
-        bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea) & ennemy;
-        bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~fileh) & ennemy;
+        bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~fileh) & ennemy;
+        bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~filea) & ennemy;
 
         while (cap3)
         {
