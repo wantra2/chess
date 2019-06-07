@@ -19,5 +19,5 @@ namespace ai
 
     constexpr int INFINITE = 500000;
     
-    int root_search(board::Board& board, int alpha, int beta, int depth, move::Move* best_move);
+    int alpha_beta(board::Board& board, int alpha, int beta, int depth, move::Move* best);
 }

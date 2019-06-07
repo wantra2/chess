@@ -51,7 +51,8 @@ void uci_loop()
         }
         move::Move bite = 0;
         move::Move* best = &bite;
-        ai::root_search(b, -ai::INFINITE, ai::INFINITE, 8, best);
+        b.ply_ = 0;
+        ai::alpha_beta(b, -ai::INFINITE, ai::INFINITE, 1, best);
         ai::play_move(utils::move_to_uci(*best));
 //        ai::search_infos infos{0, 6, 0};
 //        ai::search(b, infos);

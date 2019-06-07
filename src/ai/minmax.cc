@@ -21,19 +21,23 @@ namespace ai
 
     #define XOR_SWAP(a, b) a = a ^ b; b = a ^ b; a = a ^ b;
 
-    static void pick_move(const board::Board& board, std::vector<move::Move>& ml)
+    static void pick_move(const board::Board& board, std::vector<move::Move>& ml, const int index)
     {
-        int bestscore = -INFINITE;
-        int bestindex = 0;
-        for (size_t i = 0; i < ml.size(); ++i)
+        int bestscore = score(board, ml[index]);
+        int bestindex = index;
+        for (size_t i = index+1; i < ml.size(); ++i)
         {
-            if (score(board, ml[i]) > bestscore)
+            int scor = score(board, ml[i]);
+            if (scor > bestscore)
             {
-                bestscore = score(board, ml[i]);
+                bestscore = scor;
                 bestindex = i;
             }
         }
-        XOR_SWAP(ml[0], ml[bestindex]);
+        if (bestindex != index)
+        {
+            XOR_SWAP(ml[index], ml[bestindex]);
+        }
     }
 
     static int quiescence(board::Board& board, int alpha, int beta)
@@ -50,13 +54,14 @@ namespace ai
 
         std::vector<move::Move> move_list;
         board.gen_captures(move_list);
-        for (const auto& move : move_list)
-        {
-            pick_move(board, move_list);
 
-            board.do_move(move);
+        for (size_t i = 0; i < move_list.size(); ++i)
+        {
+            pick_move(board, move_list, i);
+
+            board.do_move(move_list[i]);
             int score = -1 * quiescence(board, -1 * beta, -1 * alpha);
-            board.undo_move(move);
+            board.undo_move(move_list[i]);
             if (score >= beta)
                 return beta;
             if (score > alpha)
@@ -65,7 +70,7 @@ namespace ai
         return alpha;
     }
 
-    static int alpha_beta(board::Board& board, int alpha, int beta, int depth)
+    int alpha_beta(board::Board& board, int alpha, int beta, int depth, move::Move* best)
     {
         if (depth <= 0)
             return quiescence(board, alpha, beta);
@@ -73,49 +78,38 @@ namespace ai
         std::vector<move::Move> move_list;
         board.gen_all(move_list);
 
+        board::bitboard kingBB = board.bitboards_[board::KING]&board.bitboards_[board.side_];
+        if (!kingBB)
+            return -INFINITE;
+
+        bool incheck = board.is_attacked((board::square)board::getlsb(kingBB), board.side_);
         if (!move_list.size()) 
         {
-            if (board.is_attacked((board::square)board::getlsb(board.bitboards_[board::KING]&board.bitboards_[board.side_]), board.side_)) 
+            if (incheck) 
                 return -INFINITE;
             else 
                 return 0;            
         }
+        if (incheck)
+            ++depth;
         
-        for (const auto& m : move_list)
+        for (size_t i = 0; i < move_list.size(); ++i)
         {
-            pick_move(board, move_list);
+            pick_move(board, move_list, i);
 
-            board.do_move(m);
-            int score = -alpha_beta(board, -beta, -alpha, depth-1);
-            board.undo_move(m);
+            board.do_move(move_list[i]);
+            int score = -alpha_beta(board, -beta, -alpha, depth-1, best);
+            board.undo_move(move_list[i]);
 
             if (score >= beta)
                 return beta;
 
             if (score > alpha) 
-                alpha = score;
-        }
-        return alpha;
-    }
-
-    int root_search(board::Board& board, int alpha, int beta, int depth, move::Move* best_move)
-    {
-        std::vector<move::Move> ml;
-        board.gen_all(ml);
-        for (const auto& m : ml)
-        {
-            pick_move(board, ml);
-
-            board.do_move(m);
-            int score = -alpha_beta(board, -beta, -alpha, depth-1);
-            board.undo_move(m);
-            if (score > alpha)
             {
                 alpha = score;
-                *best_move = m;
+                *best = move_list[i];
             }
         }
-
-        return alpha;        
+        return alpha;
     }
 }
