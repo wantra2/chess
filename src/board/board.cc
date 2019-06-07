@@ -172,6 +172,19 @@ namespace board
             || rook_attacks & ((bitboards_[ROOK]|bitboards_[QUEEN]) & bitboards_[!color]);
     }
 
+    bool Board::is_finished() const
+    {
+        std::vector<move::Move> move_list;
+        bitboard unoccupied = bitboards_[WHITE] | bitboards_[BLACK];
+        unoccupied = ~unoccupied;
+        int side = side_ == WHITE ? WHITE : BLACK;
+        const bitboard capturable = bitboards_[side];
+        const bitboard target = unoccupied | capturable;
+        gen_KingMoves(move_list, side_, target);
+        const bitboard king = bitboards_[KING] & bitboards_[side_];
+        return move_list.size() == 0 and is_attacked((square)getlsb(king), side_);
+    }
+
     void Board::gen_pawn_moves_quiet(std::vector<move::Move>& movelist, const int& color) const
     {
         const int direction = color == WHITE ? 8 : -8;
