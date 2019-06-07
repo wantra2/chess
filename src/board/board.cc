@@ -219,8 +219,6 @@ namespace board
         const int direction = color == WHITE ? 8 : -8;
         const bitboard fileh = color == WHITE ? FILE_H : NOTHING;
         const bitboard filea = color == BLACK ? FILE_A : NOTHING;
-        const bitboard fileh2 = color == WHITE ? FILE_H : NOTHING;
-        const bitboard filea2 = color == WHITE ? FILE_A : NOTHING;
         const bitboard rank7 = color == WHITE ? RANK_7 : RANK_2;
         const bitboard pawns_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & rank7;
         const bitboard pawns_not_on_rank7 = (bitboards_[color] & bitboards_[PAWN]) & ~rank7;
@@ -248,8 +246,8 @@ namespace board
         }
         
         //captures
-        bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea2) & ennemy;
-        bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~fileh2) & ennemy;
+        bitboard cap3 = (utils::shift(pawns_not_on_rank7, (direction+1)) & ~filea) & ennemy;
+        bitboard cap4 = (utils::shift(pawns_not_on_rank7, (direction-1)) & ~fileh) & ennemy;
 
         while (cap3)
         {
