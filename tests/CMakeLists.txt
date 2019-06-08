@@ -10,6 +10,7 @@
 add_executable(undo_move_test undo_move_test.cc)
 add_executable(is_attacked_test is_attacked_test.cc)
 add_executable(uci_to_move_test uci_to_move_test.cc)
+add_executable(gen_pawn_moves_test gen_pawn_moves_test.cc)
 
 
 #target_link_libraries(out1 gtest gtest_main pthread board move)
@@ -22,6 +23,7 @@ add_executable(uci_to_move_test uci_to_move_test.cc)
 target_link_libraries(undo_move_test gtest gtest_main pthread board move)
 target_link_libraries(is_attacked_test gtest gtest_main pthread board move)
 target_link_libraries(uci_to_move_test gtest gtest_main pthread board move utils)
+target_link_libraries(gen_pawn_moves_test gtest gtest_main pthread board move utils)
 
 #add_test(test_move ./out1)
 #add_test(test_adapter ./out2)
@@ -33,3 +35,4 @@ target_link_libraries(uci_to_move_test gtest gtest_main pthread board move utils
 add_test(test_undo_move ./undo_move_test)
 add_test(test_is_attacked ./is_attacked_test)
 add_test(test_uci_to_move ./uci_to_move_test)
+add_test(test_gen_pawn_moves ./gen_pawn_moves_test)
