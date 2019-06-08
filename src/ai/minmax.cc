@@ -81,17 +81,6 @@ namespace ai
         board::bitboard kingBB = board.bitboards_[board::KING]&board.bitboards_[board.side_];
         if (!kingBB)
             return -INFINITE;
-
-        bool incheck = board.is_attacked((board::square)board::getlsb(kingBB), board.side_);
-        if (!move_list.size()) 
-        {
-            if (incheck) 
-                return -INFINITE;
-            else 
-                return 0;            
-        }
-        if (incheck)
-            ++depth;
         
         for (size_t i = 0; i < move_list.size(); ++i)
         {

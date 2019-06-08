@@ -185,7 +185,7 @@ namespace utils
         board::square dst_square = board::to_square(dst_rank, dst_file);
         board::piece_type src_pt = board::type(b.at(src_square));
         if (uci_move[4])
-            return move::create_move(src_square, dst_square, char_to_prom(uci_move[5]), move::PROMOTION);
+            return move::create_move(src_square, dst_square, char_to_prom(uci_move[4]), move::PROMOTION);
         if (src_pt == board::KING && abs(dst_file - src_file) > 1)
             return move::create_move(src_square, dst_square, move::CASTLING);
         if (dst_square == b.state_.en_p_square && src_pt == board::PAWN)
