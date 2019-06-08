@@ -86,10 +86,7 @@ int main(int argc, char* argv[])
         std::cout << utils::perft((*vm)["perft"].as<std::string>()) << '\n';
         return 0;
     }
-    std::string fen = "5r1k/pN2n2p/6p1/2P5/b7/P4P2/1b3P1P/1R1R2K1 w - - 1 27";
-    board::Board board(fen);
-    utils::pretty_print(board);
-    //uci_loop();
+    uci_loop();
     //call uci_loop if no arguments are given
     return 0;
 }
