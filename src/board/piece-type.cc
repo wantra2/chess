@@ -2,7 +2,7 @@
 
 namespace board
 {
-    PieceType switch_piecetype(const piece_type type)
+    PieceType switch_piece_type(const piece_type type)
     {
         switch(type)
         {

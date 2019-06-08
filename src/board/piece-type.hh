@@ -58,7 +58,28 @@ namespace board
         PieceType::QUEEN,  PieceType::ROOK, PieceType::BISHOP,
         PieceType::KNIGHT, PieceType::PAWN, PieceType::KING};
 
-    PieceType switch_piecetype(const piece_type type);
+    inline PieceType char_to_piece(const char c)
+    {
+        switch (c)
+        {
+        case 'P':
+            return PieceType::PAWN;
+        case 'N':
+            return PieceType::KNIGHT;
+        case 'B':
+            return PieceType::BISHOP;
+        case 'R':
+            return PieceType::ROOK;
+        case 'Q':
+            return PieceType::QUEEN;
+        case 'K':
+            return PieceType::KING;
+        default:
+            throw std::invalid_argument("Unknown piece");
+        }
+    }
+
+    PieceType switch_piece_type(const piece_type type);
     piece_type switch_piecetype(const PieceType type);
 
 } // namespace board

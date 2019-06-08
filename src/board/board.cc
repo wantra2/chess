@@ -298,12 +298,24 @@ namespace board
         }
     }
 
-    void Board::do_castling(const square& src, const square& dst)
-    {
+    void Board::do_castling(const square& src, const square& dst) {
         const square a1sq = side_ == WHITE ? A1 : A8;
         const square h1sq = side_ == WHITE ? H1 : H8;
         const square rookpos = (dst > src) ? h1sq : a1sq;
-        const square rookdst = (rookpos == a1sq) ? (square)(dst+1) : (square)(dst-1);
+        const square rookdst = (rookpos == a1sq) ? (square) (dst + 1) : (square) (dst - 1);
+
+        if (rookpos == h1sq){
+            for (auto l : listeners_)
+            {
+                l->on_kingside_castling((Color)side_);
+            }
+        }
+        else {
+            for (auto l : listeners_)
+            {
+                l->on_queenside_castling((Color)side_);
+            }
+        }
 
         remove_piece(src, piece_type::KING, side_);
         remove_piece(rookpos, piece_type::ROOK, side_);

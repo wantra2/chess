@@ -52,10 +52,10 @@ namespace board
             return std::nullopt;
 
         if (location & board_.bitboards_[(int)Color::WHITE])
-            return std::pair<PieceType, Color>(switch_piecetype(i)
+            return std::pair<PieceType, Color>(switch_piece_type(i)
                                                , Color::WHITE);
 
-        return std::pair<PieceType, Color>(switch_piecetype(i), Color::BLACK);
+        return std::pair<PieceType, Color>(switch_piece_type(i), Color::BLACK);
     }
 
     void BoardAdapter::do_move(move::Move move)

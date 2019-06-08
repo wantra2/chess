@@ -54,9 +54,11 @@ namespace board
             newstate.castling_rights[side_] = NO_CASTLING;
         }
 
-        if (captured_piece != VOID)
+        if (captured_piece != VOID) {
+            for (const auto l : listeners_)
+                l->on_piece_taken(switch_piece_type(src_pt), to_position(cap_sq));
             remove_piece(cap_sq, type(captured_piece), !side_);
-
+        }
 //        if (state_.en_p_square != SQUARE_NB)
 //        {
 //            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
@@ -81,7 +83,7 @@ namespace board
         remove_piece(src, src_pt, side_);
         add_piece(dst, src_pt, side_);
         for (const auto l : listeners_)
-            l->on_piece_moved(switch_piecetype(src_pt), to_position(src), to_position(dst));
+            l->on_piece_moved(switch_piece_type(src_pt), to_position(src), to_position(dst));
 
         const int pos = side_ == WHITE ? 16 : -16;
         if (src_pt == piece_type::PAWN)
@@ -95,6 +97,8 @@ namespace board
             {
                 remove_piece(dst, src_pt, side_);
                 add_piece(dst, move::promotion_type(m), side_);
+                for (const auto l : listeners_)
+                    l->on_piece_promoted(switch_piece_type(src_pt), to_position(dst));
             }
         }
         newstate.captured = type(captured_piece);
