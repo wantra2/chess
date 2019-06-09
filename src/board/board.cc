@@ -227,6 +227,23 @@ namespace board
         return true;
     }
 
+    bool Board::is_draw()
+    {
+        int count = 1;
+        for (std::size_t i = 0; i < hashes_.size(); ++i)
+        {
+            for (std::size_t j = i + 1; j < hashes_.size(); ++j)
+            {
+                if (hashes_[i] == hashes_[j])
+                    ++count;
+                if (count == 3)
+                    return true;
+            }
+            count = 1;
+        }
+        return false;
+    }
+
     void Board::gen_pawn_moves_quiet(std::vector<move::Move>& movelist, const int& color) const
     {
         const int direction = color == WHITE ? 8 : -8;

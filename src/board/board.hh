@@ -72,6 +72,7 @@ namespace board
 
         bool is_finished();
         bool is_pat();
+        bool is_draw();
 
 //        move::Move pv_[16]; //16 = max depth
 //        uint64_t key_;
@@ -84,6 +85,7 @@ namespace board
         int position_[2];
         std::unordered_map<uint64_t, move::Move> table_;
         uint64_t hash_;
+        std::vector<uint64_t> hashes_;
 
         std::vector<listener::Listener*> listeners_;
     private:

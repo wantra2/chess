@@ -43,6 +43,7 @@ namespace pgn_parser
         board::Board board(fen);
         board::BoardAdapter adapter(board, listeners);
         int mask = 0x1FFF;
+        adapter.board_.hashes_.emplace_back(adapter.board_.hash_);
         for (auto i : moves)
         {
             std::vector<move::Move> ml;
@@ -67,6 +68,7 @@ namespace pgn_parser
                     l->on_player_check(static_cast<board::Color>(adapter.board_.side_));
             }
             adapter.do_move(i);
+            adapter.board_.hashes_.emplace_back(adapter.board_.hash_);
             if (adapter.board_.is_finished())
                 return 0;
         }
