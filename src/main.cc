@@ -21,7 +21,7 @@ using namespace board;
 void uci_loop()
 {
     ai::init("ThugChess");
-    while (1)
+    while (true)
     {
         std::string str = ai::get_board();
         char* input = &str[0u];
@@ -49,14 +49,12 @@ void uci_loop()
             b.do_move(m);
             token = std::strtok(NULL, " ");
         }
-        move::Move bite = 0;
-        move::Move* best = &bite;
+
+        move::Move best = 0;
         b.ply_ = 0;
-        ai::alpha_beta(b, -ai::INFINITE, ai::INFINITE, 1, best);
-        ai::play_move(utils::move_to_uci(*best));
-//        ai::search_infos infos{0, 6, 0};
-//        ai::search(b, infos);
-//        ai::play_move(utils::move_to_uci(infos.best_move));
+        ai::alpha_beta(b, -ai::INFINITE, ai::INFINITE, 1, &best);
+        ai::play_move(utils::move_to_uci(best));
+
     }
 }
 

@@ -16,6 +16,7 @@ namespace utils
             return 1;
         auto list = std::vector<move::Move>();
         board.gen_all(list);
+
         int res = 0;
         for (auto& move : list)
         {

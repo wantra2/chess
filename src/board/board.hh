@@ -42,13 +42,13 @@ namespace board
         void set_listeners(std::vector<listener::Listener*> listeners)
         {listeners_ = listeners;}
 
-        void gen_pawn_moves_quiet(std::vector<move::Move>&, const int& color) const;
-        void gen_pawn_moves_noisy(std::vector<move::Move>&, const int& color) const;
-        void gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
-        void gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets) const;
-        void gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
-        void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets) const;
-        void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color) const;
+        void gen_pawn_moves_quiet(std::vector<move::Move>&, const int& color);
+        void gen_pawn_moves_noisy(std::vector<move::Move>&, const int& color);
+        void gen_KnightMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets);
+        void gen_KingMoves(std::vector<move::Move>& movelist, const int& color, const bitboard& targets);
+        void gen_queen_bishop_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets);
+        void gen_queen_rook_moves(std::vector<move::Move>& movelist, const int& color, const bitboard& occupied, const bitboard& targets);
+        void gen_castlings(std::vector<move::Move>& movelist, const bitboard& occupied, const int& color);
         void gen_all(std::vector<move::Move>& movelist);
         void gen_captures(std::vector<move::Move>& movelist);
 
@@ -73,6 +73,7 @@ namespace board
         bool is_finished();
         bool is_pat();
         bool is_draw();
+        bool is_legal(move::Move move);
 
 //        move::Move pv_[16]; //16 = max depth
 //        uint64_t key_;
@@ -89,6 +90,7 @@ namespace board
 
         std::vector<listener::Listener*> listeners_;
     private:
-        void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const;
+        void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from);
+
     };
 }
