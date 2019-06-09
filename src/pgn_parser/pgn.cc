@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <utils/misc.hh>
 
 #include "pgn_parser/pgn-parser.hh"
 #include "board/pgn-move.hh"
@@ -27,7 +28,10 @@ namespace pgn_parser
             auto pt = board::piece_type::NONE;
             if (i.promotion_ != std::nullopt)
                 pt = board::switch_piecetype(i.promotion_.value());
-            res.emplace_back(move::create_move(from, to, pt, move::MoveType::NORMAL));
+            move::MoveType type = move::MoveType::NORMAL;
+            if (i.piece_ == board::PieceType::KING and abs(to - from) == 2)
+                type = move::MoveType::CASTLING;
+            res.emplace_back(move::create_move(from, to, pt, type));
         }
         return res;
     }
@@ -39,7 +43,15 @@ namespace pgn_parser
         board::BoardAdapter adapter(board, listeners);
         for (auto i : moves)
         {
+            board::square king = static_cast<board::square>(board::getlsb(
+                    adapter.board_.bitboards_[board::KING] & adapter.board_.bitboards_[adapter.board_.side_]));
+            if (adapter.board_.is_attacked(king, adapter.board_.side_)) {
+                for (const auto l : adapter.board_.listeners_)
+                    l->on_player_check(static_cast<board::Color>(adapter.board_.side_));
+            }
             adapter.do_move(i);
+//            if (adapter.board_.is_finished())
+//                return 0;
         }
         return 0;
     }

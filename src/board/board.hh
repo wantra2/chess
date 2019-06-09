@@ -61,8 +61,11 @@ namespace board
         void undo_move(const move::Move& m);
         void do_move_null();
         void undo_move_null();
+        void do_move_without_listeners(const move::Move& m);
+
 
         void do_castling(const square& src, const square& dst);
+        void do_castling_without_listeners(const square& src, const square& dst);
         void undo_castling(const square& src, const square& dst);
 
         bool is_attacked(const square& square, const int& color) const;
@@ -81,8 +84,8 @@ namespace board
         std::unordered_map<uint64_t, move::Move> table_;
         uint64_t hash_;
 
-    private:
         std::vector<listener::Listener*> listeners_;
+    private:
         void gen_non_pawn(std::vector<move::Move>& movelist, bitboard attacks, const square& square_from) const;
     };
 }

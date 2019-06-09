@@ -181,19 +181,26 @@ namespace board
         const bitboard capturable = bitboards_[opposite_side];
         const bitboard target = unoccupied | capturable;
         gen_KingMoves(move_list, side_, target);
-        const bitboard king = bitboards_[KING] & bitboards_[side_];
+        const bitboard king = getlsb(bitboards_[KING] & bitboards_[side_]);
+        int act_side = side_;
+
         for (auto& move : move_list)
         {
-            int previous_side = side_;
-            do_move(move);
-            if (not is_attacked((square)king, previous_side))
+            do_move_without_listeners(move);
+            if (not is_attacked((square)king, act_side)) {
+                undo_move(move);
                 return false;
+            }
             undo_move(move);
         }
         if (is_attacked((square)king, side_))
         {
-            for (auto l : listeners_)
+            for (auto l : listeners_) {
+                l->on_player_mat(static_cast<Color>(side_));
+            }
+            for (auto l : listeners_) {
                 l->on_game_finished();
+            }
             return true;
         }
         return false;
@@ -304,24 +311,33 @@ namespace board
         const square rookpos = (dst > src) ? h1sq : a1sq;
         const square rookdst = (rookpos == a1sq) ? (square) (dst + 1) : (square) (dst - 1);
 
-        if (rookpos == h1sq){
-            for (auto l : listeners_)
-            {
-                l->on_kingside_castling((Color)side_);
+        if (rookpos == h1sq) {
+            for (auto l : listeners_) {
+                l->on_kingside_castling((Color) side_);
+            }
+        } else {
+            for (auto l : listeners_) {
+                l->on_queenside_castling((Color) side_);
             }
         }
-        else {
-            for (auto l : listeners_)
-            {
-                l->on_queenside_castling((Color)side_);
-            }
-        }
+        remove_piece(src, piece_type::KING, side_);
+        remove_piece(rookpos, piece_type::ROOK, side_);
+        add_piece(dst, piece_type::KING, side_);
+        add_piece(rookdst, piece_type::ROOK, side_);
+    }
+
+    void Board::do_castling_without_listeners(const square& src, const square& dst) {
+        const square a1sq = side_ == WHITE ? A1 : A8;
+        const square h1sq = side_ == WHITE ? H1 : H8;
+        const square rookpos = (dst > src) ? h1sq : a1sq;
+        const square rookdst = (rookpos == a1sq) ? (square) (dst + 1) : (square) (dst - 1);
 
         remove_piece(src, piece_type::KING, side_);
         remove_piece(rookpos, piece_type::ROOK, side_);
         add_piece(dst, piece_type::KING, side_);
         add_piece(rookdst, piece_type::ROOK, side_);
     }
+
 
     void Board::undo_castling(const square& src, const square& dst)
     {

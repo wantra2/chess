@@ -49,14 +49,16 @@ namespace board
 
         if (movetype == move::MoveType::CASTLING)
         {
+                for (const auto l : listeners_)
+                    l->on_piece_moved(switch_piece_type(src_pt), to_position(src), to_position(dst));
             do_castling(src, dst);
             captured_piece = VOID;
             newstate.castling_rights[side_] = NO_CASTLING;
-        }
 
+        }
+        bool captured = false;
         if (captured_piece != VOID) {
-            for (const auto l : listeners_)
-                l->on_piece_taken(switch_piece_type(src_pt), to_position(cap_sq));
+            captured = true;
             remove_piece(cap_sq, type(captured_piece), !side_);
         }
 //        if (state_.en_p_square != SQUARE_NB)
@@ -82,9 +84,18 @@ namespace board
 
         remove_piece(src, src_pt, side_);
         add_piece(dst, src_pt, side_);
-        for (const auto l : listeners_)
-            l->on_piece_moved(switch_piece_type(src_pt), to_position(src), to_position(dst));
+        if (movetype != move::MoveType::CASTLING)
+        {
+            for (const auto l : listeners_)
+                l->on_piece_moved(switch_piece_type(src_pt), to_position(src), to_position(dst));
+        }
 
+        if (captured)
+        {
+            for (const auto l : listeners_)
+                l->on_piece_taken(switch_piece_type(src_pt), to_position(cap_sq));
+
+        }
         const int pos = side_ == WHITE ? 16 : -16;
         if (src_pt == piece_type::PAWN)
         {
@@ -108,6 +119,80 @@ namespace board
         gamestates.push_back(newstate);
         ++ply_;
     }
+
+    void Board::do_move_without_listeners(const move::Move& m)
+    {
+        State newstate{NONE, {state_.castling_rights[WHITE], state_.castling_rights[BLACK]}, SQUARE_NB};
+        const int direction = side_ == WHITE ? 8 : -8;
+        const square dst = move::move_dst(m);
+        const square src = move::move_src(m);
+        const move::MoveType movetype = move::mv_type(m);
+        piece_type src_pt = type(pieces_[src]);
+        square cap_sq = dst;
+        piece_type_with_color captured_piece = pieces_[dst];
+
+        if (movetype == move::MoveType::EN_PASSANT)
+        {
+            captured_piece = (piece_type_with_color)(WHITE_PAWN + (6 * side_));
+            cap_sq = (square)(dst - direction);
+        }
+
+        if (movetype == move::MoveType::CASTLING)
+        {
+            do_castling_without_listeners(src, dst);
+            captured_piece = VOID;
+            newstate.castling_rights[side_] = NO_CASTLING;
+
+        }
+        if (captured_piece != VOID) {
+            remove_piece(cap_sq, type(captured_piece), !side_);
+        }
+//        if (state_.en_p_square != SQUARE_NB)
+//        {
+//            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
+//        }
+
+        if (src_pt == piece_type::KING)
+        {
+            newstate.castling_rights[side_] = NO_CASTLING;
+        }
+        else
+        {
+            const square a1 = side_ == WHITE ? A1 : A8;
+            const square h1 = side_ == WHITE ? H1 : H8;
+            if (src == a1)
+            {
+                newstate.castling_rights[side_] &= ~2;
+            }
+            if (src == h1)
+                newstate.castling_rights[side_] &= ~1;
+        }
+
+        remove_piece(src, src_pt, side_);
+        add_piece(dst, src_pt, side_);
+
+        const int pos = side_ == WHITE ? 16 : -16;
+        if (src_pt == piece_type::PAWN)
+        {
+            if (dst == src + pos)
+            {
+                newstate.en_p_square = (square)(src + direction);
+//                key_ ^= h_keys.piece_keys[VOID][newstate.en_p_square];
+            }
+            if (movetype == move::PROMOTION)
+            {
+                remove_piece(dst, src_pt, side_);
+                add_piece(dst, move::promotion_type(m), side_);
+            }
+        }
+        newstate.captured = type(captured_piece);
+        side_ = !side_;
+        hash_ ^= h_keys.side_key;
+        state_ = newstate;
+        gamestates.push_back(newstate);
+        ++ply_;
+    }
+
 
     void Board::undo_move(const move::Move& m)
     {

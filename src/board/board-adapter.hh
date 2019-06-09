@@ -19,8 +19,8 @@ namespace board
         opt_piece_t operator[](const Position& position) const override;
         void do_move(move::Move move);
 
-    private:
         Board& board_;
+    private:
         std::vector<void *> handles_;
         std::vector<listener::Listener*> listeners_;
     };
