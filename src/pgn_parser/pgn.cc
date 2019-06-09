@@ -46,20 +46,24 @@ namespace pgn_parser
         adapter.board_.hashes_.emplace_back(adapter.board_.hash_);
         for (auto i : moves)
         {
-            std::vector<move::Move> ml;
-            adapter.board_.gen_all(ml);
-            if (move::mv_type(i) == move::PROMOTION &&  ml.end() == std::find(ml.begin(), ml.end(), i))
-            {
-                for (const auto l : adapter.board_.listeners_)
-                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
-                return 1;
-            }
-            if (ml.end() == std::find(ml.begin(), ml.end(), i&mask) && ml.end() == std::find(ml.begin(), ml.end(), i))
-            {
-                for (const auto l : adapter.board_.listeners_)
-                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
-                return 1;
-            }
+            if (adapter.board_.is_pat())
+                return 0;
+            if (adapter.board_.is_draw())
+                return 0;
+//            std::vector<move::Move> ml;
+//            adapter.board_.gen_all(ml);
+//            if (move::mv_type(i) == move::PROMOTION &&  ml.end() == std::find(ml.begin(), ml.end(), i))
+//            {
+//                for (const auto l : adapter.board_.listeners_)
+//                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
+//                return 0;
+//            }
+//            if (ml.end() == std::find(ml.begin(), ml.end(), i&mask) && ml.end() == std::find(ml.begin(), ml.end(), i))
+//            {
+//                for (const auto l : adapter.board_.listeners_)
+//                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
+//                return 0;
+//            }
 
             board::square king = static_cast<board::square>(board::getlsb(
                     adapter.board_.bitboards_[board::KING] & adapter.board_.bitboards_[adapter.board_.side_]));

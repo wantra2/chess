@@ -181,13 +181,13 @@ namespace board
         const bitboard capturable = bitboards_[opposite_side];
         const bitboard target = unoccupied | capturable;
         gen_KingMoves(move_list, side_, target);
-        const square king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[side_]));
+        const square king = (square)(getlsb(bitboards_[KING] & bitboards_[side_]));
         int act_side = side_;
         gen_all(move_list);
         for (auto& move : move_list)
         {
             do_move_without_listeners(move);
-            const square king_tmp = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[act_side]));
+            const square king_tmp = (square)(getlsb(bitboards_[KING] & bitboards_[act_side]));
             if (not is_attacked((square)king_tmp, act_side)) {
                 undo_move(move);
                 return false;
@@ -209,7 +209,7 @@ namespace board
 
     bool Board::is_pat()
     {
-        const square king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[side_]));
+        const square king = (square)(getlsb(bitboards_[KING] & bitboards_[side_]));
         if (is_attacked(king, side_))
             return false;
         std::vector<move::Move> moves;
@@ -217,27 +217,37 @@ namespace board
         for (auto& move : moves)
         {
             do_move_without_listeners(move);
-            const square old_king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[!side_]));
-            if (not is_attacked(old_king, !side_))
+            const square old_king = (square)(getlsb(bitboards_[KING] & bitboards_[!side_]));
+            if (not is_attacked(old_king, !side_)) {
+                undo_move(move);
                 return false;
+            }
             undo_move(move);
         }
         for (auto l : listeners_)
             l->on_player_pat(static_cast<Color>(side_));
+        for (auto l : listeners_)
+            l->on_game_finished();
         return true;
     }
 
     bool Board::is_draw()
     {
         int count = 1;
-        for (std::size_t i = 0; i < hashes_.size(); ++i)
+        for (std::size_t i = 0; i < hashes_.size() - 1; ++i)
         {
             for (std::size_t j = i + 1; j < hashes_.size(); ++j)
             {
                 if (hashes_[i] == hashes_[j])
                     ++count;
-                if (count == 3)
+                if (count == 3) {
+                    for (auto l : listeners_)
+                        l->on_player_pat(static_cast<Color>(side_));
+                    for (auto l : listeners_)
+                        l->on_game_finished();
+
                     return true;
+                }
             }
             count = 1;
         }
