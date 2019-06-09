@@ -207,6 +207,26 @@ namespace board
         return false;
     }
 
+    bool Board::is_pat()
+    {
+        const square king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[side_]));
+        if (is_attacked(king, side_))
+            return false;
+        std::vector<move::Move> moves;
+        gen_all(moves);
+        for (auto& move : moves)
+        {
+            do_move_without_listeners(move);
+            const square old_king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[!side_]));
+            if (not is_attacked(old_king, !side_))
+                return false;
+            undo_move(move);
+        }
+        for (auto l : listeners_)
+            l->on_player_pat(static_cast<Color>(side_));
+        return true;
+    }
+
     void Board::gen_pawn_moves_quiet(std::vector<move::Move>& movelist, const int& color) const
     {
         const int direction = color == WHITE ? 8 : -8;

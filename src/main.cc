@@ -71,11 +71,7 @@ int main(int argc, char* argv[])
         return 1;
     if (vm->count("listeners"))
     {
-        std::cout << "the listener plugins are: \t";
         listeners = (*vm)["listeners"].as<std::vector<std::string>>();
-        for (auto i : (*vm)["listeners"].as<std::vector<std::string>>())
-            std::cout << i << '\t';
-        std::cout << '\n';
     }
     if (vm->count("pgn"))
     {

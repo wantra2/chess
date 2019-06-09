@@ -71,6 +71,7 @@ namespace board
         bool is_attacked(const square& square, const int& color) const;
 
         bool is_finished();
+        bool is_pat();
 
 //        move::Move pv_[16]; //16 = max depth
 //        uint64_t key_;
