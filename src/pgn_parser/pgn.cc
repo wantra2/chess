@@ -50,8 +50,8 @@ namespace pgn_parser
                     l->on_player_check(static_cast<board::Color>(adapter.board_.side_));
             }
             adapter.do_move(i);
-//            if (adapter.board_.is_finished())
-//                return 0;
+            if (adapter.board_.is_finished())
+                return 0;
         }
         return 0;
     }

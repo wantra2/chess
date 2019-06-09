@@ -40,6 +40,8 @@ namespace board
         piece_type src_pt = type(pieces_[src]);
         square cap_sq = dst;
         piece_type_with_color captured_piece = pieces_[dst];
+        auto typ = type(pieces_[cap_sq]);
+        auto taken = (typ == piece_type::NONE) ? PieceType::KING : switch_piece_type(typ);
 
         if (movetype == move::MoveType::EN_PASSANT)
         {
@@ -64,7 +66,7 @@ namespace board
 //        if (state_.en_p_square != SQUARE_NB)
 //        {
 //            key_ ^= h_keys.piece_keys[VOID][state_.en_p_square];
-//        }
+//        }switch_piece_type(src_pt)
 
         if (src_pt == piece_type::KING)
         {
@@ -82,8 +84,10 @@ namespace board
                 newstate.castling_rights[side_] &= ~1;
         }
 
+
         remove_piece(src, src_pt, side_);
         add_piece(dst, src_pt, side_);
+
         if (movetype != move::MoveType::CASTLING)
         {
             for (const auto l : listeners_)
@@ -93,7 +97,7 @@ namespace board
         if (captured)
         {
             for (const auto l : listeners_)
-                l->on_piece_taken(switch_piece_type(src_pt), to_position(cap_sq));
+                l->on_piece_taken(taken, to_position(cap_sq));
 
         }
         const int pos = side_ == WHITE ? 16 : -16;

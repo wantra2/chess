@@ -181,13 +181,14 @@ namespace board
         const bitboard capturable = bitboards_[opposite_side];
         const bitboard target = unoccupied | capturable;
         gen_KingMoves(move_list, side_, target);
-        const bitboard king = getlsb(bitboards_[KING] & bitboards_[side_]);
+        const square king = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[side_]));
         int act_side = side_;
-
+        gen_all(move_list);
         for (auto& move : move_list)
         {
             do_move_without_listeners(move);
-            if (not is_attacked((square)king, act_side)) {
+            const square king_tmp = static_cast<const square>(getlsb(bitboards_[KING] & bitboards_[act_side]));
+            if (not is_attacked((square)king_tmp, act_side)) {
                 undo_move(move);
                 return false;
             }
