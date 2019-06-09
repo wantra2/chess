@@ -1,6 +1,7 @@
 #include "pgn_parser/pgn.hh"
 
 #include <vector>
+#include <algorithm>
 #include <optional>
 #include <string>
 #include <iostream>
@@ -41,8 +42,24 @@ namespace pgn_parser
         std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         board::Board board(fen);
         board::BoardAdapter adapter(board, listeners);
+        int mask = 0x1FFF;
         for (auto i : moves)
         {
+            std::vector<move::Move> ml;
+            adapter.board_.gen_all(ml);
+            if (move::mv_type(i) == move::PROMOTION &&  ml.end() == std::find(ml.begin(), ml.end(), i))
+            {
+                for (const auto l : adapter.board_.listeners_)
+                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
+                return 1;
+            }
+            if (ml.end() == std::find(ml.begin(), ml.end(), i&mask) && ml.end() == std::find(ml.begin(), ml.end(), i))
+            {
+                for (const auto l : adapter.board_.listeners_)
+                    l->on_player_disqualified(static_cast<board::Color>(adapter.board_.side_));
+                return 1;
+            }
+
             board::square king = static_cast<board::square>(board::getlsb(
                     adapter.board_.bitboards_[board::KING] & adapter.board_.bitboards_[adapter.board_.side_]));
             if (adapter.board_.is_attacked(king, adapter.board_.side_)) {
